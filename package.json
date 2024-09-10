@@ -1,0 +1,14 @@
+{
+  "name": "coding-test-task",
+  "version": "1.0.0",
+  "description": "SHA3-256",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "keywords": [],
+  "contributors": [],
+  "scripts": {},
+  "author": "Kate Goncharik",
+  "license": "ISC",
+  "dependencies": {}
+}
