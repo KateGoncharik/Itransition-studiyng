@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "SHA3-256",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "private": true,
   "keywords": [],
   "contributors": [],
