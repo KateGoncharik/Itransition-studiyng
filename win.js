@@ -1,11 +1,11 @@
 export class Win {
-  static declareWinner(isPCWin) {
-    if (isPCWin === 0) {
+  static declareWinner(result) {
+    if (result === 0) {
       console.log('Draw');
-    } else if (isPCWin > 0) {
-      console.log('You loose!');
-    } else {
+    } else if (result < 0) {
       console.log('You won!');
+    } else {
+      console.log('You loose!');
     }
   }
 }
