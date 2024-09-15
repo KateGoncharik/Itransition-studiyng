@@ -1,0 +1,16 @@
+{
+  "name": "non-transitive-game",
+  "version": "1.0.0",
+  "description": "non-transitive game",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "keywords": [],
+  "contributors": [],
+  "scripts": {},
+  "author": "Kate Goncharik",
+  "license": "ISC",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
+}
