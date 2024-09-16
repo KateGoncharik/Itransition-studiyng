@@ -6,7 +6,7 @@ import { Menu } from './menu.js';
 
 const moves = process.argv.slice(2);
 console.log('Start');
-
+// TODO validate init moves
 const key = SecretKey.getSecretKey();
 const PCMoveIndex = Moves.getPCMove(moves);
 const hmac = SecretKey.getHMAC(key, moves[PCMoveIndex]);
