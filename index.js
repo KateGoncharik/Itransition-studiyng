@@ -3,6 +3,7 @@ import { SecretKey } from './secret-key.js';
 import { Moves } from './moves.js';
 import { Win } from './win.js';
 import { Menu } from './menu.js';
+import { Table } from './table.js';
 
 const moves = process.argv.slice(2);
 console.log('Start');
@@ -19,7 +20,7 @@ while (true) {
     process.exit(1);
   }
   if (userMove === '?') {
-    console.log('TBD');
+    Table.logTable(moves);
   }
   if (
     parseInt(userMove) &&
