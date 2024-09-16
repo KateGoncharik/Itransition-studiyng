@@ -1,16 +1,13 @@
+import { USER_RESULTS } from './constants.js';
+
 export class Win {
   static declareWinner(result) {
-    const userResults = {
-      draw: 'Draw!',
-      win: 'You won!',
-      lose: 'You lost!',
-    };
     if (result === 0) {
-      console.log(userResults.draw);
+      console.log(USER_RESULTS.draw);
     } else if (result < 0) {
-      console.log(userResults.win);
+      console.log(USER_RESULTS.userWon);
     } else {
-      console.log(userResults.lose);
+      console.log(USER_RESULTS.userLost);
     }
   }
 }

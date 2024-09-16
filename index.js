@@ -1,43 +1,17 @@
-import readlineSync from 'readline-sync';
 import { Security } from './security.js';
 import { Moves } from './moves.js';
 import { Win } from './win.js';
 import { Menu } from './menu.js';
-import { Table } from './table.js';
-import { EXIT_MENU_OPTION, HELP_MENU_OPTION } from './constants.js';
 
 const initialMoves = process.argv.slice(2);
-if (initialMoves.length < 1 || initialMoves.length % 2 === 0) {
-  console.log('Try again with odd amount of initial moves');
-  process.exit(2);
-}
+Moves.validateInitialMoves(initialMoves);
 
 const secretKey = Security.getSecretKey();
 const PCMoveIndex = Moves.getPCMove(initialMoves);
 const hmac = Security.getHMAC(secretKey, initialMoves[PCMoveIndex]);
 console.log(hmac);
 Menu.logMenu(initialMoves);
-let userMove;
-
-while (true) {
-  userMove = readlineSync.question('Enter your move: ');
-  if (parseInt(userMove) === EXIT_MENU_OPTION) {
-    process.exit(1);
-  }
-  if (userMove === HELP_MENU_OPTION) {
-    Table.logTable(initialMoves);
-  }
-  const isValidMove = (move) =>
-    (move && move >= EXIT_MENU_OPTION && move <= initialMoves.length) ||
-    move === '?';
-  if (isValidMove(parseInt(userMove))) {
-    break;
-  }
-  console.log(
-    `Your move should contain only numbers from 0 to ${initialMoves.length} or ?`
-  );
-}
-
+const userMove = Moves.getUserMove(initialMoves);
 const userMoveIndex = userMove - 1;
 console.log(`Your move is ${initialMoves[userMoveIndex]}`);
 const sideMovesAmount = Math.floor(initialMoves.length / 2);

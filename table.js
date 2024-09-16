@@ -1,34 +1,30 @@
 import AsciiTable from 'ascii-table/ascii-table.js';
+import { USER_RESULTS } from './constants.js';
 
 export class Table {
   static logTable(moves) {
-    const table = new AsciiTable('');
+    const table = new AsciiTable();
     const twoPlayersHeading = 'v PC\\User >';
     const headings = [twoPlayersHeading, ...moves];
     table.setHeading(...headings);
 
     const halfMovesAmount = Math.floor(moves.length / 2);
-    const possibleResults = {
-      draw: 'draw',
-      win: 'win',
-      lose: 'lose',
-    };
     moves.forEach((PCMove, PCMoveIndex) => {
       const row = [PCMove];
 
       moves.forEach((_, userMoveIndex) => {
-        const result = Math.sign(
+        const PCResult = Math.sign(
           ((PCMoveIndex - userMoveIndex + halfMovesAmount + moves.length) %
             moves.length) -
             halfMovesAmount
         );
 
-        if (result === 0) {
-          row.push(possibleResults.draw);
-        } else if (result === 1) {
-          row.push(possibleResults.lose);
+        if (PCResult === 0) {
+          row.push(USER_RESULTS.draw);
+        } else if (PCResult === 1) {
+          row.push(USER_RESULTS.userLost);
         } else {
-          row.push(possibleResults.win);
+          row.push(USER_RESULTS.userWon);
         }
       });
 
