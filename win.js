@@ -3,7 +3,7 @@ export class Win {
     if (result === 0) {
       console.log('Draw');
     } else if (result < 0) {
-      console.log('You won!');
+      console.log('You win!');
     } else {
       console.log('You loose!');
     }
