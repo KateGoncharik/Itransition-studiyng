@@ -1,18 +1,21 @@
 import readlineSync from 'readline-sync';
-import { SecretKey } from './secret-key.js';
+import { Security } from './secret-key.js';
 import { Moves } from './moves.js';
 import { Win } from './win.js';
 import { Menu } from './menu.js';
 import { Table } from './table.js';
 
-const moves = process.argv.slice(2);
-console.log('Start');
-// TODO validate init moves
-const key = SecretKey.getSecretKey();
-const PCMoveIndex = Moves.getPCMove(moves);
-const hmac = SecretKey.getHMAC(key, moves[PCMoveIndex]);
+const initialMoves = process.argv.slice(2);
+if (initialMoves.length < 1 || initialMoves.length % 2 === 0) {
+  console.log('Try again with odd amount of initial moves');
+  process.exit(2);
+}
+
+const secretKey = Security.getSecretKey();
+const PCMoveIndex = Moves.getPCMove(initialMoves);
+const hmac = Security.getHMAC(secretKey, initialMoves[PCMoveIndex]);
 console.log(hmac);
-Menu.logMenu(moves);
+Menu.logMenu(initialMoves);
 let userMove;
 while (true) {
   userMove = readlineSync.question('Enter your move: ');
@@ -20,30 +23,26 @@ while (true) {
     process.exit(1);
   }
   if (userMove === '?') {
-    Table.logTable(moves);
+    Table.logTable(initialMoves);
   }
-  if (
-    parseInt(userMove) &&
-    parseInt(userMove) >= 0 &&
-    parseInt(userMove) <= moves.length
-  ) {
+  const isValidMove = (move) =>
+    (move && move >= 0 && move <= initialMoves.length) || move === '?';
+  if (isValidMove(parseInt(userMove))) {
     break;
   }
-
   console.log(
-    `Wrong input. Should be only numbers from 0 to ${moves.length} or ?`
+    `Your move should contain only numbers from 0 to ${initialMoves.length} or ?`
   );
 }
 
 const userMoveIndex = userMove - 1;
-console.log('Your move is ' + moves[userMoveIndex]);
-const sideMovesAmount = Math.floor(moves.length / 2);
+console.log('Your move is ' + initialMoves[userMoveIndex]);
+const sideMovesAmount = Math.floor(initialMoves.length / 2);
 const resultForPC = Math.sign(
-  ((PCMoveIndex - userMoveIndex + sideMovesAmount + moves.length) %
-    moves.length) -
+  ((PCMoveIndex - userMoveIndex + sideMovesAmount + initialMoves.length) %
+    initialMoves.length) -
     sideMovesAmount
 );
 Win.declareWinner(resultForPC);
-console.log('PC move is ' + moves[PCMoveIndex]);
-console.log('HMAC key: ' + key);
-console.log('Finish');
+console.log(`PC move is ${initialMoves[PCMoveIndex]}`);
+console.log(`HMAC key: ${secretKey}`);
