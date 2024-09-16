@@ -7,8 +7,14 @@ export class Moves {
     return Math.floor(Math.random() * moves.length);
   }
   static validateInitialMoves(initialMoves) {
-    if (initialMoves.length < 1 || initialMoves.length % 2 === 0) {
-      console.log('Try again with odd amount of initial moves');
+    const uniqueValues = new Set(initialMoves);
+
+    if (
+      initialMoves.length < 1 ||
+      initialMoves.length % 2 === 0 ||
+      uniqueValues.length !== initialMoves.length
+    ) {
+      console.log('Try again with odd amount of unique initial moves');
       process.exit(2);
     }
   }
