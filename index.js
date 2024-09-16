@@ -1,9 +1,10 @@
 import readlineSync from 'readline-sync';
-import { Security } from './secret-key.js';
+import { Security } from './security.js';
 import { Moves } from './moves.js';
 import { Win } from './win.js';
 import { Menu } from './menu.js';
 import { Table } from './table.js';
+import { EXIT_MENU_OPTION, HELP_MENU_OPTION } from './constants.js';
 
 const initialMoves = process.argv.slice(2);
 if (initialMoves.length < 1 || initialMoves.length % 2 === 0) {
@@ -17,16 +18,18 @@ const hmac = Security.getHMAC(secretKey, initialMoves[PCMoveIndex]);
 console.log(hmac);
 Menu.logMenu(initialMoves);
 let userMove;
+
 while (true) {
   userMove = readlineSync.question('Enter your move: ');
-  if (userMove === '0') {
+  if (parseInt(userMove) === EXIT_MENU_OPTION) {
     process.exit(1);
   }
-  if (userMove === '?') {
+  if (userMove === HELP_MENU_OPTION) {
     Table.logTable(initialMoves);
   }
   const isValidMove = (move) =>
-    (move && move >= 0 && move <= initialMoves.length) || move === '?';
+    (move && move >= EXIT_MENU_OPTION && move <= initialMoves.length) ||
+    move === '?';
   if (isValidMove(parseInt(userMove))) {
     break;
   }
@@ -36,7 +39,7 @@ while (true) {
 }
 
 const userMoveIndex = userMove - 1;
-console.log('Your move is ' + initialMoves[userMoveIndex]);
+console.log(`Your move is ${initialMoves[userMoveIndex]}`);
 const sideMovesAmount = Math.floor(initialMoves.length / 2);
 const resultForPC = Math.sign(
   ((PCMoveIndex - userMoveIndex + sideMovesAmount + initialMoves.length) %

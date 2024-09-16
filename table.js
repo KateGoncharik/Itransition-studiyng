@@ -3,28 +3,32 @@ import AsciiTable from 'ascii-table/ascii-table.js';
 export class Table {
   static logTable(moves) {
     const table = new AsciiTable('');
-
-    const headings = ['v PC\\User >', ...moves];
+    const twoPlayersHeading = 'v PC\\User >';
+    const headings = [twoPlayersHeading, ...moves];
     table.setHeading(...headings);
 
-    const sideMovesAmount = Math.floor(moves.length / 2);
-
+    const halfMovesAmount = Math.floor(moves.length / 2);
+    const possibleResults = {
+      draw: 'draw',
+      win: 'win',
+      lose: 'lose',
+    };
     moves.forEach((PCMove, PCMoveIndex) => {
       const row = [PCMove];
 
       moves.forEach((_, userMoveIndex) => {
         const result = Math.sign(
-          ((PCMoveIndex - userMoveIndex + sideMovesAmount + moves.length) %
+          ((PCMoveIndex - userMoveIndex + halfMovesAmount + moves.length) %
             moves.length) -
-            sideMovesAmount
+            halfMovesAmount
         );
 
         if (result === 0) {
-          row.push('Draw');
+          row.push(possibleResults.draw);
         } else if (result === 1) {
-          row.push('Lose');
+          row.push(possibleResults.lose);
         } else {
-          row.push('Win');
+          row.push(possibleResults.win);
         }
       });
 
