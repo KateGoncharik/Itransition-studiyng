@@ -12,7 +12,7 @@ export class Moves {
     if (
       initialMoves.length < 1 ||
       initialMoves.length % 2 === 0 ||
-      uniqueValues.length !== initialMoves.length
+      uniqueValues.size !== initialMoves.length
     ) {
       console.log('Try again with odd amount of unique initial moves');
       process.exit(2);
