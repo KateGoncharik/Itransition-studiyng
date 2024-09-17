@@ -31,7 +31,7 @@ _Completed: September 2024_
 
 For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/).
 
-Here is the [video-example](https://www.youtube.com/watch?v=T7nIC433wkY) of game works.
+Here is the [video demonstration](https://www.youtube.com/watch?v=T7nIC433wkY) of the game.
 
 ### Task description
 
