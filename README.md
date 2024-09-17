@@ -29,6 +29,8 @@ _Completed: September 2024_
 
 <img src='./public/game-view.png' text-align="center" alt="game-process">
 
+<img src='./public/help-table.png' text-align="center" alt="help=table">
+
 For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/).
 
 Here is the [video demonstration](https://www.youtube.com/watch?v=T7nIC433wkY) of the game.
