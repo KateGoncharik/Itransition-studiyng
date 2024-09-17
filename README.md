@@ -2,6 +2,7 @@
 
 <div align="center">
   <h1 align="center">Task 1</h1>
+  <img src="./public/usage-example.png">
 </div>
 
 <!-- TABLE OF CONTENTS -->
@@ -66,10 +67,10 @@ The file must be named `lcs.js`.
    npm install
    ```
 
-3. Run index.js (with any arguments instead of 'ABCDEFZ WBCDXYZ')
+3. Run lcs.js (with any arguments instead of 'ABCDEFZ WBCDXYZ')
 
    ```txt
-   node index.js ABCDEFZ WBCDXYZ
+   node lcs.js ABCDEFZ WBCDXYZ
    ```
 
 Here are some test-cases:
