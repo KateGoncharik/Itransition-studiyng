@@ -49,6 +49,8 @@ Here is the [video demonstration](https://www.youtube.com/watch?v=T7nIC433wkY) o
 
 [![Javascript][Javascript]][Javascript-url]
 
+[![Node-js][Node-js]][Node-js-url]
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
@@ -77,3 +79,5 @@ Here is the [video demonstration](https://www.youtube.com/watch?v=T7nIC433wkY) o
 [NPM-url]: https://www.npmjs.com
 [Javascript]: https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E
 [Javascript-url]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/What_is_JavaScript
+[Node-js]: https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
+[Node-js-url]: https://nodejs.org/en
