@@ -55,18 +55,21 @@ Here is the [video demonstration](https://www.youtube.com/watch?v=T7nIC433wkY) o
 
 1. Clone the repo
 
-   sh
+   ```txt
    git clone <https://github.com/KateGoncharik/Itransition-studiyng.git>
+   ```
 
 2. Install NPM packages
 
-   sh
+   ```txt
    npm install
+   ```
 
 3. Run game (with any arguments instead of 'A B C')
 
-   sh
+   ```txt
    node index.js A B C
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
