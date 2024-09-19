@@ -1,12 +1,32 @@
+let unsubscribeFromUsers = null; // Переменная для хранения ссылки на слушателя
+
 auth.onAuthStateChanged((user) => {
   if (user) {
     console.log("user logged in: ", user);
+
+    unsubscribeFromUsers = db.collection("users").onSnapshot((snapshot) => {
+      const users = [];
+      snapshot.forEach((doc) => {
+        users.push(doc);
+      });
+
+      setupUsers(users);
+    });
+
     db.collection("users")
       .get()
       .then((snapshot) => {
         setupUsers(snapshot.docs);
       });
+
+    setupUI(user);
   } else {
+    if (unsubscribeFromUsers) {
+      unsubscribeFromUsers();
+      unsubscribeFromUsers = null;
+    }
+
+    setupUI();
     console.log("user logged out");
     setupUsers([]);
   }
@@ -20,8 +40,14 @@ signupForm.addEventListener("submit", (e) => {
   const email = signupForm["signup-email"].value;
   const password = signupForm["signup-password"].value;
 
-  auth.createUserWithEmailAndPassword(email, password).then((cred) => {
+  auth.createUserWithEmailAndPassword(email, password).then(async (cred) => {
     console.log(cred.user);
+
+    await db.collection("users").doc(cred.user.uid).set({
+      email: email,
+      status: "active",
+      lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+    });
     const modal = document.querySelector("#modal-signup");
     M.Modal.getInstance(modal).close();
     signupForm.reset();
@@ -50,3 +76,15 @@ loginForm.addEventListener("submit", (e) => {
     loginForm.reset();
   });
 });
+
+const deleteUser = (userId) => {
+  db.collection("users")
+    .doc(userId)
+    .delete()
+    .then(() => {
+      console.log("User deleted successfully");
+    })
+    .catch((error) => {
+      console.error("Error deleting user: ", error);
+    });
+};
