@@ -1,9 +1,6 @@
 import { Component } from '../../component.js';
-import { authPage } from '../auth-page.js';
-import { SelectedUsers } from './selected-users.js';
 
 class TableComponent extends Component {
-  selectedUsers = new SelectedUsers();
   constructor({ headers = [], users = [] }) {
     super({ tag: 'table', className: ' table user-table' });
     const thead = new Component({ tag: 'thead' });
@@ -41,10 +38,10 @@ class TableComponent extends Component {
     const checkbox = new Component({ tag: 'input' });
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('data-email', user.data().email);
-    checkbox.addListener('change', (e) => {
-      const email = user.data().email;
-      this.selectedUsers.updateSelectedUsers(email, e.target.checked);
-    });
+    // checkbox.addListener('change', (e) => {
+    //   const email = user.data().email;
+    //   console.log(email);
+    // });
     checkboxCell.append(checkbox);
     const emailCell = new Component({ tag: 'td', text: user.data().email });
     const statusCell = new Component({ tag: 'td', text: user.data().status });
