@@ -1,13 +1,21 @@
 import { Component } from '../../component.js';
-import { deleteUser } from '../app.js';
 import { authPage } from '../auth-page.js';
+import { SelectedUsers } from './selected-users.js';
 
 class TableComponent extends Component {
+  selectedUsers = new SelectedUsers();
   constructor({ headers = [], users = [] }) {
-    super({ tag: 'table', className: 'user-table' });
-
+    super({ tag: 'table', className: ' table user-table' });
     const thead = new Component({ tag: 'thead' });
     const headerRow = new Component({ tag: 'tr' });
+
+    const selectAll = new Component({
+      tag: 'input',
+      className: 'select-all',
+    });
+    selectAll.setAttribute('type', 'checkbox');
+    const selectAllLabel = new Component({ tag: 'label' }, selectAll);
+    headerRow.append(selectAllLabel);
 
     headers.forEach((headerText) => {
       const th = new Component({ tag: 'th', text: headerText });
@@ -29,6 +37,15 @@ class TableComponent extends Component {
   createUserRow(user) {
     const row = new Component({ tag: 'tr' });
 
+    const checkboxCell = new Component({ tag: 'td' });
+    const checkbox = new Component({ tag: 'input' });
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.setAttribute('data-email', user.data().email);
+    checkbox.addListener('change', (e) => {
+      const email = user.data().email;
+      this.selectedUsers.updateSelectedUsers(email, e.target.checked);
+    });
+    checkboxCell.append(checkbox);
     const emailCell = new Component({ tag: 'td', text: user.data().email });
     const statusCell = new Component({ tag: 'td', text: user.data().status });
 
@@ -37,37 +54,18 @@ class TableComponent extends Component {
       : 'N/A';
     const lastLoginCell = new Component({ tag: 'td', text: lastLogin });
 
-    const deleteButton = new Component({ tag: 'button', text: 'Удалить' });
-    deleteButton.setAttribute('data-id', user.id);
-    deleteButton.addListener('click', () => this.deleteUser(user.id));
-
-    const deleteCell = new Component({ tag: 'td' });
-    deleteCell.append(deleteButton);
-
-    row.appendChildren([emailCell, statusCell, lastLoginCell, deleteCell]);
+    row.appendChildren([checkboxCell, emailCell, lastLoginCell, statusCell]);
 
     return row;
-  }
-
-  deleteUser(userId) {
-    console.log(`User with ID ${userId} will be deleted`);
-    deleteUser(userId);
   }
 }
 
 export function renderUserTable(users) {
-  const container = document.querySelector('.page-content');
+  const container = document.querySelector('.table-container');
 
-  const headers = ['Email', 'Status', 'Last Login', 'Actions'];
+  const headers = ['Email', 'Last Login', 'Status'];
   const userTable = new TableComponent({ headers, users });
 
   container.innerHTML = '';
   container.appendChild(userTable.getNode());
-}
-
-export function renderAuthPage() {
-  const container = document.querySelector('.page-content');
-
-  container.innerHTML = '';
-  container.appendChild(authPage.getNode());
 }

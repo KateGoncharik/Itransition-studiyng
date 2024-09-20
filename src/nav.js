@@ -1,25 +1,29 @@
-import { Component } from "../component.js";
-
-const buttonsData = [
-  { text: "login", className: "login-button" },
-  { text: "logout", className: "logout-button" },
-];
+import { Component } from '../component.js';
+import { auth } from '../firebase-config.js';
 
 const createNavButtons = () => {
-  return buttonsData.map((buttonData) => {
-    return new Component({
-      tag: "button",
-      className: "nav-button",
-      text: buttonData.text,
-    });
+  const loginButton = new Component({
+    tag: 'button',
+    className: 'login-button d-none',
+    text: 'login',
   });
+  const logoutButton = new Component({
+    tag: 'button',
+    className: 'logout-button d-none',
+    text: 'logout',
+  });
+  logoutButton.addListener('click', (e) => {
+    e.preventDefault();
+    auth.signOut();
+  });
+  return [loginButton, logoutButton];
 };
 
 export const nav = new Component(
   {
-    tag: "nav",
-    className: "navigation container-fluid",
+    tag: 'nav',
+    className: 'navigation container-fluid',
   },
-  new Component({ tag: "h3", text: "Hello!" }),
+  new Component({ tag: 'h3', text: 'Hello!' }),
   ...createNavButtons()
 );
