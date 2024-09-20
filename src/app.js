@@ -1,6 +1,12 @@
 import { Component } from '../component.js';
+import { auth, db } from '../firebase-config.js';
 import { renderAuthPage, renderUserTable } from './main/users-table.js';
 import { nav } from './nav.js';
+import {
+  collection,
+  onSnapshot,
+  getDocs,
+} from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
 export const app = new Component(
   {},
@@ -17,7 +23,9 @@ let unsubscribeFromUsers = null;
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    unsubscribeFromUsers = db.collection('users').onSnapshot((snapshot) => {
+    const usersCollection = collection(db, 'users');
+
+    unsubscribeFromUsers = onSnapshot(usersCollection, (snapshot) => {
       const users = [];
       snapshot.forEach((doc) => {
         users.push(doc);
@@ -26,13 +34,11 @@ auth.onAuthStateChanged((user) => {
       renderUserTable(users);
     });
 
-    db.collection('users')
-      .get()
-      .then((snapshot) => {
-        renderUserTable(snapshot.docs);
-      });
+    getDocs(usersCollection).then((snapshot) => {
+      renderUserTable(snapshot.docs);
+    });
   } else {
-    console.log('aa');
+    console.log('User is not authenticated');
 
     if (unsubscribeFromUsers) {
       unsubscribeFromUsers();
@@ -43,9 +49,8 @@ auth.onAuthStateChanged((user) => {
 });
 
 export const deleteUser = (userId) => {
-  db.collection('users')
-    .doc(userId)
-    .delete()
+  const userDoc = doc(db, 'users', userId);
+  deleteDoc(userDoc)
     .then(() => {
       console.log('User deleted successfully');
     })

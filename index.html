@@ -12,26 +12,19 @@
     <title>Users</title>
   </head>
   <body>
-    <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-firestore.js"></script>
-    <script>
-      var config = {
-        apiKey: 'AIzaSyCyARYEMyp-_ifU3rJ9rrdM2rFQebHI8e8',
-        authDomain: 'managinguserstask.firebaseapp.com',
-        projectId: 'managinguserstask',
-        storageBucket: 'managinguserstask.appspot.com',
-        messagingSenderId: '258101266080',
-        appId: '1:258101266080:web:0d06826476a7b094a2abc5',
-        measurementId: 'G-GE796WMZT2',
-      };
-      firebase.initializeApp(config);
-
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-
-      db.settings({ timestampsInSnapshots: true });
-    </script>
+    <script
+      type="module"
+      src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"
+    ></script>
+    <script
+      type="module"
+      src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"
+    ></script>
+    <script
+      type="module"
+      src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"
+    ></script>
+    <script type="module" src="firebaseConfig.js"></script>
     <script type="module" src="src/auth.js"></script>
     <script type="module" src="index.js"></script>
   </body>
