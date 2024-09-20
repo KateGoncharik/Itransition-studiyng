@@ -7,7 +7,7 @@ import {
   where,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-import { getSelectedUsers } from './selected-users.js';
+import { getSelectedUsers } from './get-selected-users.js';
 import { db } from '../../firebase-config.js';
 
 export const createMenu = () => {

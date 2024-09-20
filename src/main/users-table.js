@@ -38,10 +38,7 @@ class TableComponent extends Component {
     const checkbox = new Component({ tag: 'input' });
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('data-email', user.data().email);
-    // checkbox.addListener('change', (e) => {
-    //   const email = user.data().email;
-    //   console.log(email);
-    // });
+
     checkboxCell.append(checkbox);
     const emailCell = new Component({ tag: 'td', text: user.data().email });
     const statusCell = new Component({ tag: 'td', text: user.data().status });
