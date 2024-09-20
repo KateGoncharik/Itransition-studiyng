@@ -7,6 +7,10 @@ import {
   onSnapshot,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import {
+  doc,
+  deleteDoc,
+} from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
 export const app = new Component(
   {},
