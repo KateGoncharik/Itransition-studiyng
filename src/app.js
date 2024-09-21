@@ -46,8 +46,6 @@ auth.onAuthStateChanged((user) => {
 
     b();
   } else {
-    console.log('User is not authenticated');
-
     if (unsubscribeFromUsers) {
       unsubscribeFromUsers();
       unsubscribeFromUsers = null;

@@ -82,7 +82,6 @@ loginForm.addListener('submit', async (e) => {
 
   try {
     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-    console.log('AA', signInMethods);
     if (signInMethods.length === 0) {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, 'users', cred.user.uid), {

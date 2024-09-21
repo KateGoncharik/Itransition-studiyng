@@ -48,9 +48,7 @@ export const blockUser = async (email, userId) => {
       const user = auth.currentUser;
       if (user && user.email === email) {
         await signOut(auth);
-        console.log('User logged out');
       }
-      console.log('User blocked successfully');
     })
     .catch((error) => {
       console.error('Error while blocking user: ', error);
