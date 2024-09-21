@@ -1,38 +1,63 @@
 import { Component } from '../../component.js';
 import {
   doc,
-  deleteDoc,
+  updateDoc,
   collection,
   query,
   where,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
 import { getSelectedUsers } from './get-selected-users.js';
-import { db } from '../../firebase-config.js';
+import { auth, db } from '../../firebase-config.js';
+import { deleteUser } from './menu-actions/delete-user.js';
 
 export const createMenu = () => {
   const deleteButton = new Component({ tag: 'button', text: 'Удалить' });
   deleteButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
-      getUserByEmail(userEmail).then((result) => deleteUser(result.uid));
+      getUserByEmail(userEmail).then((result) =>
+        deleteUser(userEmail, result.uid)
+      );
     });
   });
 
-  return new Component({ className: 'menu container-fluid' }, deleteButton);
+  const blockButton = new Component({ tag: 'button', text: 'Block' });
+  blockButton.addListener('click', () => {
+    getSelectedUsers().forEach(async (userEmail) => {
+      getUserByEmail(userEmail).then((result) =>
+        blockUser(userEmail, result.uid)
+      );
+    });
+  });
+
+  return new Component(
+    { className: 'menu container-fluid' },
+    deleteButton,
+    blockButton
+  );
 };
 
-export const deleteUser = (userId) => {
+export const blockUser = async (email, userId) => {
   const userDoc = doc(db, 'users', userId);
-  deleteDoc(userDoc)
-    .then(() => {
-      console.log('User deleted successfully');
+  await updateDoc(userDoc, {
+    status: 'blocked',
+  })
+    .then(async () => {
+      const user = auth.currentUser;
+      if (user && user.email === email) {
+        await signOut(auth);
+        console.log('User logged out');
+      }
+      console.log('User blocked successfully');
     })
     .catch((error) => {
-      console.error('Error while deleting user: ', error);
+      console.error('Error while blocking user: ', error);
     });
 };
 
-async function getUserByEmail(email) {
+export async function getUserByEmail(email) {
   try {
     const q = query(collection(db, 'users'), where('email', '==', email));
 
@@ -42,12 +67,11 @@ async function getUserByEmail(email) {
       throw new Error(`No user with email ${email}`);
     }
     const userDoc = querySnapshot.docs[0];
-    const userData = {
+
+    return {
       ...userDoc.data(),
       uid: userDoc.id,
     };
-
-    return userData;
   } catch (error) {
     console.error('Error while getting user by email:', error);
   }

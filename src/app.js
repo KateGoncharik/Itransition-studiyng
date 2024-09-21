@@ -1,7 +1,8 @@
 import { Component } from '../component.js';
 import { auth, db } from '../firebase-config.js';
-import { renderAuthPage } from './auth-page.js';
+import { renderAuthPage } from './auth/auth-page.js';
 import { createMainPage } from './main/main-page.js';
+import { getUserByEmail } from './main/menu.js';
 import { renderUserTable } from './main/users-table.js';
 import { nav } from './nav.js';
 import {
@@ -25,6 +26,9 @@ let unsubscribeFromUsers = null;
 
 auth.onAuthStateChanged((user) => {
   if (user) {
+    if (getUserByEmail(user.email).status === 'blocked') {
+      return;
+    }
     const usersCollection = collection(db, 'users');
 
     unsubscribeFromUsers = onSnapshot(usersCollection, (snapshot) => {

@@ -1,17 +1,17 @@
 import { Component } from '../../component.js';
-import { auth, db } from '../../firebase-config.js';
+
 import {
   fetchSignInMethodsForEmail,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 import {
-  collection,
-  getDocs,
   doc,
   setDoc,
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { getUserByEmail } from '../main/menu.js';
+import { auth, db } from '../../firebase-config.js';
 
 export const loginForm = new Component({
   tag: 'form',
@@ -77,25 +77,25 @@ loginForm.addListener('submit', async (e) => {
   const loginEmail = document.querySelector('.login-email');
   const loginPassword = document.querySelector('.login-password');
 
-  const email = loginEmail.value;
-  const password = loginPassword.value;
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value.trim();
 
   try {
     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-
+    console.log('AA', signInMethods);
     if (signInMethods.length === 0) {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-
       await setDoc(doc(db, 'users', cred.user.uid), {
         email,
         status: 'active',
         lastLogin: serverTimestamp(),
       });
-
-      console.log('User registered and logged in');
     } else {
-      await signInWithEmailAndPassword(email, password);
-      console.log('User logged in');
+      await signInWithEmailAndPassword(auth, email, password);
+      const user = await getUserByEmail(email);
+      if (user.status === 'blocked') {
+        auth.signOut();
+      }
     }
   } catch (error) {
     console.error('Error during authentication:', error.message);
