@@ -44,32 +44,30 @@ auth.onAuthStateChanged((user) => {
       renderUserTable(snapshot.docs);
     });
 
-    b();
+    updateNavButtons(true);
   } else {
     if (unsubscribeFromUsers) {
       unsubscribeFromUsers();
       unsubscribeFromUsers = null;
     }
 
-    a();
+    updateNavButtons(false);
     renderAuthPage();
   }
 });
 
-function a() {
+function updateNavButtons(isUserLoggedIn) {
   const loginButton = document.querySelector('.login-button');
-  loginButton.classList.remove('d-none');
-  loginButton.classList.add('d-block');
   const logoutButton = document.querySelector('.logout-button');
-  logoutButton.classList.remove('d-block');
-  logoutButton.classList.add('d-none');
-}
-
-function b() {
-  const loginButton = document.querySelector('.login-button');
-  loginButton.classList.remove('d-block');
-  loginButton.classList.add('d-none');
-  const logoutButton = document.querySelector('.logout-button');
-  logoutButton.classList.remove('d-none');
-  logoutButton.classList.add('d-block');
+  if (isUserLoggedIn === true) {
+    loginButton.classList.remove('d-block');
+    loginButton.classList.add('d-none');
+    logoutButton.classList.remove('d-none');
+    logoutButton.classList.add('d-block');
+  } else {
+    loginButton.classList.remove('d-none');
+    loginButton.classList.add('d-block');
+    logoutButton.classList.remove('d-block');
+    logoutButton.classList.add('d-none');
+  }
 }
