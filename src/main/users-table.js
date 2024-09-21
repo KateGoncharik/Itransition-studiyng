@@ -12,6 +12,17 @@ class TableComponent extends Component {
     });
     selectAll.setAttribute('type', 'checkbox');
     const selectAllLabel = new Component({ tag: 'label' }, selectAll);
+
+    selectAll.addListener('change', () => {
+      const selectAllCheckbox = document.querySelector('.select-all');
+      const checkboxes = document.querySelectorAll(
+        'input[type="checkbox"]:not(.select-all)'
+      );
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAllCheckbox.checked;
+      });
+    });
     headerRow.append(selectAllLabel);
 
     headers.forEach((headerText) => {
