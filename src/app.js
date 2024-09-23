@@ -2,7 +2,7 @@ import { Component } from '../component.js';
 import { auth, db } from '../firebase-config.js';
 import { renderAuthPage } from './auth/auth-page.js';
 import { createMainPage } from './main/main-page.js';
-import { getUserByEmail } from './main/menu.js';
+import { getUserByEmail } from './main/get-user-by-email.js';
 import { renderUserTable } from './main/users-table.js';
 import { nav } from './nav.js';
 import {

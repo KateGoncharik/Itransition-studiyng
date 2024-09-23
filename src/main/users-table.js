@@ -52,6 +52,8 @@ class TableComponent extends Component {
 
     checkboxCell.append(checkbox);
     const emailCell = new Component({ tag: 'td', text: user.data().email });
+    const nameCell = new Component({ tag: 'td', text: user.data().id });
+
     const statusCell = new Component({ tag: 'td', text: user.data().status });
 
     const lastLogin = user.data().lastLogin
@@ -59,7 +61,13 @@ class TableComponent extends Component {
       : 'N/A';
     const lastLoginCell = new Component({ tag: 'td', text: lastLogin });
 
-    row.appendChildren([checkboxCell, emailCell, lastLoginCell, statusCell]);
+    row.appendChildren([
+      checkboxCell,
+      nameCell,
+      emailCell,
+      lastLoginCell,
+      statusCell,
+    ]);
 
     return row;
   }
@@ -68,7 +76,7 @@ class TableComponent extends Component {
 export function renderUserTable(users) {
   const container = document.querySelector('.table-container');
 
-  const headers = ['Email', 'Last Login', 'Status'];
+  const headers = ['Id', 'Email', 'Last Login', 'Status'];
   const userTable = new TableComponent({ headers, users });
 
   container.innerHTML = '';

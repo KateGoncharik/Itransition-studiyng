@@ -24,6 +24,6 @@ export const nav = new Component(
     tag: 'nav',
     className: 'navigation container-fluid',
   },
-  new Component({ tag: 'h3', text: 'Hello!' }),
+  new Component({ tag: 'h3', className: 'main-title' }),
   ...createNavButtons()
 );

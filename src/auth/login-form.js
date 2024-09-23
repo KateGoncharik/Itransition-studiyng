@@ -10,7 +10,7 @@ import {
   setDoc,
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-import { getUserByEmail } from '../main/menu.js';
+import { getUserByEmail } from '../main/get-user-by-email.js';
 import { auth, db } from '../../firebase-config.js';
 
 export const loginForm = new Component({
@@ -84,13 +84,18 @@ loginForm.addListener('submit', async (e) => {
     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
     if (signInMethods.length === 0) {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
+
       await setDoc(doc(db, 'users', cred.user.uid), {
         email,
+        id: email.split('@')[0],
         status: 'active',
         lastLogin: serverTimestamp(),
       });
+      updateTitle();
     } else {
       await signInWithEmailAndPassword(auth, email, password);
+      updateTitle();
+
       const user = await getUserByEmail(email);
       if (user.status === 'blocked') {
         auth.signOut();
@@ -100,3 +105,10 @@ loginForm.addListener('submit', async (e) => {
     console.error('Error during authentication:', error.message);
   }
 });
+
+async function updateTitle() {
+  const title = document.querySelector('.main-title');
+  const userInAuth = auth.currentUser;
+  const userInDB = await getUserByEmail(userInAuth.email);
+  title.innerHTML = `Hello, ${userInDB.id}!`;
+}
