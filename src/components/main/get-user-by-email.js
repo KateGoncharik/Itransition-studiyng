@@ -4,7 +4,7 @@ import {
   where,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-import { db } from '../../firebase-config.js';
+import { db } from '../../../firebase-config.js';
 
 export async function getUserByEmail(email) {
   try {

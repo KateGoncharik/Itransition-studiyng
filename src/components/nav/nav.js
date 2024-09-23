@@ -1,5 +1,5 @@
-import { Component } from '../component.js';
-import { auth } from '../firebase-config.js';
+import { Component } from '../../../component.js';
+import { auth } from '../../../firebase-config.js';
 
 const createNavButtons = () => {
   const loginButton = new Component({

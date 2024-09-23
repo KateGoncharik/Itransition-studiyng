@@ -1,10 +1,11 @@
 import { Component } from '../component.js';
 import { auth, db } from '../firebase-config.js';
-import { renderAuthPage } from './auth/auth-page.js';
-import { createMainPage } from './main/main-page.js';
-import { getUserByEmail } from './main/get-user-by-email.js';
-import { renderUserTable } from './main/users-table.js';
-import { nav } from './nav.js';
+import { renderAuthPage } from './components/auth/auth-page.js';
+import { createMainPage } from './components/main/main-page.js';
+import { getUserByEmail } from './components/main/get-user-by-email.js';
+import { renderUserTable } from './components/main/users-table.js';
+import { nav } from './components/nav/nav.js';
+import { updateNavButtons } from './components/nav/update-nav-buttons.js';
 import {
   collection,
   onSnapshot,
@@ -55,19 +56,3 @@ auth.onAuthStateChanged((user) => {
     renderAuthPage();
   }
 });
-
-function updateNavButtons(isUserLoggedIn) {
-  const loginButton = document.querySelector('.login-button');
-  const logoutButton = document.querySelector('.logout-button');
-  if (isUserLoggedIn === true) {
-    loginButton.classList.remove('d-block');
-    loginButton.classList.add('d-none');
-    logoutButton.classList.remove('d-none');
-    logoutButton.classList.add('d-block');
-  } else {
-    loginButton.classList.remove('d-none');
-    loginButton.classList.add('d-block');
-    logoutButton.classList.remove('d-block');
-    logoutButton.classList.add('d-none');
-  }
-}

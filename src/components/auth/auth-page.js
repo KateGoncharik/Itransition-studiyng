@@ -1,4 +1,4 @@
-import { Component } from '../../component.js';
+import { Component } from '../../../component.js';
 import { loginForm } from './login-form.js';
 
 export const authPage = new Component({ className: 'auth-page' }, loginForm);

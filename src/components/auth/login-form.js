@@ -1,4 +1,4 @@
-import { Component } from '../../component.js';
+import { Component } from '../../../component.js';
 
 import {
   fetchSignInMethodsForEmail,
@@ -11,7 +11,7 @@ import {
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 import { getUserByEmail } from '../main/get-user-by-email.js';
-import { auth, db } from '../../firebase-config.js';
+import { auth, db } from '../../../firebase-config.js';
 
 export const loginForm = new Component({
   tag: 'form',

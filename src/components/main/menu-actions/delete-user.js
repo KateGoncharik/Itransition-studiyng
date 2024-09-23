@@ -1,4 +1,3 @@
-import { db, auth } from '../../../firebase-config.js';
 import {
   doc,
   deleteDoc,
@@ -7,6 +6,7 @@ import {
   deleteUser as deleteAuthUser,
   signOut,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { db, auth } from '../../../../firebase-config.js';
 
 export async function deleteUser(email, uid) {
   try {

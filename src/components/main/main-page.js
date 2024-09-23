@@ -1,5 +1,5 @@
-import { Component } from '../../component.js';
-import { createMenu } from './menu.js';
+import { Component } from '../../../component.js';
+import { createMenu } from './create-menu.js';
 
 export const createMainPage = () => {
   const container = document.querySelector('.page-content');
