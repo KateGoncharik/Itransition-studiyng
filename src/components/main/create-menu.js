@@ -7,7 +7,10 @@ import { blockUser } from './menu-actions/block-user.js';
 import { unblockUser } from './menu-actions/unblock-user.js';
 
 export const createMenu = () => {
-  const deleteButton = new Component({ tag: 'button', text: 'Delete' });
+  const deleteButton = new Component(
+    { tag: 'button', text: 'Delete' },
+    new Component({ tag: 'span', className: 'bi bi-trash' })
+  );
   deleteButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
       getUserByEmail(userEmail).then((result) =>
@@ -16,7 +19,10 @@ export const createMenu = () => {
     });
   });
 
-  const blockButton = new Component({ tag: 'button', text: 'Block' });
+  const blockButton = new Component(
+    { tag: 'button', text: 'Block' },
+    new Component({ tag: 'span', className: 'bi bi-lock' })
+  );
   blockButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
       getUserByEmail(userEmail).then((result) =>
@@ -24,7 +30,10 @@ export const createMenu = () => {
       );
     });
   });
-  const unblockButton = new Component({ tag: 'button', text: 'Unblock' });
+  const unblockButton = new Component(
+    { tag: 'button', text: 'Unblock' },
+    new Component({ tag: 'span', className: 'bi bi-unlock' })
+  );
   unblockButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
       getUserByEmail(userEmail).then((result) => unblockUser(result.uid));

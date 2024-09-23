@@ -8,6 +8,7 @@ import {
 import {
   doc,
   setDoc,
+  updateDoc,
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 import { getUserByEmail } from '../main/get-user-by-email.js';
@@ -77,7 +78,7 @@ loginForm.addListener('submit', async (e) => {
   const loginEmail = document.querySelector('.login-email');
   const loginPassword = document.querySelector('.login-password');
 
-  const email = loginEmail.value.trim();
+  const email = loginEmail.value.trim().toLowerCase();
   const password = loginPassword.value.trim();
 
   try {
@@ -90,12 +91,19 @@ loginForm.addListener('submit', async (e) => {
         id: email.split('@')[0],
         status: 'active',
         lastLogin: serverTimestamp(),
+        registrationDate: serverTimestamp(),
       });
       updateTitle();
     } else {
-      await signInWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
       updateTitle();
 
+      const userDoc = doc(db, 'users', cred.user.uid);
+      await updateDoc(userDoc, {
+        lastLogin: serverTimestamp(),
+      }).catch((error) => {
+        console.error('Error while updating last login: ', error);
+      });
       const user = await getUserByEmail(email);
       if (user.status === 'blocked') {
         auth.signOut();
