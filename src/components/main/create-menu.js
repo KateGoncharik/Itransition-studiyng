@@ -7,7 +7,7 @@ import { blockUser } from './menu-actions/block-user.js';
 import { unblockUser } from './menu-actions/unblock-user.js';
 
 export const createMenu = () => {
-  const deleteButton = new Component({ tag: 'button', text: 'Удалить' });
+  const deleteButton = new Component({ tag: 'button', text: 'Delete' });
   deleteButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
       getUserByEmail(userEmail).then((result) =>
