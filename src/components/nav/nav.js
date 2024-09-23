@@ -4,12 +4,12 @@ import { auth } from '../../../firebase-config.js';
 const createNavButtons = () => {
   const loginButton = new Component({
     tag: 'button',
-    className: 'login-button d-none',
+    className: 'nav-item nav-link  login-button d-none',
     text: 'login',
   });
   const logoutButton = new Component({
     tag: 'button',
-    className: 'logout-button d-none',
+    className: ' logout-button btn btn-primary d-none',
     text: 'logout',
   });
   logoutButton.addListener('click', (e) => {
@@ -22,7 +22,7 @@ const createNavButtons = () => {
 export const nav = new Component(
   {
     tag: 'nav',
-    className: 'navigation container-fluid',
+    className: 'navbar bg-light p-2 mt-0 m-1',
   },
   new Component({ tag: 'h3', className: 'main-title' }),
   ...createNavButtons()

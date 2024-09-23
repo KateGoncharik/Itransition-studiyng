@@ -2,8 +2,8 @@ import { Component } from '../../../component.js';
 
 class TableComponent extends Component {
   constructor({ headers = [], users = [] }) {
-    super({ tag: 'table', className: ' table user-table' });
-    const thead = new Component({ tag: 'thead' });
+    super({ tag: 'table', className: ' table m-2 user-table' });
+    const thead = new Component({ tag: 'thead', className: 'thead-light' });
     const headerRow = new Component({ tag: 'tr' });
 
     const selectAll = new Component({
@@ -33,7 +33,10 @@ class TableComponent extends Component {
     thead.append(headerRow);
     this.append(thead);
 
-    const tbody = new Component({ tag: 'tbody', className: 'userTableBody' });
+    const tbody = new Component({
+      tag: 'tbody',
+      className: 'table userTableBody',
+    });
     users.forEach((user) => {
       const row = this.createUserRow(user);
       tbody.append(row);
