@@ -4,7 +4,7 @@ import { auth } from '../../../firebase-config.js';
 const createNavButtons = () => {
   const loginButton = new Component({
     tag: 'button',
-    className: 'nav-item nav-link  login-button d-none',
+    className: ' btn btn-primary login-button d-none',
     text: 'login',
   });
   const logoutButton = new Component({

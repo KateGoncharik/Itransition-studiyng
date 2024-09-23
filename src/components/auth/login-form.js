@@ -16,14 +16,13 @@ import { auth, db } from '../../../firebase-config.js';
 
 export const loginForm = new Component({
   tag: 'form',
-  className: '',
-  text: '',
+  className: 'w-50 m-auto mt-3',
 });
-loginForm.setAttribute('id', 'login-form');
+loginForm.setAttribute('id', 'login-form ');
 
 const emailInput = new Component({
   tag: 'input',
-  className: 'login-email',
+  className: 'login-email form-control',
   text: '',
 });
 emailInput.setAttribute('type', 'email');
@@ -38,14 +37,14 @@ const emailLabel = new Component({
 emailLabel.setAttribute('for', 'login-email');
 
 const emailField = new Component(
-  { tag: 'div', className: 'input-field' },
+  { tag: 'div', className: 'form-group' },
   emailInput,
   emailLabel
 );
 
 const passwordInput = new Component({
   tag: 'input',
-  className: 'login-password',
+  className: 'login-password form-control',
   text: '',
 });
 passwordInput.setAttribute('type', 'password');
@@ -60,15 +59,15 @@ const passwordLabel = new Component({
 passwordLabel.setAttribute('for', 'login-password');
 
 const passwordField = new Component(
-  { tag: 'div', className: 'input-field' },
+  { tag: 'div', className: 'form-group' },
   passwordInput,
   passwordLabel
 );
 
 const loginButton = new Component({
   tag: 'button',
-  className: '',
-  text: 'Login',
+  className: 'btn btn-primary mt-2',
+  text: 'Submit',
 });
 
 loginForm.appendChildren([emailField, passwordField, loginButton]);
