@@ -2,9 +2,9 @@ import { Component } from '../../../component.js';
 
 import { getSelectedUsers } from './get-selected-users.js';
 import { deleteUser } from './menu-actions/delete-user.js';
-import { getUserByEmail } from './get-user-by-email.js';
 import { blockUser } from './menu-actions/block-user.js';
 import { unblockUser } from './menu-actions/unblock-user.js';
+import { formatEmail } from '../auth/format-email.js';
 
 export const createMenu = () => {
   const deleteButton = new Component(
@@ -13,9 +13,7 @@ export const createMenu = () => {
   );
   deleteButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
-      getUserByEmail(userEmail).then((result) =>
-        deleteUser(userEmail, result.uid)
-      );
+      deleteUser(formatEmail(userEmail));
     });
   });
 
@@ -24,11 +22,9 @@ export const createMenu = () => {
     new Component({ tag: 'span', className: 'bi bi-lock p-2' })
   );
   blockButton.addListener('click', () => {
-    getSelectedUsers().forEach(async (userEmail) => {
-      getUserByEmail(userEmail).then((result) =>
-        blockUser(userEmail, result.uid)
-      );
-    });
+    getSelectedUsers().forEach(async (userEmail) =>
+      blockUser(formatEmail(userEmail))
+    );
   });
   const unblockButton = new Component(
     { tag: 'button', text: 'Unblock', className: 'btn btn-primary p-2 m-1' },
@@ -36,7 +32,7 @@ export const createMenu = () => {
   );
   unblockButton.addListener('click', () => {
     getSelectedUsers().forEach(async (userEmail) => {
-      getUserByEmail(userEmail).then((result) => unblockUser(result.uid));
+      unblockUser(formatEmail(userEmail));
     });
   });
 

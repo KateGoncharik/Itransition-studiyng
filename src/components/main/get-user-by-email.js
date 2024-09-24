@@ -1,21 +1,19 @@
 import {
-  collection,
-  query,
-  where,
-  getDocs,
+  doc,
+  getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 import { db } from '../../../firebase-config.js';
+import { formatEmail } from '../auth/format-email.js';
 
 export async function getUserByEmail(email) {
+  const formattedEmail = formatEmail(email);
   try {
-    const q = query(collection(db, 'users'), where('email', '==', email));
+    const userDocRef = doc(db, 'users', formattedEmail);
+    const userDoc = await getDoc(userDocRef);
 
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
+    if (!userDoc.exists()) {
       throw new Error(`No user with email ${email}`);
     }
-    const userDoc = querySnapshot.docs[0];
 
     return {
       ...userDoc.data(),

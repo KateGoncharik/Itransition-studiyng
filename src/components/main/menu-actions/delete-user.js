@@ -8,20 +8,18 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 import { db, auth } from '../../../../firebase-config.js';
 
-export async function deleteUser(email, uid) {
+export async function deleteUser(userEmail) {
   try {
-    const userDocRef = doc(db, 'users', uid);
+    const userDocRef = doc(db, 'users', userEmail);
     await deleteDoc(userDocRef);
 
-    const user = auth.currentUser;
-    if (user && user.uid === uid) {
-      await deleteAuthUser(user);
-    }
+    const currentUser = auth.currentUser;
 
-    if (user && user.email === email) {
+    if (currentUser && currentUser.email === userEmail) {
+      await deleteAuthUser(currentUser);
       await signOut(auth);
     }
   } catch (error) {
-    console.error('Error deleting user:', error);
+    console.error('Error while deleting user:', error);
   }
 }
