@@ -8,6 +8,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 import { auth, db } from '../../../firebase-config.js';
 import { updateTitle } from './update-title.js';
+import { renderLoginPage } from './login-page.js';
 
 export const registrationForm = new Component({
   tag: 'form',
@@ -58,7 +59,7 @@ const passwordField = new Component(
   passwordInput
 );
 
-const loginButton = new Component({
+const submitButton = new Component({
   tag: 'button',
   className: 'btn btn-primary mt-2',
   text: 'Submit',
@@ -68,11 +69,24 @@ const errorField = new Component({
   className: 'error-field opacity-0 text-danger',
 });
 
+const loginButton = new Component({
+  className: 'btn text-info border-none',
+  text: 'login',
+});
+loginButton.addListener('click', (e) => {
+  e.preventDefault();
+  renderLoginPage();
+});
+
 registrationForm.appendChildren([
   emailField,
   passwordField,
   errorField,
-  loginButton,
+  new Component(
+    { className: '', text: 'Already have an account? ' },
+    loginButton
+  ),
+  submitButton,
 ]);
 
 registrationForm.addListener('submit', async (e) => {

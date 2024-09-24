@@ -9,6 +9,7 @@ import {
 import { getUserByEmail } from '../main/get-user-by-email.js';
 import { auth, db } from '../../../firebase-config.js';
 import { updateTitle } from './update-title.js';
+import { renderRegistrationPage } from './registration-page.js';
 
 export const loginForm = new Component({
   tag: 'form',
@@ -60,7 +61,7 @@ const passwordField = new Component(
   passwordInput
 );
 
-const loginButton = new Component({
+const submitButton = new Component({
   tag: 'button',
   className: 'btn btn-primary mt-2',
   text: 'Submit',
@@ -69,8 +70,26 @@ const loginButton = new Component({
 const errorField = new Component({
   className: 'error-field opacity-0 text-danger',
 });
-
-loginForm.appendChildren([emailField, passwordField, errorField, loginButton]);
+////
+const registrationButton = new Component({
+  className: 'btn text-info border-none',
+  text: 'account',
+});
+registrationButton.addListener('click', (e) => {
+  e.preventDefault();
+  renderRegistrationPage();
+});
+////////
+loginForm.appendChildren([
+  emailField,
+  passwordField,
+  errorField,
+  new Component(
+    { className: '', text: 'New here? Create your ' },
+    registrationButton
+  ),
+  submitButton,
+]);
 
 loginForm.addListener('submit', async (e) => {
   e.preventDefault();
