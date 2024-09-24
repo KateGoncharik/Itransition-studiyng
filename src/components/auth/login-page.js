@@ -10,6 +10,7 @@ import { getUserByEmail } from '../main/get-user-by-email.js';
 import { auth, db } from '../../../firebase-config.js';
 import { updateTitle } from './update-title.js';
 import { renderRegistrationPage } from './registration-page.js';
+import { formatEmail } from './format-email.js';
 
 export const loginForm = new Component({
   tag: 'form',
@@ -70,7 +71,6 @@ const submitButton = new Component({
 const errorField = new Component({
   className: 'error-field opacity-0 text-danger',
 });
-////
 const registrationButton = new Component({
   className: 'btn text-info border-none',
   text: 'account',
@@ -79,7 +79,6 @@ registrationButton.addListener('click', (e) => {
   e.preventDefault();
   renderRegistrationPage();
 });
-////////
 loginForm.appendChildren([
   emailField,
   passwordField,
@@ -100,10 +99,10 @@ loginForm.addListener('submit', async (e) => {
   const password = loginPassword.value.trim();
 
   try {
-    const cred = await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(auth, email, password);
     updateTitle();
 
-    const userDoc = doc(db, 'users', cred.user.uid);
+    const userDoc = doc(db, 'users', formatEmail(email));
     await updateDoc(userDoc, {
       lastLogin: serverTimestamp(),
     }).catch((error) => {

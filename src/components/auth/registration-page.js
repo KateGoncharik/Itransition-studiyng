@@ -9,6 +9,7 @@ import {
 import { auth, db } from '../../../firebase-config.js';
 import { updateTitle } from './update-title.js';
 import { renderLoginPage } from './login-page.js';
+import { formatEmail } from './format-email.js';
 
 export const registrationForm = new Component({
   tag: 'form',
@@ -98,13 +99,9 @@ registrationForm.addListener('submit', async (e) => {
   const passwordValue = password.value.trim();
 
   try {
-    const cred = await createUserWithEmailAndPassword(
-      auth,
-      emailValue,
-      passwordValue
-    );
+    await createUserWithEmailAndPassword(auth, emailValue, passwordValue);
 
-    await setDoc(doc(db, 'users', cred.user.uid), {
+    await setDoc(doc(db, 'users', formatEmail(emailValue)), {
       email: emailValue,
       id: emailValue.split('@')[0],
       status: 'active',
