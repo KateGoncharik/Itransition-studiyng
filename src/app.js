@@ -1,6 +1,5 @@
 import { Component } from '../component.js';
 import { auth, db } from '../firebase-config.js';
-import { renderAuthPage } from './components/auth/auth-page.js';
 import { createMainPage } from './components/main/main-page.js';
 import { getUserByEmail } from './components/main/get-user-by-email.js';
 import { renderUserTable } from './components/main/users-table.js';
@@ -11,6 +10,7 @@ import {
   onSnapshot,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { renderLoginPage } from './components/auth/login-page.js';
 
 export const app = new Component(
   {},
@@ -53,6 +53,6 @@ auth.onAuthStateChanged((user) => {
     }
 
     updateNavButtons(false);
-    renderAuthPage();
+    renderLoginPage();
   }
 });

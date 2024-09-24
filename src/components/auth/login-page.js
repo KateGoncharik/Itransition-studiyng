@@ -1,18 +1,14 @@
 import { Component } from '../../../component.js';
 
-import {
-  fetchSignInMethodsForEmail,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 import {
   doc,
-  setDoc,
   updateDoc,
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 import { getUserByEmail } from '../main/get-user-by-email.js';
 import { auth, db } from '../../../firebase-config.js';
+import { updateTitle } from './update-title.js';
 
 export const loginForm = new Component({
   tag: 'form',
@@ -38,8 +34,8 @@ emailLabel.setAttribute('for', 'login-email');
 
 const emailField = new Component(
   { tag: 'div', className: 'form-group' },
-  emailInput,
-  emailLabel
+  emailLabel,
+  emailInput
 );
 
 const passwordInput = new Component({
@@ -60,8 +56,8 @@ passwordLabel.setAttribute('for', 'login-password');
 
 const passwordField = new Component(
   { tag: 'div', className: 'form-group' },
-  passwordInput,
-  passwordLabel
+  passwordLabel,
+  passwordInput
 );
 
 const loginButton = new Component({
@@ -70,7 +66,11 @@ const loginButton = new Component({
   text: 'Submit',
 });
 
-loginForm.appendChildren([emailField, passwordField, loginButton]);
+const errorField = new Component({
+  className: 'error-field opacity-0 text-danger',
+});
+
+loginForm.appendChildren([emailField, passwordField, errorField, loginButton]);
 
 loginForm.addListener('submit', async (e) => {
   e.preventDefault();
@@ -81,41 +81,37 @@ loginForm.addListener('submit', async (e) => {
   const password = loginPassword.value.trim();
 
   try {
-    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-    if (signInMethods.length === 0) {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    updateTitle();
 
-      await setDoc(doc(db, 'users', cred.user.uid), {
-        email,
-        id: email.split('@')[0],
-        status: 'active',
-        lastLogin: serverTimestamp(),
-        registrationDate: serverTimestamp(),
-      });
-      updateTitle();
-    } else {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      updateTitle();
-
-      const userDoc = doc(db, 'users', cred.user.uid);
-      await updateDoc(userDoc, {
-        lastLogin: serverTimestamp(),
-      }).catch((error) => {
-        console.error('Error while updating last login: ', error);
-      });
-      const user = await getUserByEmail(email);
-      if (user.status === 'blocked') {
-        auth.signOut();
-      }
+    const userDoc = doc(db, 'users', cred.user.uid);
+    await updateDoc(userDoc, {
+      lastLogin: serverTimestamp(),
+    }).catch((error) => {
+      console.error('Error while updating last login: ', error);
+    });
+    const user = await getUserByEmail(email);
+    if (user.status === 'blocked') {
+      auth.signOut();
     }
   } catch (error) {
-    console.error('Error during authentication:', error.message);
+    const errorField = document.querySelector('.error-field');
+    errorField.classList.remove('opacity-0');
+    errorField.classList.add('opacity-100');
+    errorField.innerHTML = error.message;
+    console.error('Error during login:', error.message);
   }
 });
 
-async function updateTitle() {
-  const title = document.querySelector('.main-title');
-  const userInAuth = auth.currentUser;
-  const userInDB = await getUserByEmail(userInAuth.email);
-  title.innerHTML = `Hello, ${userInDB.id}!`;
+export function renderLoginPage() {
+  const container = document.querySelector('.page-content');
+
+  container.innerHTML = '';
+  container.appendChild(
+    new Component(
+      { className: 'login-page' },
+      new Component({ tag: 'h1', text: 'Login', className: 'text-center m-3' }),
+      loginForm
+    ).getNode()
+  );
 }
