@@ -25,9 +25,13 @@ export const app = new Component(
 
 let unsubscribeFromUsers = null;
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
   if (user) {
-    if (getUserByEmail(user.email).status === 'blocked') {
+    const userInDB = await getUserByEmail(user.email);
+    const isUserBlocked = userInDB.status === 'blocked';
+    if (isUserBlocked) {
+      updateNavButtons(false);
+      renderLoginPage();
       return;
     }
     const usersCollection = collection(db, 'users');

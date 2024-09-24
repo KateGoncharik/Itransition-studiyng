@@ -8,7 +8,6 @@ export async function updateTitle() {
   title.innerHTML = `Hello, ${userInDB.id}!`;
 }
 export function hideTitle() {
-  console.log('AAA');
   const title = document.querySelector('.main-title');
   title.innerHTML = '';
 }
