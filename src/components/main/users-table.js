@@ -1,20 +1,20 @@
-import { Component } from '../../../component.js';
+import { Component } from "../../../component.js";
 
 class TableComponent extends Component {
   constructor({ headers = [], users = [] }) {
-    super({ tag: 'table', className: ' table m-2 user-table' });
-    const thead = new Component({ tag: 'thead', className: 'thead-light' });
-    const headerRow = new Component({ tag: 'tr' });
+    super({ tag: "table", className: " table m-2 user-table" });
+    const thead = new Component({ tag: "thead", className: "thead-light" });
+    const headerRow = new Component({ tag: "tr" });
 
     const selectAll = new Component({
-      tag: 'input',
-      className: 'select-all',
+      tag: "input",
+      className: "select-all",
     });
-    selectAll.setAttribute('type', 'checkbox');
-    const selectAllLabel = new Component({ tag: 'label' }, selectAll);
+    selectAll.setAttribute("type", "checkbox");
+    const selectAllLabel = new Component({ tag: "label" }, selectAll);
 
-    selectAll.addListener('change', () => {
-      const selectAllCheckbox = document.querySelector('.select-all');
+    selectAll.addListener("change", () => {
+      const selectAllCheckbox = document.querySelector(".select-all");
       const checkboxes = document.querySelectorAll(
         'input[type="checkbox"]:not(.select-all)'
       );
@@ -26,7 +26,7 @@ class TableComponent extends Component {
     headerRow.append(selectAllLabel);
 
     headers.forEach((headerText) => {
-      const th = new Component({ tag: 'th', text: headerText });
+      const th = new Component({ tag: "th", text: headerText });
       headerRow.append(th);
     });
 
@@ -34,8 +34,8 @@ class TableComponent extends Component {
     this.append(thead);
 
     const tbody = new Component({
-      tag: 'tbody',
-      className: 'table userTableBody',
+      tag: "tbody",
+      className: "table userTableBody",
     });
     users.forEach((user) => {
       const row = this.createUserRow(user);
@@ -46,31 +46,31 @@ class TableComponent extends Component {
   }
 
   createUserRow(user) {
-    const row = new Component({ tag: 'tr' });
+    const row = new Component({ tag: "tr" });
 
-    const checkboxCell = new Component({ tag: 'td' });
-    const checkbox = new Component({ tag: 'input' });
-    checkbox.setAttribute('type', 'checkbox');
-    checkbox.setAttribute('data-email', user.data().email);
+    const checkboxCell = new Component({ tag: "td" });
+    const checkbox = new Component({ tag: "input" });
+    checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("data-email", user.data().email);
 
     checkboxCell.append(checkbox);
-    const emailCell = new Component({ tag: 'td', text: user.data().email });
-    const nameCell = new Component({ tag: 'td', text: user.data().id });
+    const emailCell = new Component({ tag: "td", text: user.data().email });
+    const nameCell = new Component({ tag: "td", text: user.data().id });
 
-    const statusCell = new Component({ tag: 'td', text: user.data().status });
+    const statusCell = new Component({ tag: "td", text: user.data().status });
     const registrationDate = user.data().registrationDate
       ? new Date(user.data().registrationDate.seconds * 1000).toLocaleString()
-      : 'N/A';
+      : "N/A";
     const registrationDateCell = new Component({
-      tag: 'td',
+      tag: "td",
       text: registrationDate,
     });
 
     const lastLogin = user.data().lastLogin
       ? new Date(user.data().lastLogin.seconds * 1000).toLocaleString()
-      : 'N/A';
+      : "N/A";
 
-    const lastLoginCell = new Component({ tag: 'td', text: lastLogin });
+    const lastLoginCell = new Component({ tag: "td", text: lastLogin });
 
     row.appendChildren([
       checkboxCell,
@@ -85,12 +85,12 @@ class TableComponent extends Component {
   }
 }
 
-export function renderUserTable(users) {
-  const container = document.querySelector('.table-container');
+export const renderUserTable = (users) => {
+  const container = document.querySelector(".table-container");
 
-  const headers = ['Id', 'Email', 'Registered', 'Last Login', 'Status'];
+  const headers = ["Id", "Email", "Registered", "Last Login", "Status"];
   const userTable = new TableComponent({ headers, users });
 
-  container.innerHTML = '';
+  container.innerHTML = "";
   container.appendChild(userTable.getNode());
-}
+};

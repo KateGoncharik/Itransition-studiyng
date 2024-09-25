@@ -1,3 +1,3 @@
-export function formatEmail(email) {
+export const formatEmail = (email)=> {
   return email.replace(/\./g, '-');
 }

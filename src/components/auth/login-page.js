@@ -130,7 +130,7 @@ loginForm.addListener("submit", async (e) => {
   }
 });
 
-export function renderLoginPage() {
+export const renderLoginPage = () => {
   const container = document.querySelector(".page-content");
 
   container.innerHTML = "";
@@ -141,4 +141,4 @@ export function renderLoginPage() {
       loginForm
     ).getNode()
   );
-}
+};
