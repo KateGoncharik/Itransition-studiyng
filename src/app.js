@@ -26,20 +26,23 @@ export const app = new Component(
   )
 );
 
+export const handleUserIsNotInDBButIsInAuth = () => {
+  auth.signOut();
+  const errorField = document.querySelector(".error-field");
+  errorField.classList.remove("opacity-0");
+  errorField.classList.add("opacity-100");
+  errorField.innerHTML = `No user with email ${user.email} found. Register first`;
+};
+
 let unsubscribeFromUsers = null;
 
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     const userDocRef = doc(db, "users", formatEmail(user.email));
-
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
-      auth.signOut();
-      const errorField = document.querySelector(".error-field");
-      errorField.classList.remove("opacity-0");
-      errorField.classList.add("opacity-100");
-      errorField.innerHTML = `No user with email ${user.email} found. Register first`;
+      handleUserIsNotInDBButIsInAuth();
       return;
     }
 

@@ -104,7 +104,6 @@ loginForm.addListener("submit", async (e) => {
     const userDocRef = doc(db, "users", formatEmail(email));
 
     const userInDB = await getDoc(userDocRef);
-
     if (!userInDB.exists()) {
       return;
     }
@@ -112,6 +111,7 @@ loginForm.addListener("submit", async (e) => {
     updateTitle();
 
     const userDoc = doc(db, "users", formatEmail(email));
+
     await updateDoc(userDoc, {
       lastLogin: serverTimestamp(),
     }).catch((error) => {
