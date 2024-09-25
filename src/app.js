@@ -33,7 +33,6 @@ auth.onAuthStateChanged(async (user) => {
     const userDocRef = doc(db, "users", formatEmail(user.email));
 
     const ssss = await getDoc(userDocRef);
-    console.log(userDocRef);
 
     if (!ssss.exists()) {
       auth.signOut();
