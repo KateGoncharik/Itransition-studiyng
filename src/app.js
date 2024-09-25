@@ -1,7 +1,6 @@
 import { Component } from "../component.js";
 import { auth, db } from "../firebase-config.js";
 import { createMainPage } from "./components/main/main-page.js";
-import { getUserByEmail } from "./components/main/get-user-by-email.js";
 import { renderUserTable } from "./components/main/users-table.js";
 import { nav } from "./components/nav/nav.js";
 import { updateNavButtons } from "./components/nav/update-nav-buttons.js";
@@ -14,6 +13,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 import { renderLoginPage } from "./components/auth/login-page.js";
 import { formatEmail } from "./components/auth/format-email.js";
+import { getUserByEmail } from "./components/main/get-user-by-email.js";
 
 export const app = new Component(
   {},
@@ -32,9 +32,9 @@ auth.onAuthStateChanged(async (user) => {
   if (user) {
     const userDocRef = doc(db, "users", formatEmail(user.email));
 
-    const ssss = await getDoc(userDocRef);
+    const userDoc = await getDoc(userDocRef);
 
-    if (!ssss.exists()) {
+    if (!userDoc.exists()) {
       auth.signOut();
       const errorField = document.querySelector(".error-field");
       errorField.classList.remove("opacity-0");
