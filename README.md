@@ -36,6 +36,8 @@ Here is the [video demonstration](https://youtu.be/On0EyB6epoo) of the result.
 
 ### Task description
 
+ **NOTE** As I used Firebase - some technical requirements are not fully completed. E.g. deleting user is possible only for authorised user (so you can delete yourself, not others).
+
 JavaScript or TypeScript, React
 (you can use anything to store data, for example, a backend on Node.js+Express+MySQL, or SaaS services like Firebase – note that there may be nuances with deleting "built-in users").
 
