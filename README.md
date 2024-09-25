@@ -2,6 +2,9 @@
 
 <div align="center">
   <h1 align="center">Task 4</h1>
+   <img src='./src/assets/result-auth.png'>
+   <img src='./src/assets/result-main.png'>
+
 </div>
 
 <!-- TABLE OF CONTENTS -->
@@ -27,40 +30,56 @@ _Completed: September 2024_
 
 For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
-Here is the [video demonstration](hh) of the result.
+Deployment: [here](https://manage-users-task-4.netlify.app/)
+
+Here is the [video demonstration](https://youtu.be/On0EyB6epoo) of the result.
 
 ### Task description
 
-- JavaScript или TypeScript, React
-  (можно использовать что угодно для хранения данных, например, бек на Node.js+Express+MySQL; использовать SaaS вроде Firebase - обратите внимание, что могут быть нюансы с удалением "встроенных пользователей").
+JavaScript or TypeScript, React
+(you can use anything to store data, for example, a backend on Node.js+Express+MySQL, or SaaS services like Firebase – note that there may be nuances with deleting "built-in users").
 
-Реализуйте Web-приложение, позволяющее пользователям зарегистрироваться и аутентифицироваться. Неаутентифицированные пользователи не имеют доступа к управлению пользователями (доступ только к форме регистрации или форме аутентификации).
-Только аутентифицированные пользователи видят **таблицу** "пользователи" (идентификатор, именем, мылом, датой регистрации, датой последнего логина, статусом) с пользователями.
+Implement a web application that allows users to register and authenticate. Unauthenticated users do not have access to user management (they only have access to the registration or authentication forms).
+Only authenticated users can see the **users table** (with identifier, name, email, registration date, last login date, and status) containing users.
 
-Таблица **в самой левой колонке** содержит чек-боксы для множественного выделения, в заголовке колонки только чек-бокс без текста, позволяющи выделить или снять выделение со всех записей.
+The table should have **checkboxes in the leftmost column** for multiple selections, with only a checkbox in the header (no text), allowing the user to select or deselect all entries.
 
-Над таблицей должен быть **тулбар** с действиями: Block, Unblock, Delete (два последних можно и лучше иконками). Таблица, множественное выделение, тулбар — обязательно.
+Above the table, there should be a **toolbar** with actions: Block, Unblock, Delete (the last two can and should be represented as icons). The table, multiple selection, and toolbar are mandatory.
 
-Каждый пользователь может удалить или заблокировать себя или другого пользователя.
+Each user can delete or block themselves or another user.
 
-Если кто-то другой блокирует или удаляет пользователя, то при любом следующем запросе пользователь переправляется на страницу логина.
+If someone else blocks or deletes a user, the next time that user makes any request, they should be redirected to the login page.
 
-**При регистрации должна быть возможность использовать любой пароль, даже из одного символа.** Если вы используете готовый сервис для хранения пользователей, вы можете 1) реализовать своих "пользователей" или 2) принять, что некоторые требования не могут быть реализованы (зато получить результаты быстрее).
+**During registration, it should be possible to use any password, even a single character.** If you're using a ready-made service to store users, you can either 1) implement your own "users" or 2) accept that some requirements cannot be fulfilled (but you'll get results faster).
 
-Заблокированный пользователь не может войти, удаленный может заново зарегистрироваться.
+A blocked user cannot log in, while a deleted user can re-register.
 
-Обязательно использование **CSS-фреймворка** (рекомендация — Bootstrap, но можно любой другой).
+YOU MUST CREATE A UNIQUE INDEX IN YOUR DATABASE. DO NOT CHECK FOR UNIQUENESS IN CODE, CREATE AN INDEX.
 
-Почему все пользователи админы, разве это не странно? Да, немного, в реальности так не будет. Есть две причины:
+It's mandatory to use a **CSS framework** (recommendation: Bootstrap, but any other is acceptable).
 
-1. Упростить тестирование.
-2. Упростить вашу работу, чтобы не нужно было работать с ролями (в данной задаче).
+---
+
+Why are all users admins, isn't that strange? Yes, it is a bit unusual; this wouldn't happen in real life. There are two reasons for this:
+
+1) To simplify testing.
+2) To simplify your work, so you don't have to deal with roles (for this task).
+
+However, the ability to delete oneself is quite realistic, as it’s often required.
 
 ### Technology stack
 
 [![NPM][NPM]][NPM-url]
 
+[![HTML5][HTML5]][HTML5-url]
+
 [![Javascript][Javascript]][Javascript-url]
+
+![firebase](https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black)
+
+[![Netlify][Netlify]][Netlify-url]
+
+[![Bootstrap][Bootstrap]][Bootstrap-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -78,9 +97,17 @@ Here is the [video demonstration](hh) of the result.
    npm install
    ```
 
+3. Run live-server. Or check out the deployment [here](https://manage-users-task-4.netlify.app/).
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [NPM]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [NPM-url]: https://www.npmjs.com
 [Javascript]: https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E
 [Javascript-url]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/What_is_JavaScript
+[HTML5]: https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white
+[HTML5-url]: https://html.com/html5/
+[Netlify]: https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7
+[Netlify-url]: https://www.netlify.com/
+[Bootstrap]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com/
