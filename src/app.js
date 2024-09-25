@@ -30,7 +30,6 @@ let unsubscribeFromUsers = null;
 
 auth.onAuthStateChanged(async (user) => {
   if (user) {
-    // auth.signOut();
     const userDocRef = doc(db, "users", formatEmail(user.email));
 
     const ssss = await getDoc(userDocRef);

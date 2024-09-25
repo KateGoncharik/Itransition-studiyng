@@ -103,9 +103,9 @@ loginForm.addListener("submit", async (e) => {
     await signInWithEmailAndPassword(auth, email, password);
     const userDocRef = doc(db, "users", formatEmail(email));
 
-    const ssss = await getDoc(userDocRef);
+    const userInDB = await getDoc(userDocRef);
 
-    if (!ssss.exists()) {
+    if (!userInDB.exists()) {
       return;
     }
 
