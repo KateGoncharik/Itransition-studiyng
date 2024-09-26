@@ -1,0 +1,14 @@
+{
+  "name": "fake-data-generation-task",
+  "version": "1.0.0",
+  "description": "fake-data-generation-task",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "keywords": [],
+  "contributors": [],
+  "scripts": {},
+  "author": "Kate Goncharik",
+  "license": "ISC",
+  "dependencies": {}
+}
