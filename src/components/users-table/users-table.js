@@ -1,4 +1,4 @@
-import { Component } from "../component.js";
+import { Component } from "../../../component.js";
 
 const createUserRow = (user) => {
   const row = new Component({ tag: "tr" });
@@ -9,7 +9,7 @@ const createUserRow = (user) => {
   const telephoneCell = new Component({ tag: "td", text: user.telephone });
   const locationCell = new Component({
     tag: "td",
-    text: JSON.stringify(user.address),
+    text: user.address,
   });
 
   const nameCell = new Component({ tag: "td", text: user.fullName });
@@ -25,7 +25,7 @@ const createUserRow = (user) => {
   return row;
 };
 
-export const createTable = (users) => {
+export const createUsersTable = (users) => {
   const table = new Component({ tag: "table", className: "users-table" });
   const thead = new Component({ tag: "thead", className: "thead-light" });
   const headerRow = new Component({ tag: "tr" });
@@ -53,7 +53,7 @@ export const createTable = (users) => {
 
 export const updateUsersTable = (users) => {
   const container = document.querySelector(".table-container");
-  const userTable = createTable(users);
+  const userTable = createUsersTable(users);
 
   container.innerHTML = "";
   container.appendChild(userTable.getNode());

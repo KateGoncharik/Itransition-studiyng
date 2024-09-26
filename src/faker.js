@@ -12,17 +12,15 @@ export const create20Records = async (seed, country) => {
   if (country === "France") {
     faker = fakerFR;
     countryName = "France";
-  } else if (country === "Belarus") {
+  } else if (country === "Russia") {
     faker = fakerRU;
-    countryName = "Беларусь";
+    countryName = "Россия";
   } else if (country === "Poland") {
     faker = fakerPL;
-    countryName = "Poland";
+    countryName = "Polska";
   }
 
   faker.seed(seed);
-
-  // faker.setLocale(locale);
 
   for (let i = 0; i < 20; i++) {
     const userRecord = {
@@ -30,12 +28,7 @@ export const create20Records = async (seed, country) => {
       randomId: faker.string.uuid(),
       fullName: faker.person.fullName(),
       telephone: faker.phone.number(),
-      address: {
-        street: faker.location.streetAddress(), // Улица
-        city: faker.location.city(), // Город
-        postalCode: faker.location.zipCode(), // Почтовый индекс
-        country: countryName,
-      },
+      address: `${countryName}, ${faker.location.city()},${faker.location.streetAddress()}`,
     };
     records.push(userRecord);
   }
