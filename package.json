@@ -10,5 +10,7 @@
   "scripts": {},
   "author": "Kate Goncharik",
   "license": "ISC",
-  "dependencies": {}
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.2"
+  }
 }
