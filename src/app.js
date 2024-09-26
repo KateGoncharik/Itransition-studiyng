@@ -1,5 +1,5 @@
 import { Component } from "../component.js";
-import { createInitialRecords } from "./faker.js";
+import { createInitialRecords } from "./faker/faker.js";
 import { updateUsersTable } from "./components/users-table/users-table.js";
 import { createMenu } from "./components/menu/menu.js";
 
@@ -15,6 +15,6 @@ export const startApp = async () => {
     ).getNode()
   );
 
-  const users = await createInitialRecords(42, "France");
+  const users = await createInitialRecords(42, "Russia");
   updateUsersTable(users);
 };

@@ -1,4 +1,6 @@
 import { Component } from "../../../component.js";
+import { createInitialRecords } from "../../faker/faker.js";
+import { updateUsersTable } from "../users-table/users-table.js";
 
 export const createRegionSelect = () => {
   const franceOption = new Component({ tag: "option", text: "France" });
@@ -19,6 +21,11 @@ export const createRegionSelect = () => {
   );
   regionSelect.setAttribute("id", "region");
   regionSelect.setAttribute("required", true);
+
+  regionSelect.addListener("change", async (e) => {
+    const users = await createInitialRecords(42, e.target.value);
+    updateUsersTable(users);
+  });
 
   const label = new Component({
     tag: "label",

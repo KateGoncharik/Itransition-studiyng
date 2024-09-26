@@ -1,5 +1,4 @@
-
-import { getLocalizedAddress, getLocalizedFaker } from "./localization";
+import { getLocalizedAddress, getLocalizedFaker } from "./localization.js";
 
 export const createInitialRecords = async (seed, country) => {
   const records = [];
@@ -20,3 +19,5 @@ export const createInitialRecords = async (seed, country) => {
   }
   return records;
 };
+
+
