@@ -28,7 +28,7 @@ _Completed: September 2024_
 
 For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
-Deployment: [here](https://.netlify.app/)
+Deployment: [here](https://fake-data-generation-task-5.netlify.app/)
 
 Here is the [video demonstration](https) of the result.
 
@@ -60,7 +60,7 @@ Here is the [video demonstration](https) of the result.
    npm install
    ```
 
-3. Run live-server. Or check out the deployment [here](https://manage-users-task-4.netlify.app/).
+3. Run live-server. Or check out the deployment [here](https://fake-data-generation-task-5.netlify.app/).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
