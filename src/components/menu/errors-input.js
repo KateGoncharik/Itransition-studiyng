@@ -29,7 +29,7 @@ export const createErrorsInput = () => {
   errorsInput.setAttribute('max', '1000');
 
   errorsInput.setAttribute('id', 'errors-input');
-  errorsInput.setAttribute('type', 'text');
+  errorsInput.setAttribute('type', 'number');
 
   errorsInput.addListener('change', async (e) => {
     const slider = document.querySelector('.errors-slider');
