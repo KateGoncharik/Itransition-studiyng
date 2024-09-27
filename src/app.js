@@ -4,6 +4,8 @@ import { updateUsersTable } from './components/users-table/users-table.js';
 import { createMenu } from './components/menu/menu.js';
 import { loadMore } from './components/users-table/scroll.js';
 
+export const initialData = { seed: 42, region: 'Russia' };
+
 export const startApp = async () => {
   document.body.append(
     new Component(
@@ -16,7 +18,6 @@ export const startApp = async () => {
     ).getNode()
   );
 
-  const initialData = { seed: 42, region: 'Russia' };
   const users = await createInitialRecords(
     initialData.seed,
     initialData.region

@@ -1,4 +1,5 @@
 import { Component } from '../../../component.js';
+import { initialData } from '../../app.js';
 import { create10MoreRecords } from '../../faker/faker.js';
 import { createUserRow } from './user-row.js';
 
@@ -41,7 +42,10 @@ export const addRecordsToTable = async () => {
   const seed = document.querySelector('.seed-input');
   const region = document.querySelector('.region-select');
 
-  const records = await create10MoreRecords(seed.value, region.value);
+  const records = await create10MoreRecords(
+    seed.value ?? initialData.seed,
+    region.value
+  );
   const nodes = records
     .map((user) => createUserRow(user))
     .map((component) => component.getNode());
