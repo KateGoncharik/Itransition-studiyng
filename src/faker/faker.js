@@ -1,3 +1,8 @@
+import {
+  ADDITIONAL_RECORDS_AMOUNT,
+  config,
+  INITIAL_RECORDS_AMOUNT,
+} from './config.js';
 import { getLocalizedAddress, getLocalizedFaker } from './localization.js';
 
 export const createInitialRecords = async (seed, country) => {
@@ -6,7 +11,7 @@ export const createInitialRecords = async (seed, country) => {
   const { faker, countryName } = getLocalizedFaker(country);
   faker.seed(seed + 0);
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < INITIAL_RECORDS_AMOUNT; i++) {
     const userRecord = {
       id: i + 1,
       randomId: faker.string.uuid(),
@@ -18,14 +23,14 @@ export const createInitialRecords = async (seed, country) => {
   }
   return records;
 };
-let pageNumber = 0;
 export const create10MoreRecords = async (seed, country) => {
-  pageNumber += 1;
   const records = [];
-  const startIndexForNewRecords = pageNumber === 0 ? 20 : pageNumber * 10 + 20;
+  const startIndexForNewRecords = getStartIndexForNewRecords(
+    config.getCurrentPageNumber()
+  );
   const { faker, countryName } = getLocalizedFaker(country);
-  faker.seed(seed + pageNumber);
-  for (let i = 0; i < 10; i++) {
+  faker.seed(seed + config.getCurrentPageNumber());
+  for (let i = 0; i < ADDITIONAL_RECORDS_AMOUNT; i++) {
     const userRecord = {
       id: startIndexForNewRecords + i + 1,
       randomId: faker.string.uuid(),
@@ -35,5 +40,13 @@ export const create10MoreRecords = async (seed, country) => {
     };
     records.push(userRecord);
   }
+  config.incrementCurrentPageNumber();
+
   return records;
+};
+
+const getStartIndexForNewRecords = (currentPageNumber) => {
+  return currentPageNumber === 0
+    ? INITIAL_RECORDS_AMOUNT
+    : currentPageNumber * ADDITIONAL_RECORDS_AMOUNT + INITIAL_RECORDS_AMOUNT;
 };

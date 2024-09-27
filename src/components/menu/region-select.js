@@ -1,4 +1,5 @@
 import { Component } from '../../../component.js';
+import { config } from '../../faker/config.js';
 import { createInitialRecords } from '../../faker/faker.js';
 import { updateUsersTable } from '../users-table/users-table.js';
 
@@ -24,6 +25,8 @@ export const createRegionSelect = () => {
 
   regionSelect.addListener('change', async (e) => {
     const users = await createInitialRecords(42, e.target.value);
+
+    config.resetCurrentPageNumber();
     updateUsersTable(users);
   });
 

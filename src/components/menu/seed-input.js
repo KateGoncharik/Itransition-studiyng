@@ -1,4 +1,5 @@
 import { Component } from '../../../component.js';
+import { config } from '../../faker/config.js';
 import { createInitialRecords } from '../../faker/faker.js';
 import { updateUsersTable } from '../users-table/users-table.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker/+esm';
@@ -43,6 +44,7 @@ export const createRandomSeedButton = () => {
     seedInput.value = randomSeed;
     const users = await createInitialRecords(randomSeed, regionSelect.value);
 
+    config.resetCurrentPageNumber();
     updateUsersTable(users);
   });
   return randomSeedButton;
