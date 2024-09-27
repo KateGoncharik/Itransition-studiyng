@@ -1,20 +1,24 @@
-import { Component } from "../component.js";
-import { createInitialRecords } from "./faker/faker.js";
-import { updateUsersTable } from "./components/users-table/users-table.js";
-import { createMenu } from "./components/menu/menu.js";
+import { Component } from '../component.js';
+import { createInitialRecords } from './faker/faker.js';
+import { updateUsersTable } from './components/users-table/users-table.js';
+import { createMenu } from './components/menu/menu.js';
 
 export const startApp = async () => {
   document.body.append(
     new Component(
-      { className: "app" },
+      { className: 'app' },
       new Component(
-        { className: "wrapper" },
+        { className: 'wrapper' },
         createMenu(),
-        new Component({ className: "table-container" })
+        new Component({ className: 'table-container' })
       )
     ).getNode()
   );
 
-  const users = await createInitialRecords(42, "Russia");
+  const initialData = { seed: 42, region: 'Russia' };
+  const users = await createInitialRecords(
+    initialData.seed,
+    initialData.region
+  );
   updateUsersTable(users);
 };

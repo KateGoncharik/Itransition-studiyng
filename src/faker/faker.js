@@ -1,10 +1,9 @@
-import { getLocalizedAddress, getLocalizedFaker } from "./localization.js";
+import { getLocalizedAddress, getLocalizedFaker } from './localization.js';
 
 export const createInitialRecords = async (seed, country) => {
   const records = [];
 
   const { faker, countryName } = getLocalizedFaker(country);
-
   faker.seed(seed);
 
   for (let i = 0; i < 20; i++) {
@@ -19,5 +18,3 @@ export const createInitialRecords = async (seed, country) => {
   }
   return records;
 };
-
-

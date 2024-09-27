@@ -1,0 +1,14 @@
+.menu {
+  padding: 1% 2%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.seed-wrapper {
+  display: flex;
+}
+
+.users-table {
+  padding: 1%;
+  margin: 0 auto;
+}
