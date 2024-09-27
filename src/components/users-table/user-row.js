@@ -1,6 +1,7 @@
 import { Component } from '../../../component.js';
 
 export const createUserRow = (user) => {
+  console.log(user);
   const row = new Component({ tag: 'tr' });
   const idCell = new Component({ tag: 'td', text: user.id });
   const randomIdCell = new Component({ tag: 'td', text: user.randomId });

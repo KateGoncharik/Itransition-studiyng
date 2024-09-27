@@ -1,4 +1,5 @@
 import { Component } from '../../../component.js';
+import { create10MoreRecords } from '../../faker/faker.js';
 import { createUserRow } from './user-row.js';
 
 export const createUsersTable = (users) => {
@@ -33,4 +34,16 @@ export const updateUsersTable = (users) => {
 
   container.innerHTML = '';
   container.appendChild(userTable.getNode());
+};
+
+export const addRecordsToTable = async () => {
+  const table = document.querySelector('.users-table');
+  const seed = document.querySelector('.seed-input');
+  const region = document.querySelector('.region-select');
+
+  const records = await create10MoreRecords(seed.value, region.value);
+  const nodes = records
+    .map((user) => createUserRow(user))
+    .map((component) => component.getNode());
+  table.append(...nodes);
 };
