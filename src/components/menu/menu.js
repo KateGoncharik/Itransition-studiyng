@@ -11,11 +11,8 @@ export const createMenu = () => {
   return new Component(
     { tag: 'nav', className: 'menu' },
     regionSelect,
-    new Component(
-      { className: 'seed-wrapper', text: 'Type any number and press Enter' },
-      errorsInput,
-      seedInput,
-      seedButton
-    )
+    errorsInput,
+
+    new Component({ className: 'seed-wrapper' }, seedInput, seedButton)
   );
 };

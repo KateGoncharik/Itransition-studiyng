@@ -1,3 +1,16 @@
+button {
+  padding: 1%;
+  font-size: 1rem;
+}
+
+input {
+  padding: 1%;
+}
+
+label {
+  text-transform: capitalize;
+}
+
 .menu {
   padding: 1% 2%;
   display: flex;
