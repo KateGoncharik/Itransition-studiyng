@@ -35,7 +35,6 @@ export const applyErrorsToRecord = (record, totalErrors) => {
 
 export const applyError = (count, str) => {
   const applyMultipleErrors = times(count, (inputStr) => {
-    console.log('Current input string:', inputStr);
     const randomError =
       errorFunctions[Math.floor(rng() * errorFunctions.length)];
     return randomError(inputStr.length > 0 ? inputStr : str);

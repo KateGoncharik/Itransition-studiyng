@@ -21,7 +21,6 @@ export const createRegionSelect = () => {
     polandOption
   );
   regionSelect.setAttribute('id', 'region');
-  regionSelect.setAttribute('required', true);
 
   regionSelect.addListener('change', async (e) => {
     const users = await createInitialRecords(42, e.target.value);

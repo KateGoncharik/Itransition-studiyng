@@ -9,8 +9,6 @@ export const createSeedInput = () => {
   seedInput.setAttribute('id', 'seed-input');
   seedInput.setAttribute('type', 'number');
 
-  seedInput.setAttribute('required', true);
-
   seedInput.addListener('change', async (e) => {
     const regionSelect = document.querySelector('.region-select');
     const users = await createInitialRecords(

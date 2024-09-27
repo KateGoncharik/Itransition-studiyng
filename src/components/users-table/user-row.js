@@ -2,8 +2,9 @@ import { Component } from '../../../component.js';
 import { applyErrorsToRecord } from '../../errors/errors.js';
 
 export const createUserRow = (user) => {
-  applyErrorsToRecord(user, 1);
-  // TODO get value from ui
+  const errorsInput = document.querySelector('.errors-input');
+  const errorsAmount = errorsInput.value;
+  applyErrorsToRecord(user, errorsAmount);
 
   const row = new Component({ tag: 'tr' });
   const idCell = new Component({ tag: 'td', text: user.id });
