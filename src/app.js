@@ -1,5 +1,5 @@
 import { Component } from '../component.js';
-import { createInitialRecords } from './faker/faker.js';
+import { createInitialRecords, getFakerData } from './faker/faker.js';
 import { updateUsersTable } from './components/users-table/users-table.js';
 import { createMenu } from './components/menu/menu.js';
 import { loadMore } from './components/users-table/scroll.js';
@@ -18,10 +18,8 @@ export const startApp = async () => {
     ).getNode()
   );
 
-  const users = await createInitialRecords(
-    initialData.seed,
-    initialData.region
-  );
+  const fakerData = getFakerData(initialData.seed, initialData.region, true);
+  const users = await createInitialRecords(fakerData);
   updateUsersTable(users);
 
   window.addEventListener('scroll', () => {

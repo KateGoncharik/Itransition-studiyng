@@ -5,12 +5,18 @@ import {
 } from './config.js';
 import { getLocalizedAddress, getLocalizedFaker } from './localization.js';
 
-export const createInitialRecords = async (seed, country) => {
+export const getFakerData = (seed, country, isFirstPage) => {
+  const fakerData = getLocalizedFaker(country);
+  if (isFirstPage) {
+    fakerData.faker.seed(seed + 0);
+  } else {
+    fakerData.faker.seed(seed + config.getCurrentPageNumber());
+  }
+  return fakerData;
+};
+
+export const createInitialRecords = async ({ faker, countryName }) => {
   const records = [];
-
-  const { faker, countryName } = getLocalizedFaker(country);
-  faker.seed(seed + 0);
-
   for (let i = 0; i < INITIAL_RECORDS_AMOUNT; i++) {
     const userRecord = {
       id: i + 1,
@@ -24,13 +30,11 @@ export const createInitialRecords = async (seed, country) => {
   return records;
 };
 
-export const create10MoreRecords = async (seed, country) => {
+export const create10MoreRecords = async ({ faker, countryName }) => {
   const records = [];
   const startIndexForNewRecords = getStartIndexForNewRecords(
     config.getCurrentPageNumber()
   );
-  const { faker, countryName } = getLocalizedFaker(country);
-  faker.seed(seed + config.getCurrentPageNumber());
 
   for (let i = 0; i < ADDITIONAL_RECORDS_AMOUNT; i++) {
     const userRecord = {

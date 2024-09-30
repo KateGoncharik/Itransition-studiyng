@@ -1,6 +1,6 @@
 import { Component } from '../../../component.js';
 import { config } from '../../faker/config.js';
-import { createInitialRecords } from '../../faker/faker.js';
+import { createInitialRecords, getFakerData } from '../../faker/faker.js';
 import { updateUsersTable } from '../users-table/users-table.js';
 
 export const createRegionSelect = () => {
@@ -25,7 +25,8 @@ export const createRegionSelect = () => {
   regionSelect.addListener('change', async (e) => {
     const seedInput = document.querySelector('.seed-input');
 
-    const users = await createInitialRecords(seedInput.value, e.target.value);
+    const fakerData = getFakerData(seedInput.value, e.target.value, true);
+    const users = await createInitialRecords(fakerData);
 
     config.resetCurrentPageNumber();
     updateUsersTable(users);

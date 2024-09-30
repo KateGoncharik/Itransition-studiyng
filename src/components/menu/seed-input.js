@@ -1,6 +1,6 @@
 import { Component } from '../../../component.js';
 import { config } from '../../faker/config.js';
-import { createInitialRecords } from '../../faker/faker.js';
+import { createInitialRecords, getFakerData } from '../../faker/faker.js';
 import { updateUsersTable } from '../users-table/users-table.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker/+esm';
 
@@ -11,10 +11,10 @@ export const createSeedInput = () => {
 
   seedInput.addListener('change', async (e) => {
     const regionSelect = document.querySelector('.region-select');
-    const users = await createInitialRecords(
-      +e.target.value,
-      regionSelect.value
-    );
+
+    const fakerData = getFakerData(+e.target.value, regionSelect.value, true);
+    const users = await createInitialRecords(fakerData);
+
     config.resetCurrentPageNumber();
     updateUsersTable(users);
   });
@@ -41,7 +41,9 @@ export const createRandomSeedButton = () => {
     const seedInput = document.querySelector('.seed-input');
     const randomSeed = faker.number.int();
     seedInput.value = randomSeed;
-    const users = await createInitialRecords(randomSeed, regionSelect.value);
+
+    const fakerData = getFakerData(randomSeed, regionSelect.value, true);
+    const users = await createInitialRecords(fakerData);
 
     config.resetCurrentPageNumber();
     updateUsersTable(users);
