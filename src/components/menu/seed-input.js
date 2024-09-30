@@ -15,6 +15,7 @@ export const createSeedInput = () => {
       e.target.value,
       regionSelect.value
     );
+    config.resetCurrentPageNumber();
     updateUsersTable(users);
   });
 

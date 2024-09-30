@@ -23,7 +23,9 @@ export const createRegionSelect = () => {
   regionSelect.setAttribute('id', 'region');
 
   regionSelect.addListener('change', async (e) => {
-    const users = await createInitialRecords(42, e.target.value);
+    const seedInput = document.querySelector('.seed-input');
+
+    const users = await createInitialRecords(seedInput.value, e.target.value);
 
     config.resetCurrentPageNumber();
     updateUsersTable(users);
