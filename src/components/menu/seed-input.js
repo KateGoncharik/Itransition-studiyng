@@ -12,7 +12,11 @@ export const createSeedInput = () => {
   seedInput.addListener('change', async (e) => {
     const regionSelect = document.querySelector('.region-select');
 
-    const fakerData = getFakerData(+e.target.value, regionSelect.value, true);
+    const fakerData = getFakerData({
+      seed: +e.target.value,
+      country: regionSelect.value,
+      isFirstPage: true,
+    });
     const users = await createInitialRecords(fakerData);
 
     config.resetCurrentPageNumber();
@@ -42,7 +46,11 @@ export const createRandomSeedButton = () => {
     const randomSeed = faker.number.int();
     seedInput.value = randomSeed;
 
-    const fakerData = getFakerData(randomSeed, regionSelect.value, true);
+    const fakerData = getFakerData({
+      seed: randomSeed,
+      country: regionSelect.value,
+      isFirstPage: true,
+    });
     const users = await createInitialRecords(fakerData);
 
     config.resetCurrentPageNumber();

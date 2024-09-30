@@ -52,7 +52,12 @@ export const createErrorsInput = () => {
 const handleErrorsUpdate = async () => {
   const regionSelect = document.querySelector('.region-select');
   const seedInput = document.querySelector('.seed-input');
-  const fakerData = getFakerData(seedInput.value, regionSelect.value, true);
+
+  const fakerData = getFakerData({
+    seed: seedInput.value,
+    country: regionSelect.value,
+    isFirstPage: true,
+  });
   const users = await createInitialRecords(fakerData);
 
   config.resetCurrentPageNumber();

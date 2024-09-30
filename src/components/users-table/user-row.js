@@ -4,7 +4,6 @@ import { applyErrorsToRecord } from '../../errors/errors.js';
 export const createUserRow = (user) => {
   const errorsInput = document.querySelector('.errors-input');
   const errorsAmount = errorsInput.value;
-  console.log('AA', errorsAmount);
   applyErrorsToRecord(user, errorsAmount);
 
   const row = new Component({ tag: 'tr' });

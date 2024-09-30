@@ -4,7 +4,7 @@ import { updateUsersTable } from './components/users-table/users-table.js';
 import { createMenu } from './components/menu/menu.js';
 import { loadMore } from './components/users-table/scroll.js';
 
-export const initialData = { seed: 42, region: 'Russia' };
+export const initialData = { region: 'Russia' };
 
 export const startApp = async () => {
   document.body.append(
@@ -18,7 +18,10 @@ export const startApp = async () => {
     ).getNode()
   );
 
-  const fakerData = getFakerData(initialData.seed, initialData.region, true);
+  const fakerData = getFakerData({
+    country: initialData.region,
+    isFirstPage: true,
+  });
   const users = await createInitialRecords(fakerData);
   updateUsersTable(users);
 

@@ -5,9 +5,11 @@ import {
 } from './config.js';
 import { getLocalizedAddress, getLocalizedFaker } from './localization.js';
 
-export const getFakerData = (seed, country, isFirstPage) => {
+export const getFakerData = ({ seed, country, isFirstPage }) => {
   const fakerData = getLocalizedFaker(country);
-  if (isFirstPage) {
+  if (!seed) {
+    fakerData.faker.seed();
+  } else if (isFirstPage) {
     fakerData.faker.seed(seed + 0);
   } else {
     fakerData.faker.seed(seed + config.getCurrentPageNumber());

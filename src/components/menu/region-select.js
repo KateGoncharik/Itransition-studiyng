@@ -25,7 +25,11 @@ export const createRegionSelect = () => {
   regionSelect.addListener('change', async (e) => {
     const seedInput = document.querySelector('.seed-input');
 
-    const fakerData = getFakerData(seedInput.value, e.target.value, true);
+    const fakerData = getFakerData({
+      seed: seedInput.value,
+      country: e.target.value,
+      isFirstPage: true,
+    });
     const users = await createInitialRecords(fakerData);
 
     config.resetCurrentPageNumber();

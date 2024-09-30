@@ -41,7 +41,11 @@ export const addRecordsToTable = async () => {
   const seedInput = document.querySelector('.seed-input');
   const regionInput = document.querySelector('.region-select');
 
-  const fakerData = getFakerData(seedInput.value, regionInput.value, false);
+  const fakerData = getFakerData({
+    seed: seedInput.value,
+    country: regionInput.value,
+    isFirstPage: false,
+  });
   const records = await create10MoreRecords(fakerData);
   const nodes = records
     .map((user) => createUserRow(user))
