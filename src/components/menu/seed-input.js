@@ -12,7 +12,7 @@ export const createSeedInput = () => {
   seedInput.addListener('change', async (e) => {
     const regionSelect = document.querySelector('.region-select');
     const users = await createInitialRecords(
-      e.target.value,
+      +e.target.value,
       regionSelect.value
     );
     config.resetCurrentPageNumber();

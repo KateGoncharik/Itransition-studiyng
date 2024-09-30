@@ -23,6 +23,7 @@ export const createInitialRecords = async (seed, country) => {
   }
   return records;
 };
+
 export const create10MoreRecords = async (seed, country) => {
   const records = [];
   const startIndexForNewRecords = getStartIndexForNewRecords(
@@ -30,6 +31,7 @@ export const create10MoreRecords = async (seed, country) => {
   );
   const { faker, countryName } = getLocalizedFaker(country);
   faker.seed(seed + config.getCurrentPageNumber());
+
   for (let i = 0; i < ADDITIONAL_RECORDS_AMOUNT; i++) {
     const userRecord = {
       id: startIndexForNewRecords + i + 1,

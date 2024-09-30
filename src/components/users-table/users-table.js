@@ -42,10 +42,7 @@ export const addRecordsToTable = async () => {
   const seed = document.querySelector('.seed-input');
   const region = document.querySelector('.region-select');
 
-  const records = await create10MoreRecords(
-    seed.value ?? initialData.seed,
-    region.value
-  );
+  const records = await create10MoreRecords(+seed.value, region.value);
   const nodes = records
     .map((user) => createUserRow(user))
     .map((component) => component.getNode());
