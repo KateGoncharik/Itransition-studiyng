@@ -7,12 +7,16 @@ import { getLocalizedAddress, getLocalizedFaker } from './localization.js';
 
 export const getFakerData = ({ seed, country, isFirstPage }) => {
   const fakerData = getLocalizedFaker(country);
-  if (!seed) {
+  if (seed === undefined) {
     fakerData.faker.seed();
-  } else if (isFirstPage) {
-    fakerData.faker.seed(seed + 0);
+    return fakerData;
+  }
+  const numberSeed = +seed;
+
+  if (isFirstPage && seed) {
+    fakerData.faker.seed(numberSeed + 0);
   } else {
-    fakerData.faker.seed(seed + config.getCurrentPageNumber());
+    fakerData.faker.seed(numberSeed + config.getCurrentPageNumber());
   }
   return fakerData;
 };

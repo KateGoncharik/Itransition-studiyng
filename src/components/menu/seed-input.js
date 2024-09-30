@@ -13,7 +13,7 @@ export const createSeedInput = () => {
     const regionSelect = document.querySelector('.region-select');
 
     const fakerData = getFakerData({
-      seed: +e.target.value,
+      seed: e.target.value,
       country: regionSelect.value,
       isFirstPage: true,
     });

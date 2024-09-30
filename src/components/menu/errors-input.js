@@ -58,8 +58,8 @@ const handleErrorsUpdate = async () => {
     country: regionSelect.value,
     isFirstPage: true,
   });
-  const users = await createInitialRecords(fakerData);
 
+  const users = await createInitialRecords(fakerData);
   config.resetCurrentPageNumber();
   updateUsersTable(users);
 };
