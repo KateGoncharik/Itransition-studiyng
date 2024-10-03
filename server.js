@@ -33,6 +33,22 @@ app.get('/users', (req, res) => {
   });
 });
 
+app.post('/users', (req, res) => {
+  const { username, email } = req.body;
+
+  const query = 'INSERT INTO users (username, email) VALUES (?, ?)';
+
+  db.query(query, [username, email], (err, results) => {
+    if (err) {
+      console.error('Ошибка при добавлении пользователя:', err);
+      return res
+        .status(500)
+        .json({ error: 'Ошибка при добавлении пользователя' });
+    }
+    res.status(201).json({ id: results.insertId, username, email });
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
