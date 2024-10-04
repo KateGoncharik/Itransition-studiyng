@@ -8,6 +8,6 @@ export function getToken() {
   return getCookie('token');
 }
 
-function deleteToken() {
+export function deleteToken() {
   document.cookie = 'token=; path=/; max-age=0';
 }

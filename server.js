@@ -8,6 +8,9 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const secretKey = process.env.JWT_SECRET;
+const host = process.env.HOST;
+const user = process.env.USER;
+const password = process.env.PASSWORD;
 
 const app = express();
 
@@ -16,10 +19,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'kate',
-  password: 'PanteraMambo2024',
-  database: 'my_forms_database',
+  host,
+  user,
+  password,
+  database,
 });
 
 db.connect((err) => {
@@ -123,4 +126,12 @@ app.delete('/users/:id', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
