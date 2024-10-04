@@ -1,4 +1,4 @@
-fetch('http://localhost:3000/users/2', {
+fetch('http://localhost:3000/users/49', {
   method: 'DELETE',
 })
   .then((response) => response.json())

@@ -1,0 +1,15 @@
+{
+  "name": "final-task",
+  "version": "1.0.0",
+  "description": "final-task",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "keywords": [],
+  "contributors": [],
+  "scripts": {},
+  "author": "Kate Goncharik",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

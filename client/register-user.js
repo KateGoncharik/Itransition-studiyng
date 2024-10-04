@@ -1,4 +1,4 @@
-fetch('http://localhost:3000/users', {
+fetch('http://localhost:3000/register', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -6,14 +6,15 @@ fetch('http://localhost:3000/users', {
   body: JSON.stringify({
     username: 'KateGu',
     email: 'kate@example2.com',
+    password: 'yourSecurePassword123',
   }),
 })
   .then((response) => {
     if (response.status === 400) {
-      throw new Error('User with this credentials already exists');
+      throw new Error('User with these credentials already exists');
     }
     if (!response.ok) {
-      throw new Error('Some error ocurred');
+      throw new Error('Some error occurred');
     }
     return response.json();
   })

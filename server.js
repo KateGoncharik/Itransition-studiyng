@@ -3,11 +3,15 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql2');
 const { ERRORS, OKMESSAGES } = require('./constants');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
+
+const secretKey = process.env.JWT_SECRET;
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -48,12 +52,17 @@ app.get('/users/:id', (req, res) => {
   });
 });
 
-app.post('/users', (req, res) => {
-  const { username, email } = req.body;
+const bcrypt = require('bcryptjs');
 
-  const query = 'INSERT INTO users (username, email) VALUES (?, ?)';
+app.post('/register', async (req, res) => {
+  const { username, email, password } = req.body;
 
-  db.query(query, [username, email], (err, results) => {
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const query =
+    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+
+  db.query(query, [username, email, hashedPassword], (err, results) => {
     if (err) {
       if (err.code === 'ER_DUP_ENTRY') {
         return res.status(400).json({
@@ -62,7 +71,35 @@ app.post('/users', (req, res) => {
       }
       return res.status(500).json({ error: ERRORS.serverError });
     }
-    res.status(201).json({ id: results.insertId, username, email });
+    const token = jwt.sign({ userId: results.insertId }, secretKey, {
+      expiresIn: '1h',
+    });
+    res.cookie('token', token, { httpOnly: true });
+    res.status(201).json({ message: 'Registered' });
+  });
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  const query = 'SELECT * FROM users WHERE username = ?';
+
+  db.query(query, [username], async (err, results) => {
+    if (err) return res.status(500).json({ error: ERRORS.serverError });
+    if (results.length === 0)
+      return res.status(404).json({ error: ERRORS.noUser });
+
+    const user = results[0];
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ error: 'Wrong password' });
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      secretKey,
+      { expiresIn: '1h' }
+    );
+    res.json({ token });
   });
 });
 
