@@ -4,19 +4,22 @@ fetch('http://localhost:3000/users', {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    username: 'KateG',
-    email: 'kate@example.com',
+    username: 'KateGu',
+    email: 'kate@example2.com',
   }),
 })
   .then((response) => {
+    if (response.status === 400) {
+      throw new Error('User with this credentials already exists');
+    }
     if (!response.ok) {
-      throw new Error('Сеть не отвечает');
+      throw new Error('Some error ocurred');
     }
     return response.json();
   })
   .then((data) => {
-    console.log('Добавлен новый пользователь:', data);
+    console.log('New user registered:', data);
   })
   .catch((error) => {
-    console.error('Ошибка:', error);
+    console.error('Error:', error);
   });
