@@ -11,6 +11,7 @@ const secretKey = process.env.JWT_SECRET;
 const host = process.env.HOST;
 const user = process.env.USER;
 const password = process.env.PASSWORD;
+const database = process.env.DATABASE;
 
 const app = express();
 
