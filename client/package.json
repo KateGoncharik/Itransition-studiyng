@@ -10,8 +10,6 @@
   "scripts": {},
   "author": "Kate Goncharik",
   "license": "ISC",
-  "dependencies": {
-    "dotenv": "^16.4.5"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
