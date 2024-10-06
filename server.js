@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
-const secretKey = process.env.JWT_SECRET;
 const host = process.env.HOST;
 const user = process.env.USER;
 const password = process.env.PASSWORD;
@@ -83,6 +82,8 @@ app.post('/register', async (req, res) => {
     res.status(201).json({ message: 'Registered' });
   });
 });
+
+const secretKey = process.env.JWT_SECRET;
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
