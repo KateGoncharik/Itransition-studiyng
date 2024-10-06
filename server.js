@@ -13,17 +13,19 @@ const user = process.env.USER;
 const password = process.env.PASSWORD;
 const database = process.env.DATABASE;
 
+const dbPort = process.env.DB_PORT;
+
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const SERVER_PORT = process.env.SERVER_PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
-
 const db = mysql.createConnection({
   host,
   user,
   password,
   database,
+  port: dbPort,
 });
 
 db.connect((err) => {
@@ -35,13 +37,12 @@ db.connect((err) => {
 });
 
 app.get('/users', (_, res) => {
-  res.send('AAA');
-  // db.query('SELECT * FROM users', (err, results) => {
-  //   if (err) {
-  //     return res.status(500).json({ error: ERRORS.noUsers });
-  //   }
-  //   res.json(results);
-  // });
+  db.query('SELECT * FROM users', (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: ERRORS.noUsers });
+    }
+    res.json(results);
+  });
 });
 
 app.get('/users/:id', (req, res) => {
@@ -126,7 +127,7 @@ app.delete('/users/:id', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(SERVER_PORT, () => {
   console.log(`Server is running`);
 });
 

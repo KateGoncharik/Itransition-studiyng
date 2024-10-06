@@ -1,4 +1,6 @@
-fetch('https://itransition-studiyng.onrender.com/users')
+import { getUrl } from './get-url.js';
+
+fetch(getUrl('users'))
   .then((response) => {
     if (!response.ok) {
       throw new Error('Сеть не отвечает');

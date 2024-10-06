@@ -1,4 +1,6 @@
-fetch('https://itransition-studiyng.onrender.com/login', {
+import { getUrl } from './get-url.js';
+
+fetch(getUrl('login'), {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',

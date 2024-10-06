@@ -1,4 +1,6 @@
-fetch('http://localhost:3000/register', {
+import { getUrl } from './get-url.js';
+
+fetch(getUrl('register'), {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
