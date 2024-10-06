@@ -35,12 +35,13 @@ db.connect((err) => {
 });
 
 app.get('/users', (_, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: ERRORS.noUsers });
-    }
-    res.json(results);
-  });
+  res.send('AAA');
+  // db.query('SELECT * FROM users', (err, results) => {
+  //   if (err) {
+  //     return res.status(500).json({ error: ERRORS.noUsers });
+  //   }
+  //   res.json(results);
+  // });
 });
 
 app.get('/users/:id', (req, res) => {
