@@ -1,4 +1,4 @@
-import { getUrl } from "./get-url.js";
+import { getUrl } from "./get-url.ts";
 
 fetch(getUrl("users"))
   .then((response) => {

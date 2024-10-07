@@ -1,4 +1,4 @@
-function getCookie(name: string) {
+function getCookie(name: string): string | undefined {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) {
@@ -6,10 +6,10 @@ function getCookie(name: string) {
   }
 }
 
-export function getToken() {
+export function getToken(): string | undefined {
   return getCookie("token");
 }
 
-export function deleteToken() {
+export function deleteToken(): void {
   document.cookie = "token=; path=/; max-age=0";
 }

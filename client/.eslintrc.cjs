@@ -1,7 +1,6 @@
 /**
  * @type {import('eslint').ESLint.ConfigData}
  */
-
 module.exports = {
   env: { browser: true, es2023: true },
   extends: [
@@ -27,7 +26,7 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["tsconfig.json", "tsconfig.node.json"],
+    project: ["./tsconfig.json", "./tsconfig.node.json"],
     tsConfigRootDir: __dirname,
   },
   plugins: ["@typescript-eslint", "react-refresh"],
@@ -41,6 +40,7 @@ module.exports = {
     ],
     "@typescript-eslint/no-explicit-any": "error",
     curly: ["error", "all"],
+
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },

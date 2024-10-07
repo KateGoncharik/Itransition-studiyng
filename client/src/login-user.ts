@@ -1,4 +1,4 @@
-import { getUrl } from "./get-url.ts";
+import { getUrl } from "./get-url";
 
 fetch(getUrl("login"), {
   method: "POST",
@@ -19,7 +19,7 @@ fetch(getUrl("login"), {
     }
     return response.json();
   })
-  .then((data) => {
+  .then((data: { token: string }) => {
     const token = data.token;
 
     document.cookie = `token=${token}; path=/; max-age=3600`;
