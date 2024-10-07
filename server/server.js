@@ -1,11 +1,11 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mysql = require('mysql2');
-const { ERRORS, OKMESSAGES } = require('./constants');
-const jwt = require('jsonwebtoken');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const mysql = require("mysql2");
+const { ERRORS, OKMESSAGES } = require("./constants");
+const jwt = require("jsonwebtoken");
 
-require('dotenv').config();
+require("dotenv").config();
 
 const host = process.env.HOST;
 const user = process.env.USER;
@@ -34,8 +34,8 @@ db.connect((err) => {
   console.log(OKMESSAGES.dbConnection);
 });
 
-app.get('/users', (_, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
+app.get("/users", (_, res) => {
+  db.query("SELECT * FROM users", (err, results) => {
     if (err) {
       return res.status(500).json({ error: ERRORS.noUsers });
     }
@@ -43,9 +43,9 @@ app.get('/users', (_, res) => {
   });
 });
 
-app.get('/users/:id', (req, res) => {
+app.get("/users/:id", (req, res) => {
   const userId = req.params.id;
-  db.query('SELECT * FROM users WHERE id = ?', [userId], (err, results) => {
+  db.query("SELECT * FROM users WHERE id = ?", [userId], (err, results) => {
     if (err) {
       return res.status(500).json({ error: ERRORS.serverError });
     }
@@ -56,19 +56,19 @@ app.get('/users/:id', (req, res) => {
   });
 });
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 
-app.post('/register', async (req, res) => {
+app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const query =
-    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+    "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 
   db.query(query, [username, email, hashedPassword], (err, results) => {
     if (err) {
-      if (err.code === 'ER_DUP_ENTRY') {
+      if (err.code === "ER_DUP_ENTRY") {
         return res.status(400).json({
           error: ERRORS.duplicateEntry,
         });
@@ -76,19 +76,19 @@ app.post('/register', async (req, res) => {
       return res.status(500).json({ error: ERRORS.serverError });
     }
     const token = jwt.sign({ userId: results.insertId }, secretKey, {
-      expiresIn: '1h',
+      expiresIn: "1h",
     });
-    res.cookie('token', token, { httpOnly: true });
-    res.status(201).json({ message: 'Registered' });
+    res.cookie("token", token, { httpOnly: true });
+    res.status(201).json({ message: "Registered" });
   });
 });
 
 const secretKey = process.env.JWT_SECRET;
 
-app.post('/login', (req, res) => {
+app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
-  const query = 'SELECT * FROM users WHERE username = ?';
+  const query = "SELECT * FROM users WHERE username = ?";
 
   db.query(query, [username], async (err, results) => {
     if (err) return res.status(500).json({ error: ERRORS.serverError });
@@ -98,21 +98,21 @@ app.post('/login', (req, res) => {
     const user = results[0];
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: 'Wrong password' });
+    if (!isMatch) return res.status(401).json({ error: "Wrong password" });
 
     const token = jwt.sign(
       { id: user.id, username: user.username },
       secretKey,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" },
     );
     res.json({ token });
   });
 });
 
-app.delete('/users/:id', (req, res) => {
+app.delete("/users/:id", (req, res) => {
   const userId = req.params.id;
 
-  const query = 'DELETE FROM users WHERE id = ?';
+  const query = "DELETE FROM users WHERE id = ?";
 
   db.query(query, [userId], (err, results) => {
     if (err) {
@@ -132,6 +132,6 @@ app.listen(SERVER_PORT, () => {
   console.log(`Server is running`);
 });
 
-app.get('/', (req, res) => {
-  res.send('Server is running');
+app.get("/", (req, res) => {
+  res.send("Server is running");
 });
