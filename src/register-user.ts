@@ -1,4 +1,4 @@
-import { getUrl } from "./get-url";
+import { getUrl } from "./get-url.ts";
 
 fetch(getUrl("register"), {
   method: "POST",
