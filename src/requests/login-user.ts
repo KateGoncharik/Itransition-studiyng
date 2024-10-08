@@ -1,4 +1,4 @@
-import { getUrl } from "./get-url.ts";
+import { getUrl } from "./get-url";
 
 type UserData = {
   username: string;
