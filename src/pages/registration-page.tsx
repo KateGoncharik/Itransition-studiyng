@@ -1,6 +1,8 @@
-export const Registration = (): JSX.Element => {
+const Registration = (): JSX.Element => {
   return (
     <>
+      <h1>Registration</h1>
+
       <form>
         <input name="email" />
         <button type="submit">Register</button>
@@ -8,3 +10,5 @@ export const Registration = (): JSX.Element => {
     </>
   );
 };
+
+export default Registration;

@@ -4,7 +4,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { RootLayout } from "../components/root-layout.tsx";
 import ErrorPage from "../pages/error-page.tsx";
 
-import { Main, NotFound } from "./lazy-loading.tsx";
+import { Main, NotFound, Registration, Login } from "./lazy-loading.tsx";
 
 export const routes = [
   {
@@ -25,6 +25,22 @@ export const routes = [
           </Suspense>
         ),
         path: "*",
+      },
+      {
+        element: (
+          <Suspense fallback={<>Loading...</>}>
+            <Registration />
+          </Suspense>
+        ),
+        path: "/registration",
+      },
+      {
+        element: (
+          <Suspense fallback={<>Loading...</>}>
+            <Login />
+          </Suspense>
+        ),
+        path: "/login",
       },
     ],
     element: (
