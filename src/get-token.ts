@@ -6,8 +6,8 @@ function getCookie(name: string): string | undefined {
   }
 }
 
-export function getToken(): string | undefined {
-  return getCookie("token");
+export function getToken(): string | null {
+  return getCookie("token") ?? null;
 }
 
 export function deleteToken(): void {

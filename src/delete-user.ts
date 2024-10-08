@@ -3,8 +3,8 @@ fetch("http://localhost:3000/users/49", {
 })
   .then((response) => response.json())
   .then((data) => {
-    console.log("Ответ сервера:", data);
+    console.log("Successfully deleted user:", data);
   })
   .catch((error) => {
-    console.error("Ошибка:", error);
+    console.error("Error while user deletion:", error);
   });
