@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Определение схемы пользователя
 export const UserSchema = z.object({
   id: z.number().optional(),
   password: z.string().optional(),
@@ -8,5 +7,4 @@ export const UserSchema = z.object({
   email: z.string().optional(),
 });
 
-// Использование z.infer для автоматической типизации
 export type UserType = z.infer<typeof UserSchema>;
