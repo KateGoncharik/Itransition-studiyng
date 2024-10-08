@@ -4,6 +4,7 @@ const cors = require("cors");
 const mysql = require("mysql2");
 const { ERRORS, OKMESSAGES } = require("./constants");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -15,8 +16,13 @@ const database = process.env.DATABASE;
 const dbPort = process.env.DB_PORT;
 
 const app = express();
+app.use(cookieParser());
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 const db = mysql.createConnection({
   host,
@@ -105,7 +111,39 @@ app.post("/login", (req, res) => {
       secretKey,
       { expiresIn: "1h" },
     );
-    res.json({ token });
+    const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
+    db.query(updateQuery, [token, user.id], (updateErr) => {
+      if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
+
+      res.json({ token });
+    });
+  });
+});
+
+app.get("/me", (req, res) => {
+  // console.log(req);
+  // if (!req.cookies) {
+  //   return res.status(410).json({ error: "No cookies provided" });
+  // }
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    const query = "SELECT * FROM users WHERE id = ?";
+    db.query(query, [decoded.id], (queryErr, results) => {
+      if (queryErr) return res.status(500).json({ error: ERRORS.serverError });
+      if (results.length === 0)
+        return res.status(404).json({ error: "User not found" });
+
+      res.json(results[0]);
+    });
   });
 });
 
@@ -132,6 +170,6 @@ app.listen(SERVER_PORT, () => {
   console.log(`Server is running`);
 });
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Server is running");
 });
