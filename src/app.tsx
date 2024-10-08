@@ -3,6 +3,7 @@ import { useEffect, useState, type JSX } from "react";
 import { getToken } from "./get-token";
 import { User, UserComponent } from "./components/user";
 import { requestAllUsers } from "./request-all-users";
+import { getAuthorizedUser } from "./get-authorized-user";
 // import { loginUser } from "./login-user";
 
 export const App = (): JSX.Element | undefined => {
@@ -12,13 +13,14 @@ export const App = (): JSX.Element | undefined => {
       setUsers(data);
     });
   }, []);
-  // if (getToken()) {
-  // const userData = {
-  //   username: "KateGu",
-  //   password: "yourSecurePassword123",
-  // };
-  // loginUser(userData);
-  // }
+  if (getToken()) {
+    console.log(getAuthorizedUser());
+    // const userData = {
+    //   username: "KateGu",
+    //   password: "yourSecurePassword123",
+    // };
+    // loginUser(userData);
+  }
   return (
     <>
       <>AAA </>
