@@ -1,38 +1,87 @@
 import { loginUser } from "@/requests/login-user";
-import { FormEvent } from "react";
+import { Alert, Button, Snackbar, TextField, Typography } from "@mui/material";
+import { useState, FormEvent } from "react";
 
 const Login = (): JSX.Element => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
+    "error",
+  );
+
+  const handleCloseSnackbar = (): void => {
+    setOpenSnackbar(false);
+  };
+
+  const handleLogin = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username");
+    const password = formData.get("password");
+
+    if (typeof username !== "string" || typeof password !== "string") {
+      setSnackbarMessage("Invalid input");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    try {
+      void loginUser({ username, password }).then(() => {
+        setSnackbarMessage("Login successful");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
+      });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      setSnackbarMessage(errorMessage);
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
+  };
+
   return (
     <>
-      <h1>Login</h1>
+      <Typography component="h1" mb={4} mt={7} textAlign="center" variant="h2">
+        Login
+      </Typography>
       <form onSubmit={handleLogin}>
-        <label>
-          Name
-          <input name="username" type="text" />
-        </label>
-        <label>
-          Password
-          <input name="password" type="password" />
-        </label>
+        <TextField
+          autoComplete={"email"}
+          label={"email"}
+          placeholder={"email"}
+          required
+          size="small"
+          name="username"
+        />
+        <TextField
+          autoComplete={"password"}
+          label={"password"}
+          placeholder={"password"}
+          required
+          size="small"
+          name="password"
+        />
 
-        <button type="submit">Login</button>
+        <Button disabled={false} size="large" type="submit" variant="contained">
+          Login
+        </Button>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
-
-function handleLogin(event: FormEvent<HTMLFormElement>): void {
-  event.preventDefault();
-  if (!event.target) {
-    throw new Error("Target expected");
-  }
-  const formData = new FormData(event.currentTarget);
-  const username = formData.get("username");
-  const password = formData.get("password");
-  if (typeof username !== "string" || typeof password !== "string") {
-    return;
-  }
-  loginUser({ username, password });
-}
 
 export default Login;

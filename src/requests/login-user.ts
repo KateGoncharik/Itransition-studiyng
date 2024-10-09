@@ -4,8 +4,8 @@ type UserData = {
   username: string;
   password: string;
 };
-export const loginUser = (userData: UserData): void => {
-  fetch(getUrl("login"), {
+export const loginUser = (userData: UserData): Promise<void> => {
+  return fetch(getUrl("login"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,7 +14,10 @@ export const loginUser = (userData: UserData): void => {
   })
     .then((response) => {
       if (response.status === 401) {
-        throw new Error("Invalid password");
+        throw new Error("Invalid email or password");
+      }
+      if (response.status === 404) {
+        throw new Error("User not found");
       }
       if (!response.ok) {
         throw new Error("Some error occurred");
@@ -30,5 +33,6 @@ export const loginUser = (userData: UserData): void => {
     })
     .catch((error) => {
       console.error("Error:", error);
+      throw error;
     });
 };
