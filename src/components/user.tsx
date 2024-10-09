@@ -1,3 +1,4 @@
+import { Stack, Typography } from "@mui/material";
 import { FC } from "react";
 export type User = {
   id?: number;
@@ -6,6 +7,12 @@ export type User = {
   email?: string;
 };
 export const UserComponent: FC<{ user: User }> = ({ user }) => {
-  console.log("user", user);
-  return <>Name: {user.username}</>;
+  return (
+    <Stack>
+      <Typography component="p" mb={1}>
+        Name: {user.username}
+        Email: {user.email}
+      </Typography>
+    </Stack>
+  );
 };
