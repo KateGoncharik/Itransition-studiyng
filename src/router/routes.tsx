@@ -5,13 +5,14 @@ import { RootLayout } from "../components/root-layout.tsx";
 import ErrorPage from "../pages/error-page.tsx";
 
 import { Main, NotFound, Registration, Login } from "./lazy-loading.tsx";
+import { CircularProgress } from "@mui/material";
 
 export const routes = [
   {
     children: [
       {
         element: (
-          <Suspense fallback={<>Loading...</>}>
+          <Suspense fallback={<CircularProgress />}>
             <Main />
           </Suspense>
         ),
@@ -20,7 +21,7 @@ export const routes = [
 
       {
         element: (
-          <Suspense fallback={<>Loading...</>}>
+          <Suspense fallback={<CircularProgress />}>
             <NotFound />
           </Suspense>
         ),
@@ -28,7 +29,7 @@ export const routes = [
       },
       {
         element: (
-          <Suspense fallback={<>Loading...</>}>
+          <Suspense fallback={<CircularProgress />}>
             <Registration />
           </Suspense>
         ),
@@ -36,7 +37,7 @@ export const routes = [
       },
       {
         element: (
-          <Suspense fallback={<>Loading...</>}>
+          <Suspense fallback={<CircularProgress />}>
             <Login />
           </Suspense>
         ),
