@@ -147,6 +147,29 @@ app.get("/me", (req, res) => {
   });
 });
 
+app.post("/logout", (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  const query = "SELECT * FROM users WHERE token = ?";
+  db.query(query, [token], (err, results) => {
+    if (err) return res.status(500).json({ error: ERRORS.serverError });
+    if (results.length === 0)
+      return res.status(404).json({ error: ERRORS.noUser });
+
+    const user = results[0];
+
+    const updateQuery = "UPDATE users SET token = NULL WHERE id = ?";
+    db.query(updateQuery, [user.id], (updateErr) => {
+      if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
+
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+});
+
 app.delete("/users/:id", (req, res) => {
   const userId = req.params.id;
 
