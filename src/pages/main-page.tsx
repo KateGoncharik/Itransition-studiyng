@@ -4,7 +4,6 @@ import { getToken } from "../get-token";
 import { User, UserComponent } from "../components/user";
 import { getAllUsers } from "../requests/get-all-users";
 import { getAuthorizedUser } from "../requests/get-authorized-user";
-// import { loginUser } from "./login-user";
 
 const Main = (): JSX.Element | undefined => {
   const [users, setUsers] = useState<User[]>([]);
@@ -16,11 +15,6 @@ const Main = (): JSX.Element | undefined => {
   }, []);
   if (getToken()) {
     console.log(getAuthorizedUser());
-    // const userData = {
-    //   username: "KateGu",
-    //   password: "yourSecurePassword123",
-    // };
-    // loginUser(userData);
   }
   return (
     <>

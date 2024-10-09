@@ -7,8 +7,8 @@ export const registerUser = ({
   username: string;
   email: string;
   password: string;
-}): void => {
-  fetch(getUrl("register"), {
+}): Promise<void> => {
+  return fetch(getUrl("register"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,5 +33,6 @@ export const registerUser = ({
     })
     .catch((error) => {
       console.error("Error:", error);
+      throw error;
     });
 };

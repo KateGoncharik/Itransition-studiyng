@@ -1,41 +1,108 @@
+import { loginUser } from "@/requests/login-user";
 import { registerUser } from "@/requests/register-user";
-import { FormEvent } from "react";
+import { Alert, Button, Snackbar, TextField, Typography } from "@mui/material";
+import { useState, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Registration = (): JSX.Element => {
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
+    "error",
+  );
+
+  const handleCloseSnackbar = (): void => {
+    setOpenSnackbar(false);
+  };
+
+  const handleRegistration = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username");
+    const email = formData.get("email");
+
+    const password = formData.get("password");
+
+    if (
+      typeof username !== "string" ||
+      typeof password !== "string" ||
+      typeof email !== "string"
+    ) {
+      setSnackbarMessage("Invalid input");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    registerUser({ username, email, password })
+      .then(() => {
+        setSnackbarMessage("Successfully registered");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
+        void loginUser({ username, password }).then(() => {
+          setTimeout(() => navigate("/"), 2000);
+        });
+      })
+      .catch((error: unknown) => {
+        console.log("Error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        setSnackbarMessage(errorMessage);
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
+      });
+  };
   return (
     <>
-      <h1>Registration</h1>
+      <Typography component="h1" mb={4} mt={7} textAlign="center" variant="h2">
+        Registration
+      </Typography>
 
       <form onSubmit={handleRegistration}>
-        <div>
-          <label>
-            Name
-            <input name="username" type="text" />
-          </label>
-          <label>
-            Password
-            <input name="password" type="password" />
-          </label>
-        </div>
+        <TextField
+          autoComplete={"name"}
+          label={"name"}
+          placeholder={"name"}
+          required
+          size="small"
+          name="username"
+        />
+        <TextField
+          autoComplete={"email"}
+          label={"email"}
+          placeholder={"email"}
+          required
+          size="small"
+          name="email"
+        />
 
-        <button type="submit">Register</button>
+        <TextField
+          autoComplete={"password"}
+          label={"password"}
+          placeholder={"password"}
+          required
+          size="small"
+          name="password"
+        />
+        <Button disabled={false} size="large" type="submit" variant="contained">
+          Register
+        </Button>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
-
-function handleRegistration(event: FormEvent<HTMLFormElement>): void {
-  event.preventDefault();
-  if (!event.target) {
-    throw new Error("Target expected");
-  }
-  const formData = new FormData(event.currentTarget);
-  const username = formData.get("username");
-  const password = formData.get("password");
-  if (typeof username !== "string" || typeof password !== "string") {
-    return;
-  }
-  registerUser({ username, email: "aaa@aa.ss", password });
-}
 
 export default Registration;
