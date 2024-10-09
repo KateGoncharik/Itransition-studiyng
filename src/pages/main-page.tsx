@@ -2,7 +2,7 @@ import { useEffect, useState, type JSX } from "react";
 
 import { getToken } from "../get-token";
 import { User, UserComponent } from "../components/user";
-import { requestAllUsers } from "../requests/request-all-users";
+import { getAllUsers } from "../requests/get-all-users";
 import { getAuthorizedUser } from "../requests/get-authorized-user";
 // import { loginUser } from "./login-user";
 
@@ -10,7 +10,7 @@ const Main = (): JSX.Element | undefined => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    void requestAllUsers().then((data) => {
+    void getAllUsers().then((data) => {
       setUsers(data);
     });
   }, []);

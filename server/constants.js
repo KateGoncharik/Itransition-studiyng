@@ -1,8 +1,7 @@
 const ERRORS = {
   dbConnection: "Error while connecting to database",
   noUsers: "Error fetching users",
-  noUser: "Error fetching user by ID",
-  userNotFound: "User not found",
+  noUser: "User not found",
   duplicateEntry: "Duplicate entry",
   serverError: "Internal server error",
 };

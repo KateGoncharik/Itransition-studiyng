@@ -1,7 +1,7 @@
 import { getUrl } from "./get-url.ts";
 import { UserSchema, UserType } from "./user-schema.ts";
 
-export const requestAllUsers = async (): Promise<UserType[]> => {
+export const getAllUsers = async (): Promise<UserType[]> => {
   try {
     const response = await fetch(getUrl("users"));
 

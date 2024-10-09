@@ -140,7 +140,7 @@ app.get("/me", (req, res) => {
     db.query(query, [decoded.id], (queryErr, results) => {
       if (queryErr) return res.status(500).json({ error: ERRORS.serverError });
       if (results.length === 0)
-        return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: ERRORS.noUser });
 
       res.json(results[0]);
     });
