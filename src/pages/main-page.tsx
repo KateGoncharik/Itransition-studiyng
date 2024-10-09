@@ -1,6 +1,6 @@
 import { useEffect, useState, type JSX } from "react";
 
-import { getToken } from "../get-token";
+import { isUserAuthorised } from "../token";
 import { User, UserComponent } from "../components/user";
 import { getAllUsers } from "../requests/get-all-users";
 import { getAuthorizedUser } from "../requests/get-authorized-user";
@@ -13,14 +13,14 @@ const Main = (): JSX.Element | undefined => {
       setUsers(data);
     });
   }, []);
-  if (getToken()) {
+  if (isUserAuthorised()) {
     console.log(getAuthorizedUser());
   }
   return (
     <>
       {users.length > 0 &&
         users.map((user) => <UserComponent key={user.email} user={user} />)}
-      {getToken() ? (
+      {isUserAuthorised() ? (
         <>Authorized user main page</>
       ) : (
         <>Not authorized user main page</>

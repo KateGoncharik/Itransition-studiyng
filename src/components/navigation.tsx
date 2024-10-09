@@ -1,6 +1,8 @@
+import { deleteToken, isUserAuthorised } from "@/token";
+import { logoutUser } from "@/requests/logout-user";
 import { Button, Stack } from "@mui/material";
 import { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const headerButtonStyles = {
   "&:hover": {
@@ -28,11 +30,21 @@ export const Navigation: FC = () => {
       <Button component={RouterLink} sx={headerButtonStyles} to={"/login"}>
         Login
       </Button>
-      <Button sx={headerButtonStyles} onClick={handleLogout}>
-        Logout
-      </Button>
+      {isUserAuthorised() && <LogoutButton />}
     </Stack>
   );
 };
 
-const handleLogout = (): void => {};
+const LogoutButton: FC = () => {
+  const navigate = useNavigate();
+  const handleLogout = (): void => {
+    logoutUser();
+    deleteToken();
+    navigate("/login");
+  };
+  return (
+    <Button onClick={handleLogout} sx={headerButtonStyles}>
+      Logout
+    </Button>
+  );
+};
