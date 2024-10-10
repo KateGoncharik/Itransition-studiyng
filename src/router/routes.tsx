@@ -4,7 +4,13 @@ import { ErrorBoundary } from "react-error-boundary";
 import { RootLayout } from "../components/root-layout.tsx";
 import ErrorPage from "../pages/error-page.tsx";
 
-import { Main, NotFound, Registration, Login } from "./lazy-loading.tsx";
+import {
+  Main,
+  NotFound,
+  Registration,
+  Constructor,
+  Login,
+} from "./lazy-loading.tsx";
 import { CircularProgress } from "@mui/material";
 
 export const routes = [
@@ -42,6 +48,14 @@ export const routes = [
           </Suspense>
         ),
         path: "/login",
+      },
+      {
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Constructor />
+          </Suspense>
+        ),
+        path: "/constructor",
       },
     ],
     element: (

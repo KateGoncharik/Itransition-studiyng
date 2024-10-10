@@ -79,7 +79,7 @@ app.post("/register", async (req, res) => {
           error: ERRORS.duplicateEntry,
         });
       }
-      return res.status(500).json({ error: ERRORS.serverError });
+      return res.status(500).json({ error: ERRORS.serverError, info: err });
     }
     const token = jwt.sign({ userId: results.insertId }, secretKey, {
       expiresIn: "1h",

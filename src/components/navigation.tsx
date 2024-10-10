@@ -23,6 +23,13 @@ export const Navigation: FC = () => {
       <Button
         component={RouterLink}
         sx={headerButtonStyles}
+        to={"/constructor"}
+      >
+        Constructor
+      </Button>
+      <Button
+        component={RouterLink}
+        sx={headerButtonStyles}
         to={"/registration"}
       >
         Registration
@@ -30,6 +37,7 @@ export const Navigation: FC = () => {
       <Button component={RouterLink} sx={headerButtonStyles} to={"/login"}>
         Login
       </Button>
+
       {isUserAuthorised() && <LogoutButton />}
     </Stack>
   );
