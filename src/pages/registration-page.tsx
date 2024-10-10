@@ -1,6 +1,13 @@
 import { loginUser } from "@/requests/login-user";
 import { registerUser } from "@/requests/register-user";
-import { Alert, Button, Snackbar, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -53,40 +60,47 @@ const Registration = (): JSX.Element => {
       });
   };
   return (
-    <>
+    <Stack sx={{ width: "50%", margin: "0 auto", gap: 2 }}>
       <Typography component="h1" mb={4} mt={7} textAlign="center" variant="h2">
         Registration
       </Typography>
 
       <form onSubmit={handleRegistration}>
-        <TextField
-          autoComplete={"name"}
-          label={"name"}
-          placeholder={"name"}
-          required
-          size="small"
-          name="username"
-        />
-        <TextField
-          autoComplete={"email"}
-          label={"email"}
-          placeholder={"email"}
-          required
-          size="small"
-          name="email"
-        />
+        <Stack sx={{ gap: 1 }}>
+          <TextField
+            autoComplete={"name"}
+            label={"name"}
+            placeholder={"name"}
+            required
+            size="small"
+            name="username"
+          />
+          <TextField
+            autoComplete={"email"}
+            label={"email"}
+            placeholder={"email"}
+            required
+            size="small"
+            name="email"
+          />
 
-        <TextField
-          autoComplete={"password"}
-          label={"password"}
-          placeholder={"password"}
-          required
-          size="small"
-          name="password"
-        />
-        <Button disabled={false} size="large" type="submit" variant="contained">
-          Register
-        </Button>
+          <TextField
+            autoComplete={"password"}
+            label={"password"}
+            placeholder={"password"}
+            required
+            size="small"
+            name="password"
+          />
+          <Button
+            disabled={false}
+            size="large"
+            type="submit"
+            variant="contained"
+          >
+            Register
+          </Button>
+        </Stack>
       </form>
       <Snackbar
         open={openSnackbar}
@@ -101,7 +115,7 @@ const Registration = (): JSX.Element => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-    </>
+    </Stack>
   );
 };
 

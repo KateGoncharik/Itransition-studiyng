@@ -1,5 +1,12 @@
 import { loginUser } from "@/requests/login-user";
-import { Alert, Button, Snackbar, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -46,31 +53,38 @@ const Login = (): JSX.Element => {
   };
 
   return (
-    <>
+    <Stack sx={{ width: "50%", margin: "0 auto", gap: 2 }}>
       <Typography component="h1" mb={4} mt={7} textAlign="center" variant="h2">
         Login
       </Typography>
       <form onSubmit={handleLogin}>
-        <TextField
-          autoComplete={"email"}
-          label={"email"}
-          placeholder={"email"}
-          required
-          size="small"
-          name="username"
-        />
-        <TextField
-          autoComplete={"password"}
-          label={"password"}
-          placeholder={"password"}
-          required
-          size="small"
-          name="password"
-        />
+        <Stack sx={{ gap: 1 }}>
+          <TextField
+            autoComplete={"email"}
+            label={"email"}
+            placeholder={"email"}
+            required
+            size="small"
+            name="username"
+          />
+          <TextField
+            autoComplete={"password"}
+            label={"password"}
+            placeholder={"password"}
+            required
+            size="small"
+            name="password"
+          />
 
-        <Button disabled={false} size="large" type="submit" variant="contained">
-          Login
-        </Button>
+          <Button
+            disabled={false}
+            size="large"
+            type="submit"
+            variant="contained"
+          >
+            Login
+          </Button>
+        </Stack>
       </form>
       <Snackbar
         open={openSnackbar}
@@ -85,7 +99,7 @@ const Login = (): JSX.Element => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-    </>
+    </Stack>
   );
 };
 
