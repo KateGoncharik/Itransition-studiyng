@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Question } from "../question";
+import { Question } from "../question/question";
 import {
   Checkbox,
   FormControlLabel,
@@ -15,7 +15,7 @@ export const AnswerConstructor: FC<{ type: string }> = ({ type }) => {
   // TODO handle answer type change
   // TODO count answer types
 
-  // TODO disable all answer inputs
+  // TODO styles for answer inputs
   if (type === answerTypes.oneLineString) {
     return (
       <Question
@@ -30,7 +30,7 @@ export const AnswerConstructor: FC<{ type: string }> = ({ type }) => {
   if (type === answerTypes.checkbox) {
     return (
       <FormGroup>
-        <FormControlLabel control={<Checkbox />} label="TBD" />
+        <FormControlLabel control={<Checkbox disabled={true} />} label="TBD" />
       </FormGroup>
     );
   }
@@ -47,11 +47,14 @@ export const AnswerConstructor: FC<{ type: string }> = ({ type }) => {
         }}
         aria-label="Number input"
         placeholder="Type a number…"
+        disabled={true}
       />
     );
   }
   if (type === answerTypes.multilineString) {
-    return <TextareaAutosize />;
+    return (
+      <TextareaAutosize disabled={true} placeholder={"Full answer...\n"} />
+    );
   }
 };
 

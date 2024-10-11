@@ -9,13 +9,14 @@ import {
   TextField,
 } from "@mui/material";
 import { FC, useState } from "react";
-import { AnswerConstructor } from "./answers/answer-constructor";
-import { answerTypes } from "./answers/types";
+import { AnswerConstructor } from "../answer/answer-constructor";
+import { answerTypes } from "../answer/types";
 
 export const QuestionConstructor: FC = () => {
   // TODO validate type more strict
   // TODO markdown support
   // TODO fix description input type
+
   const [answerType, setAnswerType] = useState<string>(
     answerTypes.oneLineString,
   );

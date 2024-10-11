@@ -10,8 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
-import { Question } from "@/components/constructor/question";
-import { QuestionConstructor } from "@/components/constructor/question-constructor";
+import { Question } from "@/components/constructor/question/question";
+import { QuestionConstructor } from "@/components/constructor/question/question-constructor";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
