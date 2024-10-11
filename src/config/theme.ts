@@ -54,7 +54,7 @@ export const theme = createTheme({
   palette: {
     background: {
       default: "#21253c",
-      paper: "#3b4248",
+      paper: "#0d3557",
     },
     error: {
       main: red.A400,
@@ -62,11 +62,15 @@ export const theme = createTheme({
     mode: "dark",
     primary: {
       dark: "#3660ab",
-      light: "#ff8ebc",
+      light: "#ccc",
       main: "#2da2ff",
     },
     secondary: {
       main: "#19857b",
+    },
+    text: {
+      primary: "#fff",
+      secondary: "#ccc",
     },
   },
 });

@@ -11,11 +11,11 @@ import {
 import { FC, useState } from "react";
 import { AnswerConstructor } from "../answer/answer-constructor";
 import { answerTypes } from "../answer/types";
+import { StyledTextarea } from "./styled-textarea";
 
 export const QuestionConstructor: FC = () => {
   // TODO validate type more strict
   // TODO markdown support
-  // TODO fix description input type
 
   const [answerType, setAnswerType] = useState<string>(
     answerTypes.oneLineString,
@@ -27,7 +27,6 @@ export const QuestionConstructor: FC = () => {
         padding: "3% 2%",
         marginTop: 1,
         gap: 1,
-        border: "1px white solid",
       }}
     >
       <Stack
@@ -35,6 +34,7 @@ export const QuestionConstructor: FC = () => {
           flexDirection: "row",
           display: "flex",
           justifyContent: "space-between",
+
           width: "100%",
         }}
       >
@@ -47,13 +47,11 @@ export const QuestionConstructor: FC = () => {
             required
             name={"question-title"}
           />
-          <TextField
-            autoComplete={"question-description"}
-            label={"description"}
-            placeholder={"type some description"}
-            size="small"
-            required
-            name={"question-description"}
+          <StyledTextarea
+            autoComplete="question-description"
+            required={true}
+            name="question-description"
+            placeholder={"type some description\n"}
           />
         </Stack>
         <Stack gap={2} width={"45%"}>
