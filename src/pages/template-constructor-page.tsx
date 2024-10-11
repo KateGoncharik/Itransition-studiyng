@@ -25,6 +25,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
   // TODO add 2 predefined fields - user, date
   // TODO add img upload input
   // TODO add access setting (public/ particular user(s))
+
   const [questions, setQuestions] = useState<JSX.Element[]>([]);
   const handleAddQuestion = (): void => {
     setQuestions((prevQuestions) => [
@@ -41,14 +42,8 @@ const TemplateConstructor = (): JSX.Element | undefined => {
   return (
     <>
       {isAuthenticated ? (
-        <Stack>
-          <Typography
-            component="h1"
-            mb={1}
-            mt={3}
-            textAlign="center"
-            variant="h5"
-          >
+        <Stack sx={{ padding: "2% 0" }}>
+          <Typography component="h1" mb={1} textAlign="center" variant="h5">
             Template constructor
           </Typography>
           <Stack gap={1} width="60%" margin="0 auto">
@@ -89,7 +84,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
             <Button onClick={handleAddQuestion}>
               <AddCircleOutlineIcon />
             </Button>
-            <Stack className="user-questions">
+            <Stack sx={{ gap: 2 }} className="user-questions">
               {questions.map((question, index) => (
                 <Stack
                   sx={{

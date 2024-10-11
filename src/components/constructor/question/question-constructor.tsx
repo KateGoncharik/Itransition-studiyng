@@ -41,8 +41,8 @@ export const QuestionConstructor: FC = () => {
         <Stack gap={2} width={"45%"}>
           <TextField
             autoComplete={"question-title"}
-            label={"title"}
-            placeholder={"type some title"}
+            label={"Title"}
+            placeholder={"Some title"}
             size="small"
             required
             name={"question-title"}
@@ -51,7 +51,7 @@ export const QuestionConstructor: FC = () => {
             autoComplete="question-description"
             required={true}
             name="question-description"
-            placeholder={"type some description\n"}
+            placeholder={"Some description\n"}
           />
         </Stack>
         <Stack gap={2} width={"45%"}>
