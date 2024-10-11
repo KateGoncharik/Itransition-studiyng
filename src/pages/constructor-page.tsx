@@ -1,21 +1,37 @@
-import { type JSX } from "react";
+import { useState, type JSX } from "react";
 
 import { getAuthorizedUser } from "../requests/get-authorized-user";
 import {
+  Button,
   InputLabel,
   MenuItem,
   Select,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
+import { Question } from "@/components/constructor/question";
+import { QuestionConstructor } from "@/components/constructor/add-question";
 
-const Constructor = (): JSX.Element | undefined => {
+const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
     console.log(getAuthorizedUser());
   }
+  // TODO add 2 predefined fields - user, date
+  const [questions, setQuestions] = useState<JSX.Element[]>([]);
+  const handleAddQuestion = (): void => {
+    setQuestions((prevQuestions) => [
+      ...prevQuestions,
+      <QuestionConstructor key={prevQuestions.length} />,
+    ]);
+  };
+  const handleRemoveQuestion = (index: number): void => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter((_, i) => i !== index),
+    );
+  };
+
   return (
     <>
       {isAuthenticated ? (
@@ -27,45 +43,46 @@ const Constructor = (): JSX.Element | undefined => {
             textAlign="center"
             variant="h4"
           >
-            Authorized user constructor page
+            Template constructor
           </Typography>
           <Stack width="60%" margin="0 auto">
-            <TextField
-              autoComplete={"title"}
-              label={"title"}
-              placeholder={"title"}
-              required
-              size="small"
-              name="template-title"
-            />
-            <TextField
-              autoComplete={"description"}
-              label={"description"}
-              placeholder={"description"}
-              required
-              size="small"
-              name="template-description"
-            />
-            <InputLabel id="demo-simple-select-label">Topic</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={"topic 1"}
-              label="Topic"
-              onChange={() => {}}
-            >
-              <MenuItem value={"topic 1"}>topic 1</MenuItem>
-              <MenuItem value={"topic 2"}>topic 2</MenuItem>
-              <MenuItem value={"topic 3"}>topic 3</MenuItem>
-            </Select>
-            <TextField
-              autoComplete={"title"}
-              label={"title"}
-              placeholder={"title"}
-              required
-              size="small"
-              name="template-title"
-            />
+            <Stack className="template-settings">
+              <Question
+                name={"template-title"}
+                label="title of template"
+                placeholder="Nice title for template"
+                isRequired={true}
+              />
+              <Question
+                name={"template-description"}
+                label="description of template"
+                placeholder="Nice description for template"
+                isRequired={true}
+              />
+              <InputLabel id="demo-simple-select-label">Topic</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={"topic 1"}
+                label="Topic"
+                onChange={() => {}}
+              >
+                <MenuItem value={"topic 1"}>topic 1</MenuItem>
+                <MenuItem value={"topic 2"}>topic 2</MenuItem>
+                <MenuItem value={"topic 3"}>topic 3</MenuItem>
+              </Select>
+            </Stack>
+            <Button onClick={handleAddQuestion}>Add question</Button>
+            <Stack className="user-questions">
+              {questions.map((question, index) => (
+                <div key={index}>
+                  {question}
+                  <Button onClick={() => handleRemoveQuestion(index)}>
+                    Remove question
+                  </Button>
+                </div>
+              ))}
+            </Stack>
           </Stack>
         </>
       ) : (
@@ -82,4 +99,4 @@ const Constructor = (): JSX.Element | undefined => {
     </>
   );
 };
-export default Constructor;
+export default TemplateConstructor;
