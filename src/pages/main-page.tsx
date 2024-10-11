@@ -1,25 +1,26 @@
 import { useEffect, useState, type JSX } from "react";
 
-import { isUserAuthorised } from "../token";
 import { User, UserComponent } from "../components/user";
 import { getAllUsers } from "../requests/get-all-users";
 import { getAuthorizedUser } from "../requests/get-authorized-user";
 import { Typography } from "@mui/material";
+import { useAuth } from "@/hooks/use-auth";
 
 const Main = (): JSX.Element | undefined => {
   const [users, setUsers] = useState<User[]>([]);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     void getAllUsers().then((data) => {
       setUsers(data);
     });
   }, []);
-  if (isUserAuthorised()) {
+  if (isAuthenticated) {
     console.log(getAuthorizedUser());
   }
   return (
     <>
-      {isUserAuthorised() ? (
+      {isAuthenticated ? (
         <Typography
           component="h1"
           mb={1}

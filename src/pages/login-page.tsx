@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/use-auth";
 import { loginUser } from "@/requests/login-user";
 import {
   Alert,
@@ -11,6 +12,7 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = (): JSX.Element => {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -40,7 +42,8 @@ const Login = (): JSX.Element => {
         setSnackbarMessage("Login successful");
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
-        setTimeout(() => navigate("/"), 2000);
+        login();
+        setTimeout(() => navigate("/"), 1000);
       })
       .catch((error: unknown) => {
         console.log("Error:", error);
@@ -60,9 +63,9 @@ const Login = (): JSX.Element => {
       <form onSubmit={handleLogin}>
         <Stack sx={{ gap: 1 }}>
           <TextField
-            autoComplete={"email"}
-            label={"email"}
-            placeholder={"email"}
+            autoComplete={"username"}
+            label={"username"}
+            placeholder={"username"}
             required
             size="small"
             name="username"

@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/use-auth";
 import { loginUser } from "@/requests/login-user";
 import { registerUser } from "@/requests/register-user";
 import {
@@ -12,6 +13,8 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Registration = (): JSX.Element => {
+  const { login } = useAuth();
+
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -47,7 +50,8 @@ const Registration = (): JSX.Element => {
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
         void loginUser({ username, password }).then(() => {
-          setTimeout(() => navigate("/"), 2000);
+          login();
+          setTimeout(() => navigate("/"), 1000);
         });
       })
       .catch((error: unknown) => {

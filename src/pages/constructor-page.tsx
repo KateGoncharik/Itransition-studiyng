@@ -1,7 +1,5 @@
 import { type JSX } from "react";
 
-import { isUserAuthorised } from "../token";
-
 import { getAuthorizedUser } from "../requests/get-authorized-user";
 import {
   InputLabel,
@@ -11,14 +9,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useAuth } from "@/hooks/use-auth";
 
 const Constructor = (): JSX.Element | undefined => {
-  if (isUserAuthorised()) {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) {
     console.log(getAuthorizedUser());
   }
   return (
     <>
-      {isUserAuthorised() ? (
+      {isAuthenticated ? (
         <>
           <Typography
             component="h1"

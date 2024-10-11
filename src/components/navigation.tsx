@@ -1,8 +1,9 @@
-import { deleteToken, isUserAuthorised } from "@/token";
+import { deleteToken } from "@/token";
 import { logoutUser } from "@/requests/logout-user";
 import { Button, Stack } from "@mui/material";
 import { FC } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 
 const headerButtonStyles = {
   "&:hover": {
@@ -15,6 +16,7 @@ const headerButtonStyles = {
 };
 
 export const Navigation: FC = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <Stack className="gap-2" direction={"row"}>
       <Button component={RouterLink} sx={headerButtonStyles} to={"/"}>
@@ -34,19 +36,25 @@ export const Navigation: FC = () => {
       >
         Registration
       </Button>
-      <Button component={RouterLink} sx={headerButtonStyles} to={"/login"}>
-        Login
-      </Button>
 
-      {isUserAuthorised() && <LogoutButton />}
+      {isAuthenticated ? (
+        <LogoutButton />
+      ) : (
+        <Button component={RouterLink} sx={headerButtonStyles} to={"/login"}>
+          Login
+        </Button>
+      )}
     </Stack>
   );
 };
 
 const LogoutButton: FC = () => {
+  const { logout } = useAuth();
+
   const navigate = useNavigate();
   const handleLogout = (): void => {
     logoutUser();
+    logout();
     deleteToken();
     navigate("/login");
   };
