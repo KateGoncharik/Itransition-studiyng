@@ -1,21 +1,13 @@
-import { createContext, useState, FC, ReactNode } from "react";
-
-export interface AuthContextType {
-  isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+import { isUserAuthorised } from "@/token";
+import { useState, FC, ReactNode } from "react";
+import { AuthContext } from "./auth-context";
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const savedToken = isUserAuthorised();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(savedToken);
 
   const login = (): void => setIsAuthenticated(true);
   const logout = (): void => setIsAuthenticated(false);
-  // TODO get auth info from cookies
   // TODO avoid multiple logins - check token in db, how to refresh?
 
   return (
