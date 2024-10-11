@@ -11,14 +11,18 @@ import {
 } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
 import { Question } from "@/components/constructor/question";
-import { QuestionConstructor } from "@/components/constructor/add-question";
+import { QuestionConstructor } from "@/components/constructor/question-constructor";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
     console.log(getAuthorizedUser());
   }
+  // TODO topic - new values to this list are added through the database; there is no need for the UI
   // TODO add 2 predefined fields - user, date
+  // TODO add img upload input
+  // TODO add access setting (public/ particular user(s))
   const [questions, setQuestions] = useState<JSX.Element[]>([]);
   const handleAddQuestion = (): void => {
     setQuestions((prevQuestions) => [
@@ -59,10 +63,10 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                 placeholder="Nice description for template"
                 isRequired={true}
               />
-              <InputLabel id="demo-simple-select-label">Topic</InputLabel>
+              <InputLabel id="select-topic-label">Topic</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId="select-topic-label"
+                id="topic-select"
                 value={"topic 1"}
                 label="Topic"
                 onChange={() => {}}
@@ -72,7 +76,9 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                 <MenuItem value={"topic 3"}>topic 3</MenuItem>
               </Select>
             </Stack>
-            <Button onClick={handleAddQuestion}>Add question</Button>
+            <Button onClick={handleAddQuestion}>
+              <AddCircleOutlineIcon />
+            </Button>
             <Stack className="user-questions">
               {questions.map((question, index) => (
                 <div key={index}>

@@ -5,12 +5,14 @@ type QuestionConfig = {
   name: string;
   placeholder: string;
   isRequired: boolean;
+  isDisabled?: boolean;
 };
 export const Question: FC<QuestionConfig> = ({
   label,
   name,
   placeholder,
   isRequired,
+  isDisabled = false,
 }: QuestionConfig) => {
   return (
     <>
@@ -22,6 +24,7 @@ export const Question: FC<QuestionConfig> = ({
           required
           size="small"
           name={name}
+          disabled={isDisabled}
         />
       ) : (
         <TextField
@@ -30,6 +33,7 @@ export const Question: FC<QuestionConfig> = ({
           placeholder={placeholder}
           size="small"
           name={name}
+          disabled={isDisabled}
         />
       )}
     </>

@@ -15,6 +15,8 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const login = (): void => setIsAuthenticated(true);
   const logout = (): void => setIsAuthenticated(false);
+  // TODO get auth info from cookies
+  // TODO avoid multiple logins - check token in db, how to refresh?
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
