@@ -15,6 +15,7 @@ import { QuestionConstructor } from "@/components/constructor/question/question-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { StyledTextarea } from "@/components/constructor/question/styled-textarea";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { getInitialTemplateState } from "./template-state";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
@@ -38,7 +39,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
       prevQuestions.filter((_, i) => i !== index),
     );
   };
-
+  console.log(getInitialTemplateState());
   return (
     <>
       {isAuthenticated ? (
