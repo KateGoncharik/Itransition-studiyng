@@ -2,7 +2,6 @@ import { useEffect, useState, type JSX } from "react";
 
 import { User, UserComponent } from "../components/user";
 import { getAllUsers } from "../requests/get-all-users";
-import { getAuthorizedUser } from "../requests/get-authorized-user";
 import { Typography } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -15,9 +14,7 @@ const Main = (): JSX.Element | undefined => {
       setUsers(data);
     });
   }, []);
-  if (isAuthenticated) {
-    console.log(getAuthorizedUser());
-  }
+
   return (
     <>
       {isAuthenticated ? (

@@ -12,6 +12,7 @@ import {
   Login,
 } from "./lazy-loading.tsx";
 import { CircularProgress } from "@mui/material";
+import { TemplateProvider } from "@/pages/template-provider.tsx";
 
 export const routes = [
   {
@@ -52,7 +53,9 @@ export const routes = [
       {
         element: (
           <Suspense fallback={<CircularProgress />}>
-            <Constructor />
+            <TemplateProvider>
+              <Constructor />
+            </TemplateProvider>
           </Suspense>
         ),
         path: "/constructor",

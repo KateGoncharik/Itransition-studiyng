@@ -1,6 +1,6 @@
-import { useState, type JSX } from "react";
+import { ChangeEvent, type JSX } from "react";
 
-import { getAuthorizedUser } from "../requests/get-authorized-user";
+// import { getAuthorizedUser } from "../requests/get-authorized-user";
 import {
   Button,
   InputLabel,
@@ -15,31 +15,26 @@ import { QuestionConstructor } from "@/components/constructor/question/question-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { StyledTextarea } from "@/components/constructor/question/styled-textarea";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { getInitialTemplateState } from "./template-state";
+import { useTemplateContext } from "./template-context";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
-  if (isAuthenticated) {
-    void getAuthorizedUser().then((data) => console.log(data));
-  }
+  // if (isAuthenticated) {
+  //   void getAuthorizedUser().then((data) => console.log(data));
+  // }
+
   // TODO topic - new values to this list are added through the database; there is no need for the UI
   // TODO add 2 predefined fields - user, date
   // TODO add img upload input
   // TODO add access setting (public/ particular user(s))
 
-  const [questions, setQuestions] = useState<JSX.Element[]>([]);
-  const handleAddQuestion = (): void => {
-    setQuestions((prevQuestions) => [
-      ...prevQuestions,
-      <QuestionConstructor key={prevQuestions.length} />,
-    ]);
-  };
-  const handleRemoveQuestion = (index: number): void => {
-    setQuestions((prevQuestions) =>
-      prevQuestions.filter((_, i) => i !== index),
-    );
-  };
-  console.log(getInitialTemplateState());
+  const {
+    templateState,
+    handleTemplateFieldChange,
+    addQuestionToTemplateState,
+    removeQuestionFromTemplateState,
+  } = useTemplateContext();
+  console.log(templateState);
   return (
     <>
       {isAuthenticated ? (
@@ -61,6 +56,15 @@ const TemplateConstructor = (): JSX.Element | undefined => {
               <Question
                 name={"template-title"}
                 label="Title"
+                value={templateState.title}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  if (!e.target) {
+                    throw new Error("Target expected");
+                  }
+                  if (typeof e.target.value === "string") {
+                    handleTemplateFieldChange("title", e.target.value);
+                  }
+                }}
                 placeholder="Nice title"
                 isRequired={true}
               />
@@ -68,6 +72,9 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                 name={"template-description"}
                 placeholder="Description of template"
                 required={true}
+                onChange={(e) =>
+                  handleTemplateFieldChange("description", e.target.value)
+                }
               />
               <InputLabel id="select-topic-label">Topic</InputLabel>
               <Select
@@ -75,18 +82,23 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                 id="topic-select"
                 value={"topic 1"}
                 label="Topic"
-                onChange={() => {}}
+                onChange={(e) =>
+                  handleTemplateFieldChange("topicId", e.target.value)
+                }
               >
                 <MenuItem value={"topic 1"}>topic 1</MenuItem>
                 <MenuItem value={"topic 2"}>topic 2</MenuItem>
                 <MenuItem value={"topic 3"}>topic 3</MenuItem>
               </Select>
             </Stack>
-            <Button onClick={handleAddQuestion}>
+            <Button
+              disabled={templateState.questions.length === 16}
+              onClick={addQuestionToTemplateState}
+            >
               <AddCircleOutlineIcon />
             </Button>
             <Stack sx={{ gap: 2 }} className="user-questions">
-              {questions.map((question, index) => (
+              {templateState.questions.map((question, index) => (
                 <Stack
                   sx={{
                     borderLeft: "5px solid #2da2ff",
@@ -95,8 +107,12 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   }}
                   key={index}
                 >
-                  {question}
-                  <Button onClick={() => handleRemoveQuestion(index)}>
+                  <QuestionConstructor question={question} />
+                  <Button
+                    onClick={() => {
+                      removeQuestionFromTemplateState(question.id);
+                    }}
+                  >
                     <DeleteOutlineIcon />
                   </Button>
                 </Stack>

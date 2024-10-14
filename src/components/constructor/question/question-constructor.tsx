@@ -7,19 +7,29 @@ import {
   Select,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
 import { AnswerConstructor } from "../answer/answer-constructor";
 import { answerTypes } from "../answer/types";
 import { StyledTextarea } from "./styled-textarea";
 
-export const QuestionConstructor: FC = () => {
-  // TODO validate type more strict
-  // TODO markdown support
+type QuestionConstructorConfig = {
+  title: string;
+  description: string;
+  answerType: string;
+  isRequired: boolean;
+  isShown: boolean;
+  id: string;
+};
 
-  const [answerType, setAnswerType] = useState<string>(
-    answerTypes.oneLineString,
-  );
+export const QuestionConstructor: FC<{
+  question: QuestionConstructorConfig;
+}> = ({ question }) => {
+  // TODO validate type more strict
+
+  const { title, description, answerType, isRequired, isShown, id } = question;
+  const [answerTypeAAA, setAnswerTypeAAA] = useState<string>(answerType);
 
   return (
     <Stack
@@ -29,6 +39,7 @@ export const QuestionConstructor: FC = () => {
         gap: 1,
       }}
     >
+      <Typography>{id}</Typography>
       <Stack
         sx={{
           flexDirection: "row",
@@ -43,11 +54,13 @@ export const QuestionConstructor: FC = () => {
             autoComplete={"question-title"}
             label={"Title"}
             placeholder={"Some title"}
+            value={title}
             size="small"
             required
             name={"question-title"}
           />
           <StyledTextarea
+            value={description}
             autoComplete="question-description"
             required={true}
             name="question-description"
@@ -59,9 +72,9 @@ export const QuestionConstructor: FC = () => {
           <Select
             labelId="select-answer-type-label"
             id="answer-type-select"
-            value={answerType}
+            value={answerTypeAAA}
             onChange={(e) => {
-              setAnswerType(e.target.value);
+              setAnswerTypeAAA(e.target.value);
             }}
           >
             <MenuItem value={answerTypes.oneLineString}>
@@ -79,11 +92,13 @@ export const QuestionConstructor: FC = () => {
       <FormGroup>
         <FormControlLabel
           required
+          checked={isRequired}
           control={<Checkbox />}
           label="Is question required"
         />
         <FormControlLabel
           required
+          checked={isShown}
           control={<Checkbox />}
           label="Show question in form"
         />
