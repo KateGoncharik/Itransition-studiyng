@@ -13,6 +13,8 @@ import { FC, useState } from "react";
 import { AnswerConstructor } from "../answer/answer-constructor";
 import { answerTypes } from "../answer/types";
 import { StyledTextarea } from "./styled-textarea";
+import { type QuestionFieldChangeHandler } from "@/pages/template-provider";
+import { useCheckAnswerType } from "./check-answer-type";
 
 type QuestionConstructorConfig = {
   title: string;
@@ -25,11 +27,14 @@ type QuestionConstructorConfig = {
 
 export const QuestionConstructor: FC<{
   question: QuestionConstructorConfig;
-}> = ({ question }) => {
+  handleChange: QuestionFieldChangeHandler;
+}> = ({ question, handleChange }) => {
   // TODO validate type more strict
 
   const { title, description, answerType, isRequired, isShown, id } = question;
-  const [answerTypeAAA, setAnswerTypeAAA] = useState<string>(answerType);
+  const { areTypesDisabled } = useCheckAnswerType();
+
+  const [localAnswerType, setLocalAnswerType] = useState<string>(answerType);
 
   return (
     <Stack
@@ -55,6 +60,9 @@ export const QuestionConstructor: FC<{
             label={"Title"}
             placeholder={"Some title"}
             value={title}
+            onChange={(e) => {
+              handleChange(question.id, "title", e.target.value);
+            }}
             size="small"
             required
             name={"question-title"}
@@ -63,6 +71,9 @@ export const QuestionConstructor: FC<{
             value={description}
             autoComplete="question-description"
             required={true}
+            onChange={(e) => {
+              handleChange(question.id, "description", e.target.value);
+            }}
             name="question-description"
             placeholder={"Some description\n"}
           />
@@ -72,34 +83,57 @@ export const QuestionConstructor: FC<{
           <Select
             labelId="select-answer-type-label"
             id="answer-type-select"
-            value={answerTypeAAA}
+            value={localAnswerType}
             onChange={(e) => {
-              setAnswerTypeAAA(e.target.value);
+              handleChange(question.id, "answerType", e.target.value);
+              setLocalAnswerType(e.target.value);
             }}
           >
-            <MenuItem value={answerTypes.oneLineString}>
+            <MenuItem
+              disabled={areTypesDisabled.isOneLineDisabled}
+              value={answerTypes.oneLineString}
+            >
               One line string
             </MenuItem>
-            <MenuItem value={answerTypes.multilineString}>
+            <MenuItem
+              disabled={areTypesDisabled.isMultilineDisabled}
+              value={answerTypes.multilineString}
+            >
               Multiline string
             </MenuItem>
-            <MenuItem value={answerTypes.number}>Number</MenuItem>
-            <MenuItem value={answerTypes.checkbox}>Checkbox</MenuItem>
+            <MenuItem
+              disabled={areTypesDisabled.isNumberDisabled}
+              value={answerTypes.number}
+            >
+              Number
+            </MenuItem>
+            <MenuItem
+              disabled={areTypesDisabled.isCheckboxDisabled}
+              value={answerTypes.checkbox}
+            >
+              Checkbox
+            </MenuItem>
           </Select>
         </Stack>
       </Stack>
-      <AnswerConstructor type={answerType} />
+      <AnswerConstructor type={localAnswerType} />
       <FormGroup>
         <FormControlLabel
           required
           checked={isRequired}
           control={<Checkbox />}
+          onChange={(_, checked) => {
+            handleChange(question.id, "isRequired", checked);
+          }}
           label="Is question required"
         />
         <FormControlLabel
           required
           checked={isShown}
           control={<Checkbox />}
+          onChange={(_, checked) => {
+            handleChange(question.id, "isShown", checked);
+          }}
           label="Show question in form"
         />
       </FormGroup>

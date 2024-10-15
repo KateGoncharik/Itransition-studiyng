@@ -31,10 +31,10 @@ const TemplateConstructor = (): JSX.Element | undefined => {
   const {
     templateState,
     handleTemplateFieldChange,
+    handleQuestionFieldChange,
     addQuestionToTemplateState,
     removeQuestionFromTemplateState,
   } = useTemplateContext();
-  console.log(templateState);
   return (
     <>
       {isAuthenticated ? (
@@ -92,7 +92,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
               </Select>
             </Stack>
             <Button
-              disabled={templateState.questions.length === 16}
+              disabled={templateState.questions.length >= 16}
               onClick={addQuestionToTemplateState}
             >
               <AddCircleOutlineIcon />
@@ -107,7 +107,10 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   }}
                   key={index}
                 >
-                  <QuestionConstructor question={question} />
+                  <QuestionConstructor
+                    handleChange={handleQuestionFieldChange}
+                    question={question}
+                  />
                   <Button
                     onClick={() => {
                       removeQuestionFromTemplateState(question.id);

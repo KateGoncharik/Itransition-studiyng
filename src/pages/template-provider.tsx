@@ -1,3 +1,4 @@
+import { answerTypes } from "@/components/constructor/answer/types";
 import { createContext, useState, ReactNode, ReactElement } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -19,17 +20,21 @@ type TemplateState = {
   questions: Array<QuestionType>;
 };
 
+type TemplateFieldChangeHandler = (
+  field: keyof TemplateState,
+  value: string,
+) => void;
+
+export type QuestionFieldChangeHandler = (
+  id: string,
+  field: keyof QuestionType,
+  value: string | boolean,
+) => void;
+
 export type TemplateContextType = {
   templateState: TemplateState;
-  handleTemplateFieldChange: (
-    field: keyof TemplateState,
-    value: string,
-  ) => void;
-  handleQuestionFieldChange: (
-    id: string,
-    field: keyof QuestionType,
-    value: string | boolean,
-  ) => void;
+  handleTemplateFieldChange: TemplateFieldChangeHandler;
+  handleQuestionFieldChange: QuestionFieldChangeHandler;
   addQuestionToTemplateState: () => void;
   removeQuestionFromTemplateState: (id: string) => void;
 };
@@ -52,18 +57,33 @@ export const TemplateProvider = ({
     questions: [],
   };
 
-  const initialQuestionState = {
-    id: uuidv4(),
-    title: "",
-    description: "",
-    isRequired: false,
-    isShown: true,
-    answerType: "one-line-string",
-  };
-
   const [templateState, setTemplateState] =
     useState<TemplateState>(initialTemplateState);
 
+  const getQuestionCountByType = (type: string): number => {
+    return templateState.questions.filter(
+      (question) => question.answerType === type,
+    ).length;
+  };
+
+  const getAvailableAnswerType = (): string => {
+    const maxCountPerType = 4;
+
+    if (getQuestionCountByType(answerTypes.oneLineString) < maxCountPerType) {
+      return answerTypes.oneLineString;
+    }
+    if (getQuestionCountByType(answerTypes.multilineString) < maxCountPerType) {
+      return answerTypes.multilineString;
+    }
+    if (getQuestionCountByType(answerTypes.number) < maxCountPerType) {
+      return answerTypes.number;
+    }
+    if (getQuestionCountByType(answerTypes.checkbox) < maxCountPerType) {
+      return answerTypes.checkbox;
+    }
+
+    throw new Error("No available answer types. All limits reached.");
+  };
   const handleTemplateFieldChange = (
     field: keyof TemplateState,
     value: string,
@@ -88,7 +108,14 @@ export const TemplateProvider = ({
   };
 
   const addQuestionToTemplateState = (): void => {
-    const newQuestion: QuestionType = initialQuestionState;
+    const newQuestion: QuestionType = {
+      id: uuidv4(),
+      title: "",
+      description: "",
+      isRequired: false,
+      isShown: true,
+      answerType: getAvailableAnswerType(),
+    };
     setTemplateState((prevState) => ({
       ...prevState,
       questions: [...prevState.questions, newQuestion],
