@@ -121,10 +121,6 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/me", (req, res) => {
-  // console.log(req);
-  // if (!req.cookies) {
-  //   return res.status(410).json({ error: "No cookies provided" });
-  // }
   const token = req.cookies.token;
 
   if (!token) {
@@ -144,6 +140,17 @@ app.get("/me", (req, res) => {
 
       res.json(results[0]);
     });
+  });
+});
+
+app.get("/topics", (_, res) => {
+  const query = "SELECT * FROM topics";
+
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: ERRORS.serverError });
+    }
+    res.json(results);
   });
 });
 
