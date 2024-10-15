@@ -7,7 +7,6 @@ import {
   Select,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
 import { AnswerConstructor } from "../answer/answer-constructor";
@@ -31,7 +30,7 @@ export const QuestionConstructor: FC<{
 }> = ({ question, handleChange }) => {
   // TODO validate type more strict
 
-  const { title, description, answerType, isRequired, isShown, id } = question;
+  const { title, description, answerType, isRequired, isShown } = question;
   const { areTypesDisabled } = useCheckAnswerType();
 
   const [localAnswerType, setLocalAnswerType] = useState<string>(answerType);
@@ -44,7 +43,6 @@ export const QuestionConstructor: FC<{
         gap: 1,
       }}
     >
-      <Typography>{id}</Typography>
       <Stack
         sx={{
           flexDirection: "row",
@@ -116,7 +114,7 @@ export const QuestionConstructor: FC<{
           </Select>
         </Stack>
       </Stack>
-      <AnswerConstructor type={localAnswerType} />
+      <AnswerConstructor title={title} type={localAnswerType} />
       <FormGroup>
         <FormControlLabel
           required

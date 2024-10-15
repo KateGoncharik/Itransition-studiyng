@@ -1,21 +1,15 @@
 import { FC } from "react";
 import { Question } from "../question/question";
-import {
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  TextareaAutosize,
-} from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
-import { Unstable_NumberInput as BaseNumberInput } from "@mui/base/Unstable_NumberInput";
-import { styled } from "@mui/material/styles";
 import { answerTypes } from "./types";
+import { StyledTextarea } from "../question/styled-textarea";
+import { StyledNumberInput } from "./styled-number-input";
 
-export const AnswerConstructor: FC<{ type: string }> = ({ type }) => {
-  // TODO handle answer type change
-  // TODO count answer types
-
-  // TODO styles for answer inputs
+export const AnswerConstructor: FC<{ type: string; title: string }> = ({
+  type,
+  title,
+}) => {
   if (type === answerTypes.oneLineString) {
     return (
       <Question
@@ -30,7 +24,10 @@ export const AnswerConstructor: FC<{ type: string }> = ({ type }) => {
   if (type === answerTypes.checkbox) {
     return (
       <FormGroup>
-        <FormControlLabel control={<Checkbox disabled={true} />} label="TBD" />
+        <FormControlLabel
+          control={<Checkbox disabled={true} />}
+          label={title}
+        />
       </FormGroup>
     );
   }
@@ -52,41 +49,6 @@ export const AnswerConstructor: FC<{ type: string }> = ({ type }) => {
     );
   }
   if (type === answerTypes.multilineString) {
-    return (
-      <TextareaAutosize disabled={true} placeholder={"Full answer...\n"} />
-    );
+    return <StyledTextarea disabled={true} placeholder={"Full answer...\n"} />;
   }
 };
-
-const StyledNumberInput = styled(BaseNumberInput)`
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  display: flex;
-  align-items: center;
-  .input {
-    font-size: 16px;
-    color: #333;
-    border: none;
-    outline: none;
-    flex: 1;
-  }
-
-  .btn {
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-
-  .btn.decrement {
-    margin-right: 4px;
-  }
-
-  .btn.increment {
-    margin-left: 4px;
-  }
-`;
