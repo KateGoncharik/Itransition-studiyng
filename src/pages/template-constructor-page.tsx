@@ -1,6 +1,5 @@
-import { ChangeEvent, type JSX } from "react";
+import { ChangeEvent, useEffect, useState, type JSX } from "react";
 
-// import { getAuthorizedUser } from "../requests/get-authorized-user";
 import {
   Button,
   InputLabel,
@@ -16,14 +15,13 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { StyledTextarea } from "@/components/constructor/question/styled-textarea";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTemplateContext } from "./template-context";
+import { getTopics } from "@/requests/get-topics";
+import { AllTopicsType } from "@/requests/topic-schema";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
-  // if (isAuthenticated) {
-  //   void getAuthorizedUser().then((data) => console.log(data));
-  // }
 
-  // TODO topic - new values to this list are added through the database; there is no need for the UI
+  // TODO get topics from db
   // TODO add 2 predefined fields - user, date
   // TODO add img upload input
   // TODO add access setting (public/ particular user(s))
@@ -35,6 +33,15 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     addQuestionToTemplateState,
     removeQuestionFromTemplateState,
   } = useTemplateContext();
+
+  const [topics, setTopics] = useState<AllTopicsType>([]);
+  useEffect(() => {
+    getTopics().then(
+      (data) => setTopics(data),
+      () => {},
+    );
+  }, []);
+
   return (
     <>
       {isAuthenticated ? (
@@ -86,9 +93,12 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   handleTemplateFieldChange("topicId", e.target.value)
                 }
               >
-                <MenuItem value={"topic 1"}>topic 1</MenuItem>
-                <MenuItem value={"topic 2"}>topic 2</MenuItem>
-                <MenuItem value={"topic 3"}>topic 3</MenuItem>
+                {topics.length > 0 &&
+                  topics.map((topic) => (
+                    <MenuItem key={topic.id} value={topic.name}>
+                      {topic.name}
+                    </MenuItem>
+                  ))}
               </Select>
             </Stack>
             <Button
