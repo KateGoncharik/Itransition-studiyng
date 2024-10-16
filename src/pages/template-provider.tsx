@@ -11,7 +11,7 @@ type QuestionType = {
   answerType: string;
 };
 
-type TemplateState = {
+export type TemplateState = {
   id: string;
   title: string;
   description: string;
