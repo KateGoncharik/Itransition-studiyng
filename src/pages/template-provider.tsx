@@ -17,12 +17,13 @@ type TemplateState = {
   description: string;
   imageUrl: string;
   topicId: string;
+  isPublic: string;
   questions: Array<QuestionType>;
 };
 
 export type TemplateFieldChangeHandler = (
   field: keyof TemplateState,
-  value: string,
+  value: string | boolean,
 ) => void;
 
 export type QuestionFieldChangeHandler = (
@@ -54,6 +55,7 @@ export const TemplateProvider = ({
     description: "",
     imageUrl: "",
     topicId: "",
+    isPublic: "false",
     questions: [],
   };
 
@@ -86,7 +88,7 @@ export const TemplateProvider = ({
   };
   const handleTemplateFieldChange = (
     field: keyof TemplateState,
-    value: string,
+    value: string | boolean,
   ): void => {
     setTemplateState((prevState) => ({
       ...prevState,

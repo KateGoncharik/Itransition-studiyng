@@ -1,6 +1,14 @@
 import { ChangeEvent, useEffect, useState, type JSX } from "react";
 
-import { Button, Stack, Typography } from "@mui/material";
+import {
+  Checkbox,
+  FormControlLabel,
+  Button,
+  Stack,
+  Typography,
+  FormGroup,
+} from "@mui/material";
+
 import { useAuth } from "@/hooks/use-auth";
 import { Question } from "@/components/constructor/question/question";
 import { QuestionConstructor } from "@/components/constructor/question/question-constructor";
@@ -15,9 +23,7 @@ import { TopicSelect } from "@/components/constructor/topics-select";
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
 
-  // TODO add 2 predefined fields - user, date
   // TODO add img upload input
-  // TODO add access setting (public/ particular user(s))
 
   const {
     templateState,
@@ -34,7 +40,6 @@ const TemplateConstructor = (): JSX.Element | undefined => {
       () => {},
     );
   }, []);
-
   return (
     <>
       {isAuthenticated ? (
@@ -82,6 +87,15 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   handleTemplateFieldChange={handleTemplateFieldChange}
                 />
               )}
+              <FormGroup>
+                <FormControlLabel
+                  onChange={(_, checked) =>
+                    handleTemplateFieldChange("isPublic", checked)
+                  }
+                  control={<Checkbox disabled={false} />}
+                  label="Make public"
+                />
+              </FormGroup>
             </Stack>
             <Button
               disabled={templateState.questions.length >= 16}
@@ -90,6 +104,21 @@ const TemplateConstructor = (): JSX.Element | undefined => {
               <AddCircleOutlineIcon />
             </Button>
             <Stack sx={{ gap: 2 }} className="user-questions">
+              <Question
+                name={"user-name"}
+                label="User"
+                placeholder=""
+                isDisabled={true}
+                isRequired={false}
+              />
+              <Question
+                name={"time"}
+                label="Time"
+                placeholder=""
+                isDisabled={true}
+                isRequired={false}
+              />
+
               {templateState.questions.map((question, index) => (
                 <Stack
                   sx={{
