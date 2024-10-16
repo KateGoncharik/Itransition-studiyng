@@ -20,7 +20,7 @@ type TemplateState = {
   questions: Array<QuestionType>;
 };
 
-type TemplateFieldChangeHandler = (
+export type TemplateFieldChangeHandler = (
   field: keyof TemplateState,
   value: string,
 ) => void;

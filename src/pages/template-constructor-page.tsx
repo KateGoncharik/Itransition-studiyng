@@ -1,13 +1,6 @@
 import { ChangeEvent, useEffect, useState, type JSX } from "react";
 
-import {
-  Button,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
 import { Question } from "@/components/constructor/question/question";
 import { QuestionConstructor } from "@/components/constructor/question/question-constructor";
@@ -17,11 +10,11 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTemplateContext } from "./template-context";
 import { getTopics } from "@/requests/get-topics";
 import { AllTopicsType } from "@/requests/topic-schema";
+import { TopicSelect } from "@/components/constructor/topics-select";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
 
-  // TODO get topics from db
   // TODO add 2 predefined fields - user, date
   // TODO add img upload input
   // TODO add access setting (public/ particular user(s))
@@ -83,23 +76,12 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   handleTemplateFieldChange("description", e.target.value)
                 }
               />
-              <InputLabel id="select-topic-label">Topic</InputLabel>
-              <Select
-                labelId="select-topic-label"
-                id="topic-select"
-                value={"topic 1"}
-                label="Topic"
-                onChange={(e) =>
-                  handleTemplateFieldChange("topicId", e.target.value)
-                }
-              >
-                {topics.length > 0 &&
-                  topics.map((topic) => (
-                    <MenuItem key={topic.id} value={topic.name}>
-                      {topic.name}
-                    </MenuItem>
-                  ))}
-              </Select>
+              {topics.length > 0 && (
+                <TopicSelect
+                  topics={topics}
+                  handleTemplateFieldChange={handleTemplateFieldChange}
+                />
+              )}
             </Stack>
             <Button
               disabled={templateState.questions.length >= 16}
