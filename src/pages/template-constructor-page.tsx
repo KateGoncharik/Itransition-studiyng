@@ -19,11 +19,11 @@ import { useTemplateContext } from "./template-context";
 import { getTopics } from "@/requests/get-topics";
 import { AllTopicsType } from "@/requests/topic-schema";
 import { TopicSelect } from "@/components/constructor/topics-select";
+import { InputFileUpload } from "@/components/constructor/file-input";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
-
-  // TODO add img upload input
 
   const {
     templateState,
@@ -34,12 +34,23 @@ const TemplateConstructor = (): JSX.Element | undefined => {
   } = useTemplateContext();
 
   const [topics, setTopics] = useState<AllTopicsType>([]);
+
+  const defaultImage = "./template-placeholder.jpg";
+  const [file, setFile] = useState(defaultImage);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   useEffect(() => {
     getTopics().then(
       (data) => setTopics(data),
       () => {},
     );
   }, []);
+
+  // TODO move file input logic to its component
+  const handleFileRemove = (): void => {
+    setFile(defaultImage);
+  };
+
   return (
     <>
       {isAuthenticated ? (
@@ -48,6 +59,43 @@ const TemplateConstructor = (): JSX.Element | undefined => {
             Template constructor
           </Typography>
           <Stack gap={1} width="60%" margin="0 auto">
+            <div
+              style={{
+                width: "100%",
+                height: "200px",
+                overflow: "hidden",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
+            >
+              <img
+                src={file}
+                alt="Uploaded or default"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+              />
+            </div>
+            <Stack flexDirection="row" justifyContent="space-evenly">
+              <InputFileUpload
+                setUploadError={setUploadError}
+                setFile={setFile}
+              />
+              <Button
+                disabled={file === defaultImage}
+                onClick={handleFileRemove}
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                style={{ marginTop: "10px" }}
+              >
+                Reset img
+              </Button>
+            </Stack>
+
+            {uploadError && <p style={{ color: "red" }}>{uploadError}</p>}
             <Stack
               sx={{
                 backgroundColor: "background.paper",
@@ -87,6 +135,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   handleTemplateFieldChange={handleTemplateFieldChange}
                 />
               )}
+
               <FormGroup>
                 <FormControlLabel
                   onChange={(_, checked) =>
