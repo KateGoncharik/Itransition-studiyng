@@ -9,6 +9,7 @@ const ERRORS = {
 const OKMESSAGES = {
   dbConnection: "Successfully connected to database",
   userDelete: "Successfully deleted user",
+  templateCreated: "Template created",
 };
 
 module.exports = { ERRORS, OKMESSAGES };

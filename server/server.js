@@ -120,6 +120,37 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.post("/upload-template", (req, res) => {
+  const { title, description, isPublic, questions, imageUrl } = req.body;
+
+  // if (!title || !description || questions.length === 0) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Все поля обязательны для заполнения" });
+  // }
+  res.status(201).json({ message: OKMESSAGES.templateCreated });
+
+  // const query = 'INSERT INTO templates (title, description, isPublic, imageUrl) VALUES (?, ?, ?, ?)';
+  // db.query(query, [title, description, isPublic, imageUrl], (err, result) => {
+  //   if (err) {
+  //     return res.status(500).json({ error: ERRORS.serverError });
+  //   }
+
+  //   const templateId = result.insertId;
+  //   const questionsQuery = 'INSERT INTO questions (template_id, question_text, question_type) VALUES ?';
+
+  //   const questionValues = questions.map((q) => [templateId, q.text, q.type]);
+
+  //   db.query(questionsQuery, [questionValues], (questionsErr) => {
+  //     if (questionsErr) {
+  //       return res.status(500).json({ error: ERRORS.serverError });
+  //     }
+
+  //     res.status(201).json({ message: OKMESSAGES.templateCreated });
+  //   });
+  // });
+});
+
 app.get("/me", (req, res) => {
   const token = req.cookies.token;
 
