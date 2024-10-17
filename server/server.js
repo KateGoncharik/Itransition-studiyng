@@ -23,7 +23,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
 const db = mysql.createConnection({
   host,
   user,
@@ -63,6 +63,7 @@ app.get("/users/:id", (req, res) => {
 });
 
 const bcrypt = require("bcryptjs");
+const { isTemplateValid } = require("./validate-template");
 
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
@@ -121,14 +122,14 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/upload-template", (req, res) => {
-  const { title, description, isPublic, questions, imageUrl } = req.body;
+  const templateState = req.body;
+  console.log(templateState);
 
-  // if (!title || !description || questions.length === 0) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Все поля обязательны для заполнения" });
-  // }
-  res.status(201).json({ message: OKMESSAGES.templateCreated });
+  if (isTemplateValid(templateState)) {
+    return res.status(201).json({ message: OKMESSAGES.templateCreated });
+  } else {
+    return res.status(400).json({ error: "Invalid template data" });
+  }
 
   // const query = 'INSERT INTO templates (title, description, isPublic, imageUrl) VALUES (?, ?, ?, ?)';
   // db.query(query, [title, description, isPublic, imageUrl], (err, result) => {
