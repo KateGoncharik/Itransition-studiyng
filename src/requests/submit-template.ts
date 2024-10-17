@@ -7,6 +7,9 @@ export const submitTemplate = async (
   try {
     const response = await fetch(getUrl("upload-template"), {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(formData),
     });
 

@@ -81,7 +81,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
           <Typography component="h1" mb={1} textAlign="center" variant="h5">
             Template constructor
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
             <Stack gap={1} width="60%" margin="0 auto">
               <div
                 style={{
