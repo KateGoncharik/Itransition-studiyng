@@ -5,7 +5,7 @@ export const submitTemplate = async (
   formData: TemplateState,
 ): Promise<void> => {
   try {
-    const response = await fetch(getUrl("upload"), {
+    const response = await fetch(getUrl("upload-template"), {
       method: "POST",
       body: JSON.stringify(formData),
     });
