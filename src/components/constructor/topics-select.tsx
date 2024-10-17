@@ -15,15 +15,19 @@ export const TopicSelect: FC<{
         labelId="select-topic-label"
         id="topic-select"
         value={selectedTopic}
+        required={true}
         label="Topic"
         onChange={(e) => {
           setSelectedTopic(e.target.value);
-          handleTemplateFieldChange("topicId", e.target.value);
+          const topic = topics.filter(
+            (topic) => topic.name === e.target.value,
+          )[0];
+          handleTemplateFieldChange("topicId", topic.id);
         }}
       >
         {topics.length > 0 &&
           topics.map((topic) => (
-            <MenuItem key={topic.id} value={topic.id}>
+            <MenuItem key={topic.id} value={topic.name}>
               {topic.name}
             </MenuItem>
           ))}

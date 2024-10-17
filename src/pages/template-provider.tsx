@@ -10,6 +10,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { defaultImage } from "./template-constructor-page";
 import { convertFileToBase64 } from "./convert-file-to-base64";
+import { getTopics } from "@/requests/get-topics";
 
 type QuestionType = {
   id: string;
@@ -24,14 +25,14 @@ export type TemplateState = {
   title: string;
   description: string;
   imageUrl: string;
-  topicId: string;
+  topicId: number | null;
   userId: number | null;
   questions: Array<QuestionType>;
 };
 
 export type TemplateFieldChangeHandler = (
   field: keyof TemplateState,
-  value: string | boolean,
+  value: string | number | boolean,
 ) => void;
 
 export type QuestionFieldChangeHandler = (
@@ -61,7 +62,7 @@ export const TemplateProvider = ({
     title: "",
     description: "",
     imageUrl: "",
-    topicId: "",
+    topicId: null,
     userId: null,
     questions: [],
   };
@@ -78,6 +79,20 @@ export const TemplateProvider = ({
     };
 
     void fetchUserData();
+
+    const setInitialTopic = (): void => {
+      getTopics().then(
+        (data) =>
+          setTemplateState((prevState) => ({
+            ...prevState,
+            topicId: data[0].id,
+          })),
+        () => {},
+      );
+    };
+
+    void setInitialTopic();
+
     const formatDefaultImage = (): void => {
       convertFileToBase64(defaultImage).then(
         (base64String) => {
@@ -119,7 +134,7 @@ export const TemplateProvider = ({
 
   const handleTemplateFieldChange = (
     field: keyof TemplateState,
-    value: string | boolean,
+    value: string | number | boolean,
   ): void => {
     setTemplateState((prevState) => ({
       ...prevState,

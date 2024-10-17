@@ -50,9 +50,14 @@ const TemplateConstructor = (): JSX.Element | undefined => {
       setFormError("Description is required");
       return false;
     }
+    if (templateState.questions.length === 0) {
+      setFormError("At least one question is required");
+      return false;
+    }
     return true;
   };
   console.log(templateState);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setFormError(null);
