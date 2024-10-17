@@ -1,13 +1,6 @@
 import { ChangeEvent, useEffect, useState, type JSX } from "react";
 
-import {
-  Checkbox,
-  FormControlLabel,
-  Button,
-  Stack,
-  Typography,
-  FormGroup,
-} from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 
 import { useAuth } from "@/hooks/use-auth";
 import { Question } from "@/components/constructor/question/question";
@@ -24,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { submitTemplate } from "@/requests/submit-template";
-
+export const defaultImage = "./template-placeholder.jpg";
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
 
@@ -38,7 +31,6 @@ const TemplateConstructor = (): JSX.Element | undefined => {
 
   const [topics, setTopics] = useState<AllTopicsType>([]);
 
-  const defaultImage = "./template-placeholder.jpg";
   const [file, setFile] = useState(defaultImage);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -60,7 +52,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     }
     return true;
   };
-
+  console.log(templateState);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setFormError(null);
@@ -68,7 +60,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     if (!validateForm()) {
       return;
     }
-
+    console.log(templateState);
     void submitTemplate(templateState);
   };
 
@@ -108,6 +100,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
               </div>
               <Stack flexDirection="row" justifyContent="space-evenly">
                 <InputFileUpload
+                  handleTemplateFieldChange={handleTemplateFieldChange}
                   setUploadError={setUploadError}
                   setFile={setFile}
                 />
@@ -162,16 +155,6 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                     handleTemplateFieldChange={handleTemplateFieldChange}
                   />
                 )}
-
-                <FormGroup>
-                  <FormControlLabel
-                    onChange={(_, checked) =>
-                      handleTemplateFieldChange("isPublic", checked)
-                    }
-                    control={<Checkbox disabled={false} />}
-                    label="Make public"
-                  />
-                </FormGroup>
               </Stack>
               <Button
                 disabled={templateState.questions.length >= 16}

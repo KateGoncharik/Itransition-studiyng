@@ -23,7 +23,7 @@ export const TopicSelect: FC<{
       >
         {topics.length > 0 &&
           topics.map((topic) => (
-            <MenuItem key={topic.id} value={topic.name}>
+            <MenuItem key={topic.id} value={topic.id}>
               {topic.name}
             </MenuItem>
           ))}

@@ -2,6 +2,8 @@ import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { TemplateFieldChangeHandler } from "@/pages/template-provider";
+import { convertFileToBase64 } from "@/pages/convert-file-to-base64";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -18,7 +20,8 @@ const VisuallyHiddenInput = styled("input")({
 export const InputFileUpload: FC<{
   setUploadError: (error: string | null) => void;
   setFile: (file: string) => void;
-}> = ({ setFile, setUploadError }) => {
+  handleTemplateFieldChange: TemplateFieldChangeHandler;
+}> = ({ setFile, setUploadError, handleTemplateFieldChange }) => {
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
@@ -32,7 +35,7 @@ export const InputFileUpload: FC<{
         return;
       }
 
-      const maxSizeInMB = 4;
+      const maxSizeInMB = 2;
       if (selectedFile.size > maxSizeInMB * 1024 * 1024) {
         setUploadError(`File size exceeds ${maxSizeInMB}MB limit.`);
         return;
@@ -40,10 +43,16 @@ export const InputFileUpload: FC<{
 
       const fileURL = URL.createObjectURL(selectedFile);
       setFile(fileURL);
+      convertFileToBase64(fileURL).then(
+        (base64img) => {
+          handleTemplateFieldChange("imageUrl", base64img);
+        },
+        () => {},
+      );
+
       setUploadError(null);
     }
   };
-
   return (
     <Button
       component="label"

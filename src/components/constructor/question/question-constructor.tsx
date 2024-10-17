@@ -117,7 +117,6 @@ export const QuestionConstructor: FC<{
       <AnswerConstructor title={title} type={localAnswerType} />
       <FormGroup>
         <FormControlLabel
-          required
           checked={isRequired}
           control={<Checkbox />}
           onChange={(_, checked) => {

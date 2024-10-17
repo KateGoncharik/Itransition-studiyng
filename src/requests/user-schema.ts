@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const UserSchema = z.object({
-  id: z.number().optional(),
-  password: z.string().optional(),
+  id: z.number(),
+  password: z.string(),
   username: z.string(),
-  email: z.string().optional(),
+  email: z.string(),
 });
 
 export type UserType = z.infer<typeof UserSchema>;

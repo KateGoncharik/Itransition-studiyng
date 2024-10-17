@@ -1,6 +1,15 @@
 import { answerTypes } from "@/components/constructor/answer/types";
-import { createContext, useState, ReactNode, ReactElement } from "react";
+import { getAuthorizedUser } from "@/requests/get-authorized-user";
+import {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  ReactElement,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
+import { defaultImage } from "./template-constructor-page";
+import { convertFileToBase64 } from "./convert-file-to-base64";
 
 type QuestionType = {
   id: string;
@@ -12,12 +21,11 @@ type QuestionType = {
 };
 
 export type TemplateState = {
-  id: string;
   title: string;
   description: string;
   imageUrl: string;
   topicId: string;
-  isPublic: string;
+  userId: number | null;
   questions: Array<QuestionType>;
 };
 
@@ -50,17 +58,39 @@ export const TemplateProvider = ({
   children: ReactNode;
 }): ReactElement => {
   const initialTemplateState: TemplateState = {
-    id: "",
     title: "",
     description: "",
     imageUrl: "",
     topicId: "",
-    isPublic: "false",
+    userId: null,
     questions: [],
   };
-
   const [templateState, setTemplateState] =
     useState<TemplateState>(initialTemplateState);
+
+  useEffect(() => {
+    const fetchUserData = async (): Promise<void> => {
+      const user = await getAuthorizedUser();
+      setTemplateState((prevState) => ({
+        ...prevState,
+        userId: user.id,
+      }));
+    };
+
+    void fetchUserData();
+    const formatDefaultImage = (): void => {
+      convertFileToBase64(defaultImage).then(
+        (base64String) => {
+          setTemplateState((prevState) => ({
+            ...prevState,
+            imageUrl: base64String,
+          }));
+        },
+        () => {},
+      );
+    };
+    void formatDefaultImage();
+  }, []);
 
   const getQuestionCountByType = (type: string): number => {
     return templateState.questions.filter(
@@ -86,6 +116,7 @@ export const TemplateProvider = ({
 
     throw new Error("No available answer types. All limits reached.");
   };
+
   const handleTemplateFieldChange = (
     field: keyof TemplateState,
     value: string | boolean,
