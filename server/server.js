@@ -5,6 +5,9 @@ const mysql = require("mysql2");
 const { ERRORS, OKMESSAGES, clientAnswerTypes } = require("./constants");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 require("dotenv").config();
 
@@ -16,6 +19,39 @@ const database = process.env.DATABASE;
 const dbPort = process.env.DB_PORT;
 
 const app = express();
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const UPLOAD_DIR = path.join(__dirname, "uploads");
+
+const upload = multer({ storage });
+
+const clearUploadDir = () => {
+  fs.readdir(UPLOAD_DIR, (err, files) => {
+    if (err) {
+      console.error("Error reading upload directory:", err);
+      return;
+    }
+
+    files.forEach((file) => {
+      const filePath = path.join(UPLOAD_DIR, file);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error("Error deleting file:", err);
+        } else {
+          console.log(`Deleted file: ${filePath}`);
+        }
+      });
+    });
+  });
+};
+
 app.use(cookieParser());
 const corsOptions = {
   origin: "http://localhost:5173",
@@ -64,6 +100,7 @@ app.get("/users/:id", (req, res) => {
 
 const bcrypt = require("bcryptjs");
 const { isTemplateValid } = require("./validate-template");
+const { uploadImage } = require("./store-images");
 
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
@@ -121,20 +158,35 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.post("/upload-template", (req, res) => {
+app.post("/upload-template", upload.single("image"), async (req, res) => {
   const templateState = req.body;
+  if (!req.file) {
+    return res.status(400).json({ error: "Файл изображения не был загружен" });
+  }
+  // why destination is uploads?
+  console.log("file that we received:", req.file);
+  // TODO check that folder exists - if not - create
 
+  const filePath = path.join(__dirname, req.file.path);
+  // we need to put url into state before validation
+  const imgCloudUrl = await uploadImage(filePath);
+  fs.unlinkSync(filePath);
+  clearUploadDir();
+
+  templateState.image = imgCloudUrl;
   if (isTemplateValid(templateState)) {
-    const { title, description, imageUrl, topicId, userId, questions } =
+    const { title, description, image, topicId, userId, questions } =
       templateState;
+
     const result = {
       title,
       description,
-      image_url: imageUrl,
+      image_url: imgCloudUrl,
       topic_id: topicId,
       user_id: userId,
     };
-
+    const parsedQuestions = JSON.parse(templateState.questions);
+    // TODO try catch?
     const formatQuestionsByType = (questions, type, mappedAnswerType) => {
       return questions
         .filter((question) => question.answerType === type)
@@ -160,63 +212,54 @@ app.post("/upload-template", (req, res) => {
     };
     const formattedQuestions = {
       ...formatQuestionsByType(
-        questions,
+        parsedQuestions,
         clientAnswerTypes.oneLineString,
         mappedAnswerTypes[clientAnswerTypes.oneLineString],
       ),
       ...formatQuestionsByType(
-        questions,
+        parsedQuestions,
         clientAnswerTypes.multilineString,
         mappedAnswerTypes[clientAnswerTypes.multilineString],
       ),
       ...formatQuestionsByType(
-        questions,
+        parsedQuestions,
         clientAnswerTypes.number,
         mappedAnswerTypes[clientAnswerTypes.number],
       ),
       ...formatQuestionsByType(
-        questions,
+        parsedQuestions,
         clientAnswerTypes.checkbox,
         mappedAnswerTypes[clientAnswerTypes.checkbox],
       ),
     };
 
-    result.questions = formattedQuestions;
+    Object.assign(result, formattedQuestions);
 
     console.log(result);
-    res.status(201).json({ message: "Ok", result });
+    const insertTemplateQuery = `
+      INSERT INTO templates (
+        title, description, image_url, topic_id, user_id,
+        ${Object.keys(formattedQuestions).join(", ")}
+      ) VALUES (?, ?, ?, ?, ?, ${Object.keys(formattedQuestions)
+        .map(() => "?")
+        .join(", ")})
+    `;
 
-    // const insertTemplateQuery =
-    //   "INSERT INTO templates (title, description, imageUrl, topicId, userId) VALUES (?, ?, ?, ?, ?)";
-    // const templateValues = [title, description, imageUrl, topicId, userId];
+    const templateValues = [
+      result.title,
+      result.description,
+      result.image_url,
+      result.topic_id,
+      result.user_id,
+      ...Object.values(formattedQuestions),
+    ];
 
-    // db.query(insertTemplateQuery, templateValues, (err, templateResult) => {
-    //   if (err) {
-    //     return res.status(500).json({ error: "Ошибка сервера" });
-    //   }
-
-    //   const templateId = templateResult.insertId;
-
-    //   const insertQuestionsQuery =
-    //     "INSERT INTO questions (template_id, question_text, question_type, is_required) VALUES ?";
-
-    //   const questionValues = questions.map((q) => [
-    //     templateId,
-    //     q.title,
-    //     q.answerType,
-    //     q.isRequired,
-    //   ]);
-
-    //   db.query(insertQuestionsQuery, [questionValues], (questionsErr) => {
-    //     if (questionsErr) {
-    //       return res
-    //         .status(500)
-    //         .json({ error: "Ошибка сервера при добавлении вопросов" });
-    //     }
-
-    //     res.status(201).json({ message: "Шаблон успешно создан" });
-    //   });
-    // });
+    db.query(insertTemplateQuery, templateValues, (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Ошибка сервера", info: err });
+      }
+      res.status(201).json({ message: "Шаблон успешно создан", result });
+    });
   } else {
     return res.status(400).json({ error: "Неверные данные шаблона" });
   }
