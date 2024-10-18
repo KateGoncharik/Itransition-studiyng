@@ -60,7 +60,6 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     }
     return true;
   };
-  console.log(templateState);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -69,8 +68,22 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     if (!validateForm()) {
       return;
     }
-    console.log(templateState);
-    void submitTemplate(templateState);
+    if (
+      templateState.image === null ||
+      templateState.userId === null ||
+      templateState.topicId === null
+    ) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("title", templateState.title);
+    formData.append("description", templateState.description);
+    formData.append("topicId", JSON.stringify(templateState.topicId));
+    formData.append("userId", JSON.stringify(templateState.userId));
+    formData.append("questions", JSON.stringify(templateState.questions));
+    formData.append("image", templateState.image);
+
+    void submitTemplate(formData);
   };
 
   // TODO move file input logic to its component

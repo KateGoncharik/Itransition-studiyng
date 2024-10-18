@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { TemplateFieldChangeHandler } from "@/pages/template-provider";
-import { convertFileToBase64 } from "@/pages/convert-file-to-base64";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -43,12 +42,8 @@ export const InputFileUpload: FC<{
 
       const fileURL = URL.createObjectURL(selectedFile);
       setFile(fileURL);
-      convertFileToBase64(fileURL).then(
-        (base64img) => {
-          handleTemplateFieldChange("imageUrl", base64img);
-        },
-        () => {},
-      );
+      // TODO fix this to file
+      handleTemplateFieldChange("image", fileURL);
 
       setUploadError(null);
     }

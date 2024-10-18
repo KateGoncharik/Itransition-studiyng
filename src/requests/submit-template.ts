@@ -1,16 +1,11 @@
-import { TemplateState } from "@/pages/template-provider.tsx";
 import { getUrl } from "./get-url.ts";
 
-export const submitTemplate = async (
-  formData: TemplateState,
-): Promise<void> => {
+export const submitTemplate = async (formData: FormData): Promise<void> => {
   try {
     const response = await fetch(getUrl("upload-template"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
+
+      body: formData,
     });
 
     if (!response.ok) {

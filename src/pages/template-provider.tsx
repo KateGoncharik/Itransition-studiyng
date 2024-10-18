@@ -9,7 +9,6 @@ import {
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { defaultImage } from "./template-constructor-page";
-import { convertFileToBase64 } from "./convert-file-to-base64";
 import { getTopics } from "@/requests/get-topics";
 
 type QuestionType = {
@@ -24,7 +23,7 @@ type QuestionType = {
 export type TemplateState = {
   title: string;
   description: string;
-  imageUrl: string;
+  image: File | null;
   topicId: number | null;
   userId: number | null;
   questions: Array<QuestionType>;
@@ -49,6 +48,16 @@ export type TemplateContextType = {
   removeQuestionFromTemplateState: (id: string) => void;
 };
 
+const convertUrlToFile = async (
+  url: string,
+  fileName: string,
+  mimeType: string,
+): Promise<File> => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new File([blob], fileName, { type: mimeType });
+};
+
 export const TemplateContext = createContext<TemplateContextType | undefined>(
   undefined,
 );
@@ -61,7 +70,7 @@ export const TemplateProvider = ({
   const initialTemplateState: TemplateState = {
     title: "",
     description: "",
-    imageUrl: "",
+    image: null,
     topicId: null,
     userId: null,
     questions: [],
@@ -80,6 +89,19 @@ export const TemplateProvider = ({
 
     void fetchUserData();
 
+    const handleSetDefaultImage = async (): Promise<void> => {
+      const file = await convertUrlToFile(
+        defaultImage,
+        "template-placeholder.jpg",
+        "image/png",
+      );
+
+      setTemplateState((prevState) => ({
+        ...prevState,
+        image: file,
+      }));
+    };
+    void handleSetDefaultImage();
     const setInitialTopic = (): void => {
       getTopics().then(
         (data) =>
@@ -92,19 +114,6 @@ export const TemplateProvider = ({
     };
 
     void setInitialTopic();
-
-    const formatDefaultImage = (): void => {
-      convertFileToBase64(defaultImage).then(
-        (base64String) => {
-          setTemplateState((prevState) => ({
-            ...prevState,
-            imageUrl: base64String,
-          }));
-        },
-        () => {},
-      );
-    };
-    void formatDefaultImage();
   }, []);
 
   const getQuestionCountByType = (type: string): number => {
