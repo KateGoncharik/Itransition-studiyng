@@ -46,6 +46,10 @@ const TemplateConstructor = (): JSX.Element | undefined => {
       setFormError("Title is required");
       return false;
     }
+    if (templateState.userId === null || templateState.topicId === null) {
+      setFormError("Topic or user id is not present");
+      return false;
+    }
     if (!templateState.description) {
       setFormError("Description is required");
       return false;
@@ -208,7 +212,10 @@ const TemplateConstructor = (): JSX.Element | undefined => {
               </Stack>
               {formError && <p style={{ color: "red" }}>{formError}</p>}
               <Button
-                disabled={false}
+                disabled={
+                  templateState.userId === null ||
+                  templateState.topicId === null
+                }
                 variant="contained"
                 type="submit"
                 startIcon={<DoneOutlineIcon />}
