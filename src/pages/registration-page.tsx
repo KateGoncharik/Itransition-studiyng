@@ -55,7 +55,7 @@ const Registration = (): JSX.Element => {
         });
       })
       .catch((error: unknown) => {
-        console.log("Error:", error);
+        console.error("Error:", error);
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
         setSnackbarMessage(errorMessage);
