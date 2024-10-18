@@ -43,7 +43,7 @@ export const InputFileUpload: FC<{
       const fileURL = URL.createObjectURL(selectedFile);
       setFile(fileURL);
       // TODO fix this to file
-      handleTemplateFieldChange("image", fileURL);
+      handleTemplateFieldChange("image", selectedFile);
 
       setUploadError(null);
     }

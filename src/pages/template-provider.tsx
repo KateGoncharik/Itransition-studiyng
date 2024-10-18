@@ -31,7 +31,7 @@ export type TemplateState = {
 
 export type TemplateFieldChangeHandler = (
   field: keyof TemplateState,
-  value: string | number | boolean,
+  value: string | number | boolean | File,
 ) => void;
 
 export type QuestionFieldChangeHandler = (
@@ -143,7 +143,7 @@ export const TemplateProvider = ({
 
   const handleTemplateFieldChange = (
     field: keyof TemplateState,
-    value: string | number | boolean,
+    value: string | number | boolean | File,
   ): void => {
     setTemplateState((prevState) => ({
       ...prevState,
