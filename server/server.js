@@ -35,7 +35,7 @@ const upload = multer({ storage });
 const clearUploadDir = () => {
   fs.readdir(UPLOAD_DIR, (err, files) => {
     if (err) {
-      console.error("Error reading upload directory:", err);
+      console.error(ERRORS.readingDirectory, err);
       return;
     }
 
@@ -43,9 +43,7 @@ const clearUploadDir = () => {
       const filePath = path.join(UPLOAD_DIR, file);
       fs.unlink(filePath, (err) => {
         if (err) {
-          console.error("Error deleting file:", err);
-        } else {
-          console.log(`Deleted file: ${filePath}`);
+          console.error(ERRORS.fileDeleting, err);
         }
       });
     });
@@ -53,12 +51,14 @@ const clearUploadDir = () => {
 };
 
 app.use(cookieParser());
+// TODO change for prod?
 const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true,
 };
 
 app.use(cors(corsOptions));
+// TODO remove custom limit
 app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
 const db = mysql.createConnection({
   host,
@@ -123,7 +123,7 @@ app.post("/register", async (req, res) => {
       expiresIn: "1h",
     });
     res.cookie("token", token, { httpOnly: true });
-    res.status(201).json({ message: "Registered" });
+    res.status(201).json({ message: OKMESSAGES.registered });
   });
 });
 
@@ -161,21 +161,19 @@ app.post("/login", (req, res) => {
 app.post("/upload-template", upload.single("image"), async (req, res) => {
   const templateState = req.body;
   if (!req.file) {
-    return res.status(400).json({ error: "Файл изображения не был загружен" });
+    return res.status(400).json({ error: ERRORS.noReceivedFile });
   }
   // why destination is uploads?
   // TODO check that folder exists - if not - create
 
   const filePath = path.join(__dirname, req.file.path);
-  // we need to put url into state before validation
   const imgCloudUrl = await uploadImage(filePath);
   fs.unlinkSync(filePath);
   clearUploadDir();
 
   templateState.image = imgCloudUrl;
   if (isTemplateValid(templateState)) {
-    const { title, description, image, topicId, userId, questions } =
-      templateState;
+    const { title, description, topicId, userId } = templateState;
 
     const result = {
       title,
@@ -186,6 +184,7 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
     };
     const parsedQuestions = JSON.parse(templateState.questions);
     // TODO try catch?
+    // TODO put strings in constants
     const formatQuestionsByType = (questions, type, mappedAnswerType) => {
       return questions
         .filter((question) => question.answerType === type)
@@ -203,6 +202,7 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
     };
 
     // TODO make the same names and remove mapping
+    // TODO refactor
     const mappedAnswerTypes = {
       [clientAnswerTypes.oneLineString]: "string",
       [clientAnswerTypes.multilineString]: "text",
@@ -254,12 +254,12 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
 
     db.query(insertTemplateQuery, templateValues, (err) => {
       if (err) {
-        return res.status(500).json({ error: "Ошибка сервера", info: err });
+        return res.status(500).json({ error: ERRORS.serverError });
       }
-      res.status(201).json({ message: "Шаблон успешно создан", result });
+      res.status(201).json({ message: OKMESSAGES.templateCreated });
     });
   } else {
-    return res.status(400).json({ error: "Неверные данные шаблона" });
+    return res.status(400).json({ error: ERRORS.invalidTemplate });
   }
 });
 
@@ -267,12 +267,12 @@ app.get("/me", (req, res) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: "No token provided" });
+    return res.status(401).json({ error: ERRORS.noToken });
   }
 
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ error: "Invalid token" });
+      return res.status(401).json({ error: ERRORS.invalidToken });
     }
 
     const query = "SELECT * FROM users WHERE id = ?";
@@ -300,7 +300,7 @@ app.get("/topics", (_, res) => {
 app.post("/logout", (req, res) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.status(401).json({ error: "No token provided" });
+    return res.status(401).json({ error: ERRORS.noToken });
   }
 
   const query = "SELECT * FROM users WHERE token = ?";
@@ -315,7 +315,7 @@ app.post("/logout", (req, res) => {
     db.query(updateQuery, [user.id], (updateErr) => {
       if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
 
-      res.json({ message: "Logged out successfully" });
+      res.json({ message: OKMESSAGES.loggedOut });
     });
   });
 });
@@ -340,9 +340,9 @@ app.delete("/users/:id", (req, res) => {
 
 const SERVER_PORT = process.env.SERVER_PORT || 3000;
 app.listen(SERVER_PORT, () => {
-  console.log(`Server is running`);
+  console.log(OKMESSAGES.serverIsRunning);
 });
 
 app.get("/", (_, res) => {
-  res.send("Server is running");
+  res.send(OKMESSAGES.serverIsRunning);
 });
