@@ -164,7 +164,6 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
     return res.status(400).json({ error: "Файл изображения не был загружен" });
   }
   // why destination is uploads?
-  console.log("file that we received:", req.file);
   // TODO check that folder exists - if not - create
 
   const filePath = path.join(__dirname, req.file.path);
@@ -235,7 +234,6 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
 
     Object.assign(result, formattedQuestions);
 
-    console.log(result);
     const insertTemplateQuery = `
       INSERT INTO templates (
         title, description, image_url, topic_id, user_id,
