@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql2");
-const { ERRORS, OKMESSAGES } = require("./constants");
+const { ERRORS, OKMESSAGES, clientAnswerTypes } = require("./constants");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
@@ -123,33 +123,103 @@ app.post("/login", (req, res) => {
 
 app.post("/upload-template", (req, res) => {
   const templateState = req.body;
-  console.log(templateState);
 
   if (isTemplateValid(templateState)) {
-    return res.status(201).json({ message: OKMESSAGES.templateCreated });
+    const { title, description, imageUrl, topicId, userId, questions } =
+      templateState;
+    const result = {
+      title,
+      description,
+      image_url: imageUrl,
+      topic_id: topicId,
+      user_id: userId,
+    };
+
+    const formatQuestionsByType = (questions, type, mappedAnswerType) => {
+      return questions
+        .filter((question) => question.answerType === type)
+        .map((question, index) => ({
+          [`custom_${mappedAnswerType}${index + 1}_id`]: question.id,
+          [`custom_${mappedAnswerType}${index + 1}_state`]: question.isRequired
+            ? "PRESENT_REQUIRED"
+            : "PRESENT_OPTIONAL",
+          [`custom_${mappedAnswerType}${index + 1}_question`]: question.title,
+          [`custom_${mappedAnswerType}${index + 1}_description`]:
+            question.description,
+          [`custom_${mappedAnswerType}${index + 1}_isShown`]: question.isShown,
+        }))
+        .reduce((acc, current) => ({ ...acc, ...current }), {});
+    };
+
+    // TODO make the same names and remove mapping
+    const mappedAnswerTypes = {
+      [clientAnswerTypes.oneLineString]: "string",
+      [clientAnswerTypes.multilineString]: "text",
+      [clientAnswerTypes.number]: "int",
+      [clientAnswerTypes.checkbox]: "checkbox",
+    };
+    const formattedQuestions = {
+      ...formatQuestionsByType(
+        questions,
+        clientAnswerTypes.oneLineString,
+        mappedAnswerTypes[clientAnswerTypes.oneLineString],
+      ),
+      ...formatQuestionsByType(
+        questions,
+        clientAnswerTypes.multilineString,
+        mappedAnswerTypes[clientAnswerTypes.multilineString],
+      ),
+      ...formatQuestionsByType(
+        questions,
+        clientAnswerTypes.number,
+        mappedAnswerTypes[clientAnswerTypes.number],
+      ),
+      ...formatQuestionsByType(
+        questions,
+        clientAnswerTypes.checkbox,
+        mappedAnswerTypes[clientAnswerTypes.checkbox],
+      ),
+    };
+
+    result.questions = formattedQuestions;
+
+    console.log(result);
+    res.status(201).json({ message: "Ok", result });
+
+    // const insertTemplateQuery =
+    //   "INSERT INTO templates (title, description, imageUrl, topicId, userId) VALUES (?, ?, ?, ?, ?)";
+    // const templateValues = [title, description, imageUrl, topicId, userId];
+
+    // db.query(insertTemplateQuery, templateValues, (err, templateResult) => {
+    //   if (err) {
+    //     return res.status(500).json({ error: "Ошибка сервера" });
+    //   }
+
+    //   const templateId = templateResult.insertId;
+
+    //   const insertQuestionsQuery =
+    //     "INSERT INTO questions (template_id, question_text, question_type, is_required) VALUES ?";
+
+    //   const questionValues = questions.map((q) => [
+    //     templateId,
+    //     q.title,
+    //     q.answerType,
+    //     q.isRequired,
+    //   ]);
+
+    //   db.query(insertQuestionsQuery, [questionValues], (questionsErr) => {
+    //     if (questionsErr) {
+    //       return res
+    //         .status(500)
+    //         .json({ error: "Ошибка сервера при добавлении вопросов" });
+    //     }
+
+    //     res.status(201).json({ message: "Шаблон успешно создан" });
+    //   });
+    // });
   } else {
-    return res.status(400).json({ error: "Invalid template data" });
+    return res.status(400).json({ error: "Неверные данные шаблона" });
   }
-
-  // const query = 'INSERT INTO templates (title, description, isPublic, imageUrl) VALUES (?, ?, ?, ?)';
-  // db.query(query, [title, description, isPublic, imageUrl], (err, result) => {
-  //   if (err) {
-  //     return res.status(500).json({ error: ERRORS.serverError });
-  //   }
-
-  //   const templateId = result.insertId;
-  //   const questionsQuery = 'INSERT INTO questions (template_id, question_text, question_type) VALUES ?';
-
-  //   const questionValues = questions.map((q) => [templateId, q.text, q.type]);
-
-  //   db.query(questionsQuery, [questionValues], (questionsErr) => {
-  //     if (questionsErr) {
-  //       return res.status(500).json({ error: ERRORS.serverError });
-  //     }
-
-  //     res.status(201).json({ message: OKMESSAGES.templateCreated });
-  //   });
-  // });
 });
 
 app.get("/me", (req, res) => {

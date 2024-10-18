@@ -12,4 +12,11 @@ const OKMESSAGES = {
   templateCreated: "Template created",
 };
 
-module.exports = { ERRORS, OKMESSAGES };
+const clientAnswerTypes = {
+  oneLineString: "one-line-string",
+  multilineString: "multiline-string",
+  number: "number",
+  checkbox: "checkbox",
+};
+
+module.exports = { ERRORS, OKMESSAGES, clientAnswerTypes };
