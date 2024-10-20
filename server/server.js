@@ -123,7 +123,12 @@ app.post("/register", async (req, res) => {
     const token = jwt.sign({ userId: results.insertId }, secretKey, {
       expiresIn: "1h",
     });
-    res.cookie("token", token, { httpOnly: true, secure: true, domain: "*" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      domain: "*",
+      sameSite: "None",
+    });
     res.status(201).json({ message: OKMESSAGES.registered });
   });
 });
