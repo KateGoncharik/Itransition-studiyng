@@ -53,13 +53,15 @@ const clearUploadDir = () => {
 app.use(cookieParser());
 // TODO change for prod?
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://itransition-studiyng.onrender.com",
+  ],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-// TODO remove custom limit
-app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
+app.use(bodyParser.json());
 const db = mysql.createConnection({
   host,
   user,
@@ -267,7 +269,7 @@ app.get("/me", (req, res) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: ERRORS.noToken });
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
   }
 
   jwt.verify(token, secretKey, (err, decoded) => {
