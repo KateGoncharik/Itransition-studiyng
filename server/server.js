@@ -153,7 +153,6 @@ app.post("/login", (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      domain: "*",
       sameSite: "None",
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
