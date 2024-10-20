@@ -52,10 +52,12 @@ const clearUploadDir = () => {
 
 app.use(cookieParser());
 // TODO change for prod?
+// с false - ещё больше проблем
 const corsOptions = {
-  origin: "*",
+  origin: "http://localhost:5173",
   credentials: true,
 };
+// origin: "http://localhost:5173",
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -121,7 +123,7 @@ app.post("/register", async (req, res) => {
     const token = jwt.sign({ userId: results.insertId }, secretKey, {
       expiresIn: "1h",
     });
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, { httpOnly: true, secure: true, domain: "*" });
     res.status(201).json({ message: OKMESSAGES.registered });
   });
 });
