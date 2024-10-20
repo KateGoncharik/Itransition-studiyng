@@ -120,15 +120,10 @@ app.post("/register", async (req, res) => {
       }
       return res.status(500).json({ error: ERRORS.serverError, info: err });
     }
-    const token = jwt.sign({ userId: results.insertId }, secretKey, {
-      expiresIn: "1h",
-    });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      domain: "*",
-      sameSite: "None",
-    });
+    // const token = jwt.sign({ userId: results.insertId }, secretKey, {
+    //   expiresIn: "1h",
+    // });
+
     res.status(201).json({ message: OKMESSAGES.registered });
   });
 });
@@ -155,6 +150,12 @@ app.post("/login", (req, res) => {
       secretKey,
       { expiresIn: "1h" },
     );
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      domain: "*",
+      sameSite: "None",
+    });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
       if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
