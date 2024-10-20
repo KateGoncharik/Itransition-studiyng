@@ -53,10 +53,7 @@ const clearUploadDir = () => {
 app.use(cookieParser());
 // TODO change for prod?
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "https://itransition-studiyng.onrender.com",
-  ],
+  origin: "*",
   credentials: true,
 };
 
