@@ -320,8 +320,8 @@ app.post("/logout", (req, res) => {
       if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
       res.clearCookie("token", {
         httpOnly: true,
-        sameSite: "lax",
-        secure: false,
+        sameSite: "none",
+        secure: true,
       });
       res.json({ message: OKMESSAGES.loggedOut });
     });
