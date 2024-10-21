@@ -147,10 +147,11 @@ app.post("/login", (req, res) => {
       secretKey,
       { expiresIn: "1h" },
     );
+    // TODO make constants for development
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
