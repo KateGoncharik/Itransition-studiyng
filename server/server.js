@@ -51,13 +51,13 @@ const clearUploadDir = () => {
 };
 
 app.use(cookieParser());
-// TODO change for prod?
-// с false - ещё больше проблем
+
+// TODO change for prod
+
 const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true,
 };
-// origin: "http://localhost:5173",
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -120,9 +120,6 @@ app.post("/register", async (req, res) => {
       }
       return res.status(500).json({ error: ERRORS.serverError, info: err });
     }
-    // const token = jwt.sign({ userId: results.insertId }, secretKey, {
-    //   expiresIn: "1h",
-    // });
 
     res.status(201).json({ message: OKMESSAGES.registered });
   });
@@ -152,14 +149,14 @@ app.post("/login", (req, res) => {
     );
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
+      sameSite: "lax",
+      secure: false,
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
       if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
 
-      res.json({ token });
+      res.status(200).json("Logger in");
     });
   });
 });
@@ -320,7 +317,11 @@ app.post("/logout", (req, res) => {
     const updateQuery = "UPDATE users SET token = NULL WHERE id = ?";
     db.query(updateQuery, [user.id], (updateErr) => {
       if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
-
+      res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false,
+      });
       res.json({ message: OKMESSAGES.loggedOut });
     });
   });
