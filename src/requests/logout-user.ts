@@ -1,8 +1,7 @@
 import { getUrl } from "./get-url";
-import { deleteToken } from "../token";
 
-export function logoutUser(): void {
-  fetch(getUrl("logout"), {
+export function logoutUser(): Promise<void> {
+  return fetch(getUrl("logout"), {
     method: "POST",
     credentials: "include",
   })
@@ -10,7 +9,6 @@ export function logoutUser(): void {
       if (!response.ok) {
         throw new Error("Logout failed");
       }
-      deleteToken();
       console.log("Logged out successfully");
     })
     .catch((error) => {

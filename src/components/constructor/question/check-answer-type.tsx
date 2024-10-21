@@ -9,7 +9,7 @@ type UseCheckAnswerTypeData = {
     isCheckboxDisabled: boolean;
   };
 };
-
+// TODO move to template-constructor?
 export const useCheckAnswerType = (): UseCheckAnswerTypeData => {
   const { templateState } = useTemplateContext();
   const maxTypeCount = 4;

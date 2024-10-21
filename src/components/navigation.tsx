@@ -1,4 +1,3 @@
-import { deleteToken } from "@/token";
 import { logoutUser } from "@/requests/logout-user";
 import { Button, Stack } from "@mui/material";
 import { FC } from "react";
@@ -53,10 +52,13 @@ const LogoutButton: FC = () => {
 
   const navigate = useNavigate();
   const handleLogout = (): void => {
-    logoutUser();
-    logout();
-    deleteToken();
-    navigate("/login");
+    logoutUser().then(
+      () => {
+        logout();
+        navigate("/login");
+      },
+      () => {},
+    );
   };
   return (
     <Button onClick={handleLogout} sx={headerButtonStyles}>

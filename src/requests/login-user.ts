@@ -7,6 +7,7 @@ type UserData = {
 export const loginUser = (userData: UserData): Promise<void> => {
   return fetch(getUrl("login"), {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -24,11 +25,7 @@ export const loginUser = (userData: UserData): Promise<void> => {
       }
       return response.json();
     })
-    .then((data: { token: string }) => {
-      const token = data.token;
-
-      document.cookie = `token=${token}; path=/; max-age=3600`;
-
+    .then(() => {
       console.log("Logged in successfully, token saved to cookies");
     })
     .catch((error) => {

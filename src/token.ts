@@ -8,7 +8,3 @@ function getCookie(name: string): string | undefined {
 export function isUserAuthorised(): boolean {
   return getCookie("token") !== undefined;
 }
-
-export function deleteToken(): void {
-  document.cookie = "token=; path=/; max-age=0";
-}
