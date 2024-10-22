@@ -10,7 +10,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { defaultImage } from "./template-constructor-page";
 import { getTopics } from "@/requests/get-topics";
-import { isUserAuthorised } from "@/token";
+import { isUserAuthorized } from "@/requests/check-if-user-authorized";
 
 type QuestionType = {
   id: string;
@@ -78,18 +78,19 @@ export const TemplateProvider = ({
   };
   const [templateState, setTemplateState] =
     useState<TemplateState>(initialTemplateState);
-
   useEffect(() => {
-    if (isUserAuthorised()) {
-      const fetchUserData = async (): Promise<void> => {
-        const user = await getAuthorizedUser();
-        setTemplateState((prevState) => ({
-          ...prevState,
-          userId: user.id,
-        }));
-      };
-      void fetchUserData();
-    }
+    const fetchUserData = async (): Promise<void> => {
+      const authorized = await isUserAuthorized();
+      if (!authorized.isAuthorized) {
+        return;
+      }
+      const user = await getAuthorizedUser();
+      setTemplateState((prevState) => ({
+        ...prevState,
+        userId: user.id,
+      }));
+    };
+    void fetchUserData();
 
     const handleSetDefaultImage = async (): Promise<void> => {
       const file = await convertUrlToFile(

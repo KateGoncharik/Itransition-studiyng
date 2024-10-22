@@ -17,10 +17,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { submitTemplate } from "@/requests/submit-template";
+import { useNavigate } from "react-router-dom";
 export const defaultImage = "./template-placeholder.jpg";
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // TODO DRY
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
   const {
     templateState,
     handleTemplateFieldChange,
