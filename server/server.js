@@ -31,6 +31,10 @@ const storage = multer.diskStorage({
 
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR);
+}
+
 const upload = multer({ storage });
 
 const clearUploadDir = () => {
@@ -170,9 +174,7 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
   }
   // why destination is uploads?
   // TODO check that folder exists - if not - create
-  if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR);
-  }
+
   console.log("file:", req.file);
   console.log("path:", path.join(__dirname, req.file.path));
 
