@@ -172,6 +172,7 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
   // TODO check that folder exists - if not - create
 
   const filePath = path.join(__dirname, req.file.path);
+  console.log("File path:", filePath);
   const imgCloudUrl = await uploadImage(filePath);
   fs.unlinkSync(filePath);
   clearUploadDir();
