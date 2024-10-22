@@ -173,6 +173,9 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
   if (!fs.existsSync(UPLOAD_DIR)) {
     fs.mkdirSync(UPLOAD_DIR);
   }
+  console.log("file:", req.file);
+  console.log("path:", path.join(__dirname, req.file.path));
+
   const filePath = path.join(__dirname, req.file.path);
   console.log("File path:", filePath);
   const imgCloudUrl = await uploadImage(filePath);
