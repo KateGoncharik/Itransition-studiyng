@@ -301,6 +301,20 @@ app.get("/topics", (_, res) => {
   });
 });
 
+app.get("/auth/check", (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(200).json({ isAuthorized: false });
+    }
+
+    return res.status(200).json({ isAuthorized: true });
+  } catch (err) {
+    return res.status(500).json({ error: "Server error occurred." });
+  }
+});
+
 app.post("/logout", (req, res) => {
   const token = req.cookies.token;
   if (!token) {
