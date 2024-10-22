@@ -177,7 +177,7 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
   console.log("File path:", filePath);
   const imgCloudUrl = await uploadImage(filePath);
   fs.unlinkSync(filePath);
-  clearUploadDir();
+  // clearUploadDir();
 
   templateState.image = imgCloudUrl;
   if (isTemplateValid(templateState)) {
