@@ -15,6 +15,7 @@ const host = process.env.HOST;
 const user = process.env.USER;
 const password = process.env.PASSWORD;
 const database = process.env.DATABASE;
+const clientOrigin = process.env.CLIENT_ORIGIN;
 
 const dbPort = process.env.DB_PORT;
 
@@ -55,7 +56,7 @@ app.use(cookieParser());
 // TODO change for prod
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: clientOrigin,
   credentials: true,
 };
 

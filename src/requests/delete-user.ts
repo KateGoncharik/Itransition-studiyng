@@ -1,3 +1,4 @@
+// TODO remove or fix url
 fetch("http://localhost:3000/users/49", {
   method: "DELETE",
 })
