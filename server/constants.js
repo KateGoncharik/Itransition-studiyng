@@ -2,6 +2,7 @@ const ERRORS = {
   dbConnection: "Error while connecting to database",
   noUsers: "Error fetching users",
   noUser: "User not found",
+  noTemplates: "Error fetching templates",
   duplicateEntry: "Duplicate entry",
   serverError: "Internal server error",
   fileDeleting: "File deletion failed",

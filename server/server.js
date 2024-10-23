@@ -37,27 +37,7 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 
 const upload = multer({ storage });
 
-const clearUploadDir = () => {
-  fs.readdir(UPLOAD_DIR, (err, files) => {
-    if (err) {
-      console.error(ERRORS.readingDirectory, err);
-      return;
-    }
-
-    files.forEach((file) => {
-      const filePath = path.join(UPLOAD_DIR, file);
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error(ERRORS.fileDeleting, err);
-        }
-      });
-    });
-  });
-};
-
 app.use(cookieParser());
-
-// TODO change for prod
 
 const corsOptions = {
   origin: clientOrigin,
@@ -172,17 +152,11 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: ERRORS.noReceivedFile });
   }
-  // why destination is uploads?
-  // TODO check that folder exists - if not - create
-
-  console.log("file:", req.file);
-  console.log("path:", path.join(__dirname, req.file.path));
 
   const filePath = path.join(__dirname, req.file.path);
-  console.log("File path:", filePath);
+
   const imgCloudUrl = await uploadImage(filePath);
   fs.unlinkSync(filePath);
-  // clearUploadDir();
 
   templateState.image = imgCloudUrl;
   if (isTemplateValid(templateState)) {
@@ -274,6 +248,19 @@ app.post("/upload-template", upload.single("image"), async (req, res) => {
   } else {
     return res.status(400).json({ error: ERRORS.invalidTemplate });
   }
+});
+
+app.get("/templates", (_, res) => {
+  db.query(
+    "SELECT id, title, description, image_url, user_id, topic_id FROM templates",
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: ERRORS.noUsers });
+      }
+      console.log(results);
+      res.json(results);
+    },
+  );
 });
 
 app.get("/me", (req, res) => {
