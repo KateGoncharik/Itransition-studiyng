@@ -28,7 +28,7 @@ _Completed: 2024_
 
 For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
-Deployment: [here](h)
+Deployment: [here](https://kate-forms-final-task.netlify.app/)
 
 Here is the [video demonstration](h) of the result.
 
@@ -46,8 +46,6 @@ TBD
 
 [![Netlify][Netlify]][Netlify-url]
 
-[![Bootstrap][Bootstrap]][Bootstrap-url]
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
@@ -64,7 +62,7 @@ TBD
    npm install
    ```
 
-3. Run live-server. Or check out the deployment [here](h).
+3. Run live-server. Or check out the deployment [here](https://kate-forms-final-task.netlify.app/).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,5 +74,3 @@ TBD
 [HTML5-url]: https://html.com/html5/
 [Netlify]: https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7
 [Netlify-url]: https://www.netlify.com/
-[Bootstrap]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com/
