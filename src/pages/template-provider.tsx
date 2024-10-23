@@ -11,15 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { defaultImage } from "./template-constructor-page";
 import { getTopics } from "@/requests/get-topics";
 import { isUserAuthorized } from "@/requests/check-if-user-authorized";
-
-type QuestionType = {
-  id: string;
-  title: string;
-  description: string;
-  isRequired: boolean;
-  isShown: boolean;
-  answerType: string;
-};
+import { QuestionType } from "@/requests/template-state-schema";
 
 export type TemplateState = {
   title: string;

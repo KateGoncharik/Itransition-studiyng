@@ -1,12 +1,12 @@
 import { TemplateData } from "@/pages/main-page";
 import {
-  IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
   ListSubheader,
 } from "@mui/material";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
   templates,
@@ -24,18 +24,12 @@ export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
             alt={template.title}
             loading="lazy"
           />
-          <ImageListItemBar
-            title={template.title}
-            subtitle={template.user_name}
-            actionIcon={
-              <IconButton
-                sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                aria-label={`info about ${template.title}`}
-              >
-                Fill
-              </IconButton>
-            }
-          />
+          <Link to={`/form/${template.id}`}>
+            <ImageListItemBar
+              title={template.title}
+              subtitle={template.user_name}
+            />
+          </Link>
         </ImageListItem>
       ))}
     </ImageList>

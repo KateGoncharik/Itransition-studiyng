@@ -13,6 +13,7 @@ import {
 } from "./lazy-loading.tsx";
 import { CircularProgress } from "@mui/material";
 import { TemplateProvider } from "@/pages/template-provider.tsx";
+import { FormComponent } from "@/components/form.tsx";
 
 export const routes = [
   {
@@ -59,6 +60,14 @@ export const routes = [
           </Suspense>
         ),
         path: "/constructor",
+      },
+      {
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <FormComponent />
+          </Suspense>
+        ),
+        path: "/form/:id",
       },
     ],
     element: (

@@ -3,11 +3,11 @@ import { useEffect, useState, type JSX } from "react";
 import { Stack, Typography } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
 import { getAllTemplates } from "@/requests/get-all-templates";
-import { TemplateType } from "@/requests/templates-schema";
+import { TemplatePreviewType } from "@/requests/templates-schema";
 import { TemplateOnMain } from "@/components/template-on-main";
 import { getUserById } from "@/requests/get-user-by-id";
 
-export interface TemplateData extends TemplateType {
+export interface TemplateData extends TemplatePreviewType {
   user_name: string;
 }
 const Main = (): JSX.Element | undefined => {

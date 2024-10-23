@@ -1,18 +1,20 @@
 import { getUrl } from "./get-url.ts";
 import {
-  TemplatePreviewType,
-  TemplatePreviewSchema,
-} from "./templates-schema.ts";
+  StoredTemplateSchema,
+  StoredTemplateType,
+} from "./template-state-schema.ts";
 
-export const getAllTemplates = async (): Promise<TemplatePreviewType[]> => {
+export const getTemplateById = async (
+  id: number,
+): Promise<StoredTemplateType> => {
   try {
-    const response = await fetch(getUrl("templates"));
+    const response = await fetch(getUrl(`templates/${id}`));
 
     if (!response.ok) {
       throw new Error("No server response");
     }
 
-    return TemplatePreviewSchema.array().parse(await response.json());
+    return StoredTemplateSchema.parse(await response.json());
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);

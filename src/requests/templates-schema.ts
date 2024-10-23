@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const TemplateSchema = z.object({
+export const TemplatePreviewSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
@@ -9,4 +9,4 @@ export const TemplateSchema = z.object({
   topic_id: z.number(),
 });
 
-export type TemplateType = z.infer<typeof TemplateSchema>;
+export type TemplatePreviewType = z.infer<typeof TemplatePreviewSchema>;
