@@ -87,6 +87,7 @@ app.get("/users/:id", (req, res) => {
 const bcrypt = require("bcryptjs");
 const { isTemplateValid } = require("./validate-template");
 const { uploadImage } = require("./store-images");
+const { parseTemplateDataBack } = require("./parse-template-data");
 
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
@@ -257,8 +258,38 @@ app.get("/templates", (_, res) => {
       if (err) {
         return res.status(500).json({ error: ERRORS.noUsers });
       }
-      console.log(results);
       res.json(results);
+    },
+  );
+});
+
+app.get("/templates/:id", (req, res) => {
+  const templateId = req.params.id;
+  db.query(
+    "SELECT * FROM templates WHERE id = ?",
+    [templateId],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: ERRORS.serverError });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: ERRORS.noTemplate });
+      }
+      const templateData = results[0];
+
+      const parsedQuestions = parseTemplateDataBack(templateData);
+
+      const templateResponse = {
+        id: +templateId,
+        title: templateData.title,
+        description: templateData.description,
+        image_url: templateData.image_url,
+        topic_id: templateData.topic_id,
+        user_id: templateData.user_id,
+        questions: parsedQuestions,
+      };
+
+      res.json(templateResponse);
     },
   );
 });

@@ -3,6 +3,7 @@ const ERRORS = {
   noUsers: "Error fetching users",
   noUser: "User not found",
   noTemplates: "Error fetching templates",
+  noTemplate: "Error fetching template",
   duplicateEntry: "Duplicate entry",
   serverError: "Internal server error",
   fileDeleting: "File deletion failed",
