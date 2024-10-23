@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState, type JSX } from "react";
 
-import { Button, Stack, Typography } from "@mui/material";
+import { Alert, Button, Snackbar, Stack, Typography } from "@mui/material";
 
 import { useAuth } from "@/hooks/use-auth";
 import { Question } from "@/components/constructor/question/question";
@@ -21,7 +21,15 @@ import { useNavigate } from "react-router-dom";
 export const defaultImage = "./template-placeholder.jpg";
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
+    "error",
+  );
 
+  const handleCloseSnackbar = (): void => {
+    setOpenSnackbar(false);
+  };
   const navigate = useNavigate();
   useEffect(() => {
     if (!isAuthenticated) {
@@ -51,19 +59,18 @@ const TemplateConstructor = (): JSX.Element | undefined => {
 
   const validateForm = (): boolean => {
     if (!templateState.title) {
-      setFormError("Title is required");
-      return false;
-    }
-    if (templateState.userId === null || templateState.topicId === null) {
-      setFormError("Topic or user id is not present");
+      setSnackbarMessage("Title is required");
+      setOpenSnackbar(true);
       return false;
     }
     if (!templateState.description) {
-      setFormError("Description is required");
+      setSnackbarMessage("Description is required");
+      setOpenSnackbar(true);
       return false;
     }
     if (templateState.questions.length === 0) {
-      setFormError("At least one question is required");
+      setSnackbarMessage("At least one question is required");
+      setOpenSnackbar(true);
       return false;
     }
     return true;
@@ -76,6 +83,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     if (!validateForm()) {
       return;
     }
+    // TODO remove?
     if (
       templateState.image === null ||
       templateState.userId === null ||
@@ -91,7 +99,21 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     formData.append("questions", JSON.stringify(templateState.questions));
     formData.append("image", templateState.image);
 
-    void submitTemplate(formData);
+    submitTemplate(formData)
+      .then(() => {
+        setSnackbarMessage("Template successfully created!");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
+        setTimeout(() => navigate("/"), 1000);
+      })
+      .catch((error: unknown) => {
+        console.error("Error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        setSnackbarMessage(errorMessage);
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
+      });
   };
 
   // TODO move file input logic to its component
@@ -101,7 +123,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
 
   return (
     <>
-      {isAuthenticated ? (
+      {isAuthenticated && (
         <Stack sx={{ padding: "2% 0" }}>
           <Typography component="h1" mb={1} textAlign="center" variant="h5">
             Template constructor
@@ -246,17 +268,20 @@ const TemplateConstructor = (): JSX.Element | undefined => {
               </Button>
             </Stack>
           </form>
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity={snackbarSeverity}
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
         </Stack>
-      ) : (
-        <Typography
-          component="h1"
-          mb={4}
-          mt={7}
-          textAlign="center"
-          variant="h3"
-        >
-          Log in to view this page
-        </Typography>
       )}
     </>
   );
