@@ -21,21 +21,25 @@ export const Navigation: FC = () => {
       <Button component={RouterLink} sx={headerButtonStyles} to={"/"}>
         Main
       </Button>
-      <Button
-        component={RouterLink}
-        sx={headerButtonStyles}
-        to={"/constructor"}
-      >
-        Constructor
-      </Button>
-      <Button
-        component={RouterLink}
-        sx={headerButtonStyles}
-        to={"/registration"}
-      >
-        Registration
-      </Button>
+      {isAuthenticated && (
+        <Button
+          component={RouterLink}
+          sx={headerButtonStyles}
+          to={"/constructor"}
+        >
+          Constructor
+        </Button>
+      )}
 
+      {!isAuthenticated && (
+        <Button
+          component={RouterLink}
+          sx={headerButtonStyles}
+          to={"/registration"}
+        >
+          Registration
+        </Button>
+      )}
       {isAuthenticated ? (
         <LogoutButton />
       ) : (

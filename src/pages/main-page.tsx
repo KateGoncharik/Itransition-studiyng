@@ -23,20 +23,25 @@ const Main = (): JSX.Element | undefined => {
           mb={1}
           mt={3}
           textAlign="center"
-          variant="h4"
+          variant="h5"
         >
           Authorized user main page
         </Typography>
       ) : (
-        <Typography
-          component="h1"
-          mb={4}
-          mt={7}
-          textAlign="center"
-          variant="h3"
-        >
-          Not authorized user main page
-        </Typography>
+        <>
+          <Typography
+            component="h1"
+            mb={4}
+            mt={7}
+            textAlign="center"
+            variant="h4"
+          >
+            Not authorized user main page
+          </Typography>
+          <Typography component="h3" textAlign="center" variant="h5">
+            Log in to create template
+          </Typography>
+        </>
       )}
       {users.length > 0 &&
         users.map((user) => <UserComponent key={user.email} user={user} />)}
