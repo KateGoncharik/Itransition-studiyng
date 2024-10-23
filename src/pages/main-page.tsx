@@ -1,22 +1,35 @@
 import { useEffect, useState, type JSX } from "react";
 
-import { User, UserComponent } from "../components/user";
-import { getAllUsers } from "../requests/get-all-users";
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
+import { getAllTemplates } from "@/requests/get-all-templates";
+import { TemplateType } from "@/requests/templates-schema";
+import { TemplateOnMain } from "@/components/template-on-main";
+import { getUserById } from "@/requests/get-user-by-id";
 
+export interface TemplateData extends TemplateType {
+  user_name: string;
+}
 const Main = (): JSX.Element | undefined => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [templates, setTemplates] = useState<TemplateData[]>([]);
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    void getAllUsers().then((data) => {
-      setUsers(data);
+    void getAllTemplates().then(async (data) => {
+      const mapped = await Promise.all(
+        data.map(async (templateData, index) => {
+          const user = await getUserById(data[index].user_id);
+
+          return { ...templateData, user_name: user.username };
+        }),
+      );
+
+      setTemplates(mapped);
     });
   }, []);
 
   return (
-    <>
+    <Stack>
       {isAuthenticated ? (
         <Typography
           component="h1"
@@ -43,9 +56,14 @@ const Main = (): JSX.Element | undefined => {
           </Typography>
         </>
       )}
-      {users.length > 0 &&
-        users.map((user) => <UserComponent key={user.email} user={user} />)}
-    </>
+      {templates.length > 0 ? (
+        <TemplateOnMain templates={templates} />
+      ) : (
+        <Typography component="h4" textAlign="center" variant="h6">
+          No templates created yet
+        </Typography>
+      )}
+    </Stack>
   );
 };
 export default Main;
