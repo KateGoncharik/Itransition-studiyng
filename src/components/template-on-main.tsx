@@ -17,7 +17,7 @@ export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
         <ListSubheader component="div">All templates</ListSubheader>
       </ImageListItem>
       {templates.map((template) => (
-        <ImageListItem key={template.image_url}>
+        <ImageListItem key={template.id}>
           <img
             srcSet={`${template.image_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
             src={`${template.image_url}?w=248&fit=crop&auto=format`}

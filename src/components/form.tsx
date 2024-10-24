@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { UserType } from "@/requests/user-schema";
 import { answerTypes } from "./constructor/answer/types";
-import { StyledNumberInput } from "./constructor/answer/styled-number-input";
+import { NumberInputComponent } from "./constructor/answer/number-input";
 
 const getCurrentDate = (): string => {
   const today = new Date();
@@ -24,7 +24,6 @@ export const FormComponent: FC = () => {
   const { isAuthenticated } = useAuth();
   const [user, setUser] = useState<null | UserType>(null);
   const [currentDate, setCurrentDate] = useState("");
-  const [numberValue, setNumberValue] = useState(0);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -43,22 +42,6 @@ export const FormComponent: FC = () => {
       () => {},
     );
   }, [id, isAuthenticated]);
-
-  const handleInputChange = (
-    event:
-      | React.FocusEvent<HTMLInputElement>
-      | React.PointerEvent
-      | React.KeyboardEvent,
-    value: number | null,
-  ): void => {
-    console.log(event);
-    if (!value) {
-      return;
-    }
-    if (!isNaN(value)) {
-      setNumberValue(value);
-    }
-  };
 
   return template ? (
     <Stack
@@ -125,38 +108,12 @@ export const FormComponent: FC = () => {
             {template.questions.map((question) => {
               if (question.answerType === answerTypes.number) {
                 return (
-                  <>
-                    <Stack flexDirection="row" gap={1}>
-                      <Typography>{question.title}</Typography>
-                      {question.isRequired && "*"}
-                    </Stack>
-
-                    <StyledNumberInput
-                      min={0}
-                      max={9999}
-                      title={question.title}
-                      required={question.isRequired}
-                      slotProps={{
-                        root: { className: "CustomNumberInput" },
-                        input: { className: "input" },
-                        decrementButton: {
-                          className: "btn decrement",
-                          children: "▾",
-                          type: "button",
-                        },
-                        incrementButton: {
-                          className: "btn increment",
-                          children: "▴",
-                          type: "button",
-                        },
-                      }}
-                      value={numberValue}
-                      onChange={handleInputChange}
-                      aria-label="Number input"
-                      placeholder="Type a number…"
-                      disabled={false}
-                    />
-                  </>
+                  <NumberInputComponent
+                    isDisabled={false}
+                    key={question.id}
+                    label={question.title}
+                    isRequired={question.isRequired}
+                  />
                 );
               }
               return (

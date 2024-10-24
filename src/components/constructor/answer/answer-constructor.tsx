@@ -10,7 +10,8 @@ import {
 
 import { answerTypes } from "./types";
 import { StyledTextarea } from "../question/styled-textarea";
-import { StyledNumberInput } from "./styled-number-input";
+
+import { NumberInputComponent } from "./number-input";
 
 export const AnswerConstructor: FC<{
   type: string;
@@ -47,36 +48,11 @@ export const AnswerConstructor: FC<{
   }
   if (type === answerTypes.number) {
     return (
-      <>
-        <Stack flexDirection="row" gap={1}>
-          <Typography>{title}</Typography>
-          {isRequired && "*"}
-        </Stack>
-
-        <StyledNumberInput
-          min={0}
-          max={9999}
-          title={title}
-          required={isRequired}
-          slotProps={{
-            root: { className: "CustomNumberInput" },
-            input: { className: "input" },
-            decrementButton: {
-              className: "btn decrement",
-              children: "▾",
-              type: "button",
-            },
-            incrementButton: {
-              className: "btn increment",
-              children: "▴",
-              type: "button",
-            },
-          }}
-          aria-label="Number input"
-          placeholder="Type a number…"
-          disabled={isDisabled}
-        />
-      </>
+      <NumberInputComponent
+        isDisabled={isDisabled}
+        label={title}
+        isRequired={isRequired}
+      />
     );
   }
   if (type === answerTypes.multilineString) {
