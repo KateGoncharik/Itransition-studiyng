@@ -2,8 +2,8 @@ const parseTemplateDataBack = (templateData) => {
   const parsedQuestions = [];
 
   const questionTypesMap = {
-    string: "oneLineString",
-    text: "multilineString",
+    string: "one-line-string",
+    text: "multiline-string",
     int: "number",
     checkbox: "checkbox",
   };
