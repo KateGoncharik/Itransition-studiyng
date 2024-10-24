@@ -36,7 +36,7 @@ export const StyledNumberInput = styled(BaseNumberInput)`
   .btn:disabled:hover {
     cursor: auto;
   }
-  :disabled {
-    background-color: #ccc;
+  .input::placeholder {
+    color: #ccc;
   }
 `;

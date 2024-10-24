@@ -114,7 +114,12 @@ export const QuestionConstructor: FC<{
           </Select>
         </Stack>
       </Stack>
-      <AnswerConstructor title={title} type={localAnswerType} />
+      <AnswerConstructor
+        title={title}
+        type={localAnswerType}
+        isDisabled={true}
+        isRequired={isRequired}
+      />
       <FormGroup>
         <FormControlLabel
           checked={isRequired}

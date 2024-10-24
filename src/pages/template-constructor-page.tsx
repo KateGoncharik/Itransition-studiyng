@@ -197,6 +197,12 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                   name={"template-description"}
                   placeholder="Description of template"
                   required={true}
+                  style={{
+                    maxWidth: "100%",
+                    minWidth: "50%",
+                    maxHeight: "300px",
+                    minHeight: "40px",
+                  }}
                   onChange={(e) =>
                     handleTemplateFieldChange("description", e.target.value)
                   }

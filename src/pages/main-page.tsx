@@ -60,7 +60,7 @@ const Main = (): JSX.Element | undefined => {
         <TemplateOnMain templates={templates} />
       ) : (
         <Typography component="h4" textAlign="center" variant="h6">
-          No templates created yet
+          No templates created yet..
         </Typography>
       )}
     </Stack>
