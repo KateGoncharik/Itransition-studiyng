@@ -17,15 +17,17 @@ export const AnswerConstructor: FC<{
   title: string;
   isDisabled: boolean;
   isRequired: boolean;
-}> = ({ type, title, isDisabled, isRequired }) => {
+  value?: string;
+}> = ({ type, title, isDisabled, isRequired, value }) => {
   if (type === answerTypes.oneLineString) {
     return (
       <>
-        {/* <Typography>{title}</Typography> */}
+        {value && <Typography>{title}</Typography>}
 
         <Question
           name="one-line-string-answer"
-          label={title}
+          label={value ? "" : title}
+          value={value}
           isRequired={isRequired}
           placeholder="Short answer"
           isDisabled={isDisabled}
