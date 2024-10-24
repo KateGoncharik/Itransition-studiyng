@@ -4,10 +4,12 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { StoredTemplateType } from "@/requests/template-state-schema";
 import { AnswerConstructor } from "./constructor/answer/answer-constructor";
+import { useAuth } from "@/hooks/use-auth";
 
 export const FormComponent: FC = () => {
   const [template, setTemplate] = useState<null | StoredTemplateType>(null);
   const { id } = useParams<{ id: string }>();
+  const { isAuthenticated } = useAuth();
   useEffect(() => {
     if (!id) {
       return;
@@ -48,6 +50,7 @@ export const FormComponent: FC = () => {
           }}
         />
       </div>
+
       <form
         style={{ width: "100%" }}
         onSubmit={(e) => {
@@ -60,7 +63,20 @@ export const FormComponent: FC = () => {
             {template.title}
           </Typography>
           <Typography>{template.description}</Typography>
+          {!isAuthenticated && (
+            <Typography
+              color="warning"
+              component="h3"
+              variant="h5"
+              textAlign="center"
+            >
+              Log in to fill the form
+            </Typography>
+          )}
           <Stack sx={{ gap: 1 }}>
+            {/* <AnswerConstructor>User</AnswerConstructor> */}
+
+            {/* <AnswerConstructor>Data</AnswerConstructor> */}
             {template.questions.map((question) => {
               return (
                 <Stack
@@ -76,14 +92,14 @@ export const FormComponent: FC = () => {
                     key={question.id}
                     type={question.answerType}
                     title={question.title}
-                    isDisabled={false}
+                    isDisabled={!isAuthenticated}
                   />
                 </Stack>
               );
             })}
           </Stack>
 
-          <Button variant="contained" type="submit">
+          <Button disabled={!isAuthenticated} variant="contained" type="submit">
             Submit
           </Button>
         </Stack>
