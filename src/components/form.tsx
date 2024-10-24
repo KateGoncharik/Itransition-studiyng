@@ -8,7 +8,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { UserType } from "@/requests/user-schema";
 import { answerTypes } from "./constructor/answer/types";
-import { NumberInputComponent } from "./constructor/answer/number-input";
 
 const getCurrentDate = (): string => {
   const today = new Date();
@@ -106,16 +105,6 @@ export const FormComponent: FC = () => {
             <TextField type="date" value={currentDate} disabled={true} />
 
             {template.questions.map((question) => {
-              if (question.answerType === answerTypes.number) {
-                return (
-                  <NumberInputComponent
-                    isDisabled={false}
-                    key={question.id}
-                    label={question.title}
-                    isRequired={question.isRequired}
-                  />
-                );
-              }
               return (
                 <Stack
                   sx={{
