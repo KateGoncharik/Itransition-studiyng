@@ -4,6 +4,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  Stack,
   Typography,
 } from "@mui/material";
 
@@ -20,11 +21,11 @@ export const AnswerConstructor: FC<{
   if (type === answerTypes.oneLineString) {
     return (
       <>
-        <Typography>{title}</Typography>
+        {/* <Typography>{title}</Typography> */}
 
         <Question
           name="one-line-string-answer"
-          label=""
+          label={title}
           isRequired={isRequired}
           placeholder="Short answer"
           isDisabled={isDisabled}
@@ -45,11 +46,15 @@ export const AnswerConstructor: FC<{
   if (type === answerTypes.number) {
     return (
       <>
-        <Typography>{title}</Typography>
+        <Stack flexDirection="row" gap={1}>
+          <Typography>{title}</Typography>
+          {isRequired && "*"}
+        </Stack>
 
         <StyledNumberInput
           min={0}
           max={9999}
+          title={title}
           required={isRequired}
           slotProps={{
             root: { className: "CustomNumberInput" },
@@ -75,7 +80,11 @@ export const AnswerConstructor: FC<{
   if (type === answerTypes.multilineString) {
     return (
       <>
-        <Typography>{title}</Typography>
+        <Stack>
+          <Typography>{title}</Typography>
+          {isRequired && "*"}
+        </Stack>
+
         <StyledTextarea
           style={{
             maxWidth: "100%",
