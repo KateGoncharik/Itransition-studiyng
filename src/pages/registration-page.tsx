@@ -125,6 +125,7 @@ const Registration = (): JSX.Element => {
               label={"password"}
               placeholder={"password"}
               required
+              type={passwordInputType}
               fullWidth={true}
               size="small"
               name="password"
