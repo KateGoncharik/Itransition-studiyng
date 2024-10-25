@@ -11,11 +11,15 @@ import {
 } from "@mui/material";
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const Registration = (): JSX.Element => {
   const { login } = useAuth();
 
   const navigate = useNavigate();
+  const [passwordInputType, setPasswordInputType] = useState("password");
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
@@ -24,6 +28,15 @@ const Registration = (): JSX.Element => {
 
   const handleCloseSnackbar = (): void => {
     setOpenSnackbar(false);
+  };
+
+  const togglePasswordInputType = (): void => {
+    if (passwordInputType === "password") {
+      setPasswordInputType("text");
+    }
+    if (passwordInputType === "text") {
+      setPasswordInputType("password");
+    }
   };
 
   const handleRegistration = (event: FormEvent<HTMLFormElement>): void => {
@@ -40,6 +53,16 @@ const Registration = (): JSX.Element => {
       typeof email !== "string"
     ) {
       setSnackbarMessage("Invalid input");
+      setOpenSnackbar(true);
+      return;
+    }
+    if (password.length < 6) {
+      setSnackbarMessage("Password should be at least 6 chars long");
+      setOpenSnackbar(true);
+      return;
+    }
+    if (password.length > 20) {
+      setSnackbarMessage("Password should be at not longer than 20 chars");
       setOpenSnackbar(true);
       return;
     }
@@ -76,6 +99,7 @@ const Registration = (): JSX.Element => {
             label={"name"}
             placeholder={"name"}
             required
+            type="text"
             size="small"
             name="username"
           />
@@ -84,18 +108,36 @@ const Registration = (): JSX.Element => {
             label={"email"}
             placeholder={"email"}
             required
+            type="email"
             size="small"
             name="email"
           />
+          <Stack
+            sx={{
+              justifyContent: "space-between",
+              border: "1px solid #43465a",
+              borderRadius: "4px",
+              flexDirection: "row",
+            }}
+          >
+            <TextField
+              autoComplete={"password"}
+              label={"password"}
+              placeholder={"password"}
+              required
+              fullWidth={true}
+              size="small"
+              name="password"
+            />
+            <Button onClick={() => togglePasswordInputType()}>
+              {passwordInputType === "password" ? (
+                <VisibilityIcon />
+              ) : (
+                <VisibilityOffIcon />
+              )}
+            </Button>
+          </Stack>
 
-          <TextField
-            autoComplete={"password"}
-            label={"password"}
-            placeholder={"password"}
-            required
-            size="small"
-            name="password"
-          />
           <Button
             disabled={false}
             size="large"

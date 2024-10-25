@@ -28,9 +28,7 @@ export const registerUser = ({
       }
       return response.json();
     })
-    .then((data) => {
-      console.log("New user registered:", data);
-    })
+
     .catch((error) => {
       console.error("Error:", error);
       throw error;

@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const Login = (): JSX.Element => {
   const { login, isAuthenticated } = useAuth();
@@ -20,6 +22,7 @@ const Login = (): JSX.Element => {
     }
   }, [isAuthenticated, navigate]);
 
+  const [passwordInputType, setPasswordInputType] = useState("password");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
@@ -30,14 +33,33 @@ const Login = (): JSX.Element => {
     setOpenSnackbar(false);
   };
 
+  const togglePasswordInputType = (): void => {
+    if (passwordInputType === "password") {
+      setPasswordInputType("text");
+    }
+    if (passwordInputType === "text") {
+      setPasswordInputType("password");
+    }
+  };
+
   const handleLogin = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
-
+    // TODO validation
     if (typeof username !== "string" || typeof password !== "string") {
       setSnackbarMessage("Invalid input");
+      setOpenSnackbar(true);
+      return;
+    }
+    if (password.length < 6) {
+      setSnackbarMessage("Password should be at least 6 chars long");
+      setOpenSnackbar(true);
+      return;
+    }
+    if (password.length > 20) {
+      setSnackbarMessage("Password should be at not longer than 20 chars");
       setOpenSnackbar(true);
       return;
     }
@@ -72,17 +94,37 @@ const Login = (): JSX.Element => {
             label={"username"}
             placeholder={"username"}
             required
+            type="text"
             size="small"
             name="username"
           />
-          <TextField
-            autoComplete={"password"}
-            label={"password"}
-            placeholder={"password"}
-            required
-            size="small"
-            name="password"
-          />
+          <Stack
+            sx={{
+              justifyContent: "space-between",
+              border: "1px solid #43465a",
+              borderRadius: "4px",
+              flexDirection: "row",
+            }}
+          >
+            <TextField
+              autoComplete={"password"}
+              label={"password"}
+              type={passwordInputType}
+              placeholder={"1234"}
+              required
+              fullWidth={true}
+              size="small"
+              sx={{ border: "none" }}
+              name="password"
+            />
+            <Button onClick={() => togglePasswordInputType()}>
+              {passwordInputType === "password" ? (
+                <VisibilityIcon />
+              ) : (
+                <VisibilityOffIcon />
+              )}
+            </Button>
+          </Stack>
 
           <Button
             disabled={false}

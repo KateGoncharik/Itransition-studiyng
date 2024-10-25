@@ -25,9 +25,7 @@ export const loginUser = (userData: UserData): Promise<void> => {
       }
       return response.json();
     })
-    .then(() => {
-      console.log("Logged in successfully, token saved to cookies");
-    })
+
     .catch((error) => {
       console.error("Error:", error);
       throw error;

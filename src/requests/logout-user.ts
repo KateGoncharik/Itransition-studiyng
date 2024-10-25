@@ -9,7 +9,6 @@ export function logoutUser(): Promise<void> {
       if (!response.ok) {
         throw new Error("Logout failed");
       }
-      console.log("Logged out successfully");
     })
     .catch((error) => {
       console.error("Error:", error);
