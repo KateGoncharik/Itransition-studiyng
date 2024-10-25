@@ -80,24 +80,7 @@ function handleDisconnect() {
   });
 }
 
-// Инициализируем первое подключение
 handleDisconnect();
-
-// const db = mysql.createConnection({
-//   host,
-//   user,
-//   password,
-//   database,
-//   port: dbPort,
-// });
-
-// db.connect((err) => {
-//   if (err) {
-//     console.error(ERRORS.dbConnection, err);
-//     return;
-//   }
-//   console.log(OKMESSAGES.dbConnection);
-// });
 
 app.get("/users", (_, res) => {
   db.query("SELECT * FROM users", (err, results) => {
