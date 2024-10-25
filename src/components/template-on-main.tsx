@@ -12,9 +12,34 @@ export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
   templates,
 }) => {
   return (
-    <ImageList sx={{ width: "70%", height: "60vh", margin: "1% auto" }}>
+    <ImageList
+      sx={{
+        width: { lg: "50%", md: "70%", sm: "85%", xs: "95%" },
+        height: "60vh",
+        margin: "1% auto",
+        overflowY: "scroll",
+        "&::-webkit-scrollbar": {
+          width: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#2da2ff",
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#3660ab",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "#ccc",
+        },
+      }}
+    >
       <ImageListItem key="Subheader" cols={2}>
-        <ListSubheader component="div">All templates</ListSubheader>
+        <ListSubheader
+          sx={{ color: "primary.main", fontSize: "1em" }}
+          component="div"
+        >
+          All templates
+        </ListSubheader>
       </ImageListItem>
       {templates.map((template) => (
         <ImageListItem key={template.id}>
@@ -26,6 +51,10 @@ export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
           />
           <Link to={`/form/${template.id}`}>
             <ImageListItemBar
+              sx={{
+                height: { lg: "30%", md: "45%", sm: "60%", xs: "70%" },
+                padding: "1%",
+              }}
               title={template.title}
               subtitle={template.user_name}
             />

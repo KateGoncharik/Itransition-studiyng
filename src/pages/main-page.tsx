@@ -6,6 +6,8 @@ import { getAllTemplates } from "@/requests/get-all-templates";
 import { TemplatePreviewType } from "@/requests/templates-schema";
 import { TemplateOnMain } from "@/components/template-on-main";
 import { getUserById } from "@/requests/get-user-by-id";
+import Lottie from "react-lottie";
+import animationData from "../lotties/Animation - 1729850510680.json";
 
 export interface TemplateData extends TemplatePreviewType {
   user_name: string;
@@ -13,7 +15,14 @@ export interface TemplateData extends TemplatePreviewType {
 const Main = (): JSX.Element | undefined => {
   const [templates, setTemplates] = useState<TemplateData[]>([]);
   const { isAuthenticated } = useAuth();
-
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   useEffect(() => {
     void getAllTemplates().then(async (data) => {
       const mapped = await Promise.all(
@@ -29,40 +38,33 @@ const Main = (): JSX.Element | undefined => {
   }, []);
 
   return (
-    <Stack>
-      {isAuthenticated ? (
-        <Typography
-          component="h1"
-          mb={1}
-          mt={3}
-          textAlign="center"
-          variant="h5"
-        >
-          Authorized user main page
-        </Typography>
-      ) : (
-        <>
-          <Typography
-            component="h1"
-            mb={4}
-            mt={7}
-            textAlign="center"
-            variant="h4"
-          >
-            Not authorized user main page
-          </Typography>
-          <Typography component="h3" textAlign="center" variant="h5">
-            Log in to create template
-          </Typography>
-        </>
-      )}
-      {templates.length > 0 ? (
-        <TemplateOnMain templates={templates} />
-      ) : (
-        <Typography component="h4" textAlign="center" variant="h6">
-          No templates created yet..
+    <Stack gap={2} textAlign="center">
+      <Typography component="h1" mt={3} variant="h4">
+        Welcome to Kate-forms!
+      </Typography>
+
+      <Typography
+        sx={{ fontSize: { lg: "24px", md: "20px", sm: "18px", xs: "14px" } }}
+      >
+        Here you can browse quizzes created by others and create your own
+        template.
+      </Typography>
+
+      <Lottie options={defaultOptions} height={300} width={300} />
+      {!isAuthenticated && (
+        <Typography component="h4" color="info" textAlign="center" variant="h5">
+          Log in to create template
         </Typography>
       )}
+      <Stack>
+        {templates.length > 0 ? (
+          <TemplateOnMain templates={templates} />
+        ) : (
+          <Typography component="h4" textAlign="center" variant="h6">
+            No templates created yet..
+          </Typography>
+        )}
+      </Stack>
     </Stack>
   );
 };
