@@ -46,21 +46,58 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-const db = mysql.createConnection({
+
+const dbConfig = {
   host,
   user,
   password,
   database,
   port: dbPort,
-});
+};
 
-db.connect((err) => {
-  if (err) {
-    console.error(ERRORS.dbConnection, err);
-    return;
-  }
-  console.log(OKMESSAGES.dbConnection);
-});
+let db;
+
+function handleDisconnect() {
+  db = mysql.createConnection(dbConfig);
+
+  db.connect((err) => {
+    if (err) {
+      console.error(ERRORS.dbConnection, err);
+      setTimeout(handleDisconnect, 5000);
+    } else {
+      console.log(OKMESSAGES.dbConnection);
+    }
+  });
+
+  db.on("error", (err) => {
+    if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
+      console.log("Соединение потеряно, переподключение...");
+      handleDisconnect();
+    } else {
+      console.error(ERRORS.dbConnection, err);
+      throw err;
+    }
+  });
+}
+
+// Инициализируем первое подключение
+handleDisconnect();
+
+// const db = mysql.createConnection({
+//   host,
+//   user,
+//   password,
+//   database,
+//   port: dbPort,
+// });
+
+// db.connect((err) => {
+//   if (err) {
+//     console.error(ERRORS.dbConnection, err);
+//     return;
+//   }
+//   console.log(OKMESSAGES.dbConnection);
+// });
 
 app.get("/users", (_, res) => {
   db.query("SELECT * FROM users", (err, results) => {
