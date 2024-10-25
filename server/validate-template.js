@@ -4,7 +4,6 @@ const isTemplateValid = (templateState) => {
   const parsedQuestions = JSON.parse(templateState.questions);
   if (
     !templateState.title ||
-    !templateState.description ||
     templateState.userId === null ||
     templateState.topicId === null ||
     !templateState.image
