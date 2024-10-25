@@ -63,11 +63,6 @@ const TemplateConstructor = (): JSX.Element | undefined => {
       setOpenSnackbar(true);
       return false;
     }
-    if (!templateState.description) {
-      setSnackbarMessage("Description is required");
-      setOpenSnackbar(true);
-      return false;
-    }
     if (templateState.questions.length === 0) {
       setSnackbarMessage("At least one question is required");
       setOpenSnackbar(true);
@@ -196,7 +191,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                 <StyledTextarea
                   name={"template-description"}
                   placeholder="Description of template"
-                  required={true}
+                  required={false}
                   style={{
                     maxWidth: "100%",
                     minWidth: "50%",

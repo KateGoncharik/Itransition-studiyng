@@ -7,9 +7,9 @@ export const submitTemplate = async (formData: FormData): Promise<void> => {
 
       body: formData,
     });
-
+    // TODO fix error message
     if (!response.ok) {
-      throw new Error("No server response");
+      throw new Error("Some error ocurred");
     }
   } catch (error) {
     if (error instanceof Error) {

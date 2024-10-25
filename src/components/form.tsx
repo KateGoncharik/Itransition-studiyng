@@ -114,6 +114,8 @@ export const FormComponent: FC = () => {
                   }}
                   key={question.id}
                 >
+                  <Typography>{question.description}</Typography>
+
                   <AnswerConstructor
                     isRequired={question.isRequired}
                     key={question.id}

@@ -68,7 +68,7 @@ export const QuestionConstructor: FC<{
           <StyledTextarea
             value={description}
             autoComplete="question-description"
-            required={true}
+            required={false}
             onChange={(e) => {
               handleChange(question.id, "description", e.target.value);
             }}
