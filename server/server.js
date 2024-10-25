@@ -256,7 +256,7 @@ app.get("/templates", (_, res) => {
     "SELECT id, title, description, image_url, user_id, topic_id FROM templates",
     (err, results) => {
       if (err) {
-        return res.status(500).json({ error: ERRORS.noUsers });
+        return res.status(500).json({ error: ERRORS.noUsers, info: err });
       }
       res.json(results);
     },
