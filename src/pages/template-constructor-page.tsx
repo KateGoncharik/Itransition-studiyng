@@ -213,7 +213,8 @@ const TemplateConstructor = (): JSX.Element | undefined => {
                 disabled={templateState.questions.length >= 16}
                 onClick={addQuestionToTemplateState}
               >
-                <AddCircleOutlineIcon />
+                Add question
+                <AddCircleOutlineIcon sx={{ marginLeft: "5px" }} />
               </Button>
               <Stack sx={{ gap: 2 }} className="user-questions">
                 <Question
