@@ -3,23 +3,18 @@ import { Button, Stack } from "@mui/material";
 import { FC } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
-
-const headerButtonStyles = {
-  "&:hover": {
-    bgcolor: "primary.contrastText",
-    color: "primary.main",
-    transition: "0.7s",
-  },
-  color: "primary.contrastText",
-  transition: "0.7s",
-};
+import { headerButtonStyles } from "./styles";
+import HomeIcon from "@mui/icons-material/Home";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 export const Navigation: FC = () => {
   const { isAuthenticated } = useAuth();
   return (
     <Stack className="gap-2" direction={"row"}>
       <Button component={RouterLink} sx={headerButtonStyles} to={"/"}>
-        Main
+        <HomeIcon />
       </Button>
       {isAuthenticated && (
         <Button
@@ -37,14 +32,14 @@ export const Navigation: FC = () => {
           sx={headerButtonStyles}
           to={"/registration"}
         >
-          Registration
+          <PersonAddIcon />
         </Button>
       )}
       {isAuthenticated ? (
         <LogoutButton />
       ) : (
         <Button component={RouterLink} sx={headerButtonStyles} to={"/login"}>
-          Login
+          <LoginIcon />
         </Button>
       )}
     </Stack>
@@ -66,7 +61,7 @@ const LogoutButton: FC = () => {
   };
   return (
     <Button onClick={handleLogout} sx={headerButtonStyles}>
-      Logout
+      <LogoutIcon />
     </Button>
   );
 };

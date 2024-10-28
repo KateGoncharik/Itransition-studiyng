@@ -35,7 +35,11 @@ export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
     >
       <ImageListItem key="Subheader" cols={2}>
         <ListSubheader
-          sx={{ color: "primary.main", fontSize: "1em" }}
+          sx={{
+            backgroundColor: "primary.main",
+            color: "primary.contrastText",
+            fontSize: "1em",
+          }}
           component="div"
         >
           All templates

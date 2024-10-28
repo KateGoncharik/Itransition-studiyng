@@ -3,6 +3,7 @@ import { FC, ReactNode } from "react";
 import { AppBar, useScrollTrigger } from "@mui/material";
 import { Stack } from "@mui/system";
 import { Navigation } from "./navigation";
+import { ChangeThemeButton } from "./change-theme-button";
 
 export const Header: FC<{
   children?: ReactNode;
@@ -10,9 +11,8 @@ export const Header: FC<{
   return (
     <AppBar
       className="px-5 py-1"
-      data-testid="header"
       sx={{
-        bgcolor: useScrollTrigger() ? "primary.dark" : "primary.main",
+        bgcolor: useScrollTrigger() ? "primary.light" : "primary.main",
         minHeight: "5vh",
         position: "sticky",
         top: 0,
@@ -21,12 +21,14 @@ export const Header: FC<{
       <Stack alignItems="center" className="w-full flex-row justify-between">
         <Stack
           alignItems="center"
-          borderRadius={20}
-          justifyContent="center"
+          flexDirection="row"
+          justifyContent="space-between"
           sx={{ transition: "2s" }}
           width={{ lg: "20%", md: "30%", sm: "40%", xs: "50%" }}
-        ></Stack>
-        <Navigation />
+        >
+          <Navigation />
+          <ChangeThemeButton />
+        </Stack>
       </Stack>
     </AppBar>
   );
