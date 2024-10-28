@@ -28,11 +28,16 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(
 );
 
 export const AppThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  // TODO get from ls, set to ls
-  const [mode, setMode] = useState<"light" | "dark">("dark");
+  const storedTheme = localStorage.getItem("theme");
+  const initialMode: "light" | "dark" =
+    storedTheme === "light" || storedTheme === "dark" ? storedTheme : "dark";
+
+  const [mode, setMode] = useState<"light" | "dark">(initialMode);
 
   const toggleTheme = (): void => {
-    setMode((prevMode) => (prevMode === "dark" ? "light" : "dark"));
+    const newMode = mode === "dark" ? "light" : "dark";
+    setMode(newMode);
+    localStorage.setItem("theme", newMode);
   };
 
   const theme: Theme = useMemo(
