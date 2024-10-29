@@ -82,11 +82,44 @@ Main features (completed and in progress):
 
 [![NPM][NPM]][NPM-url]
 
+Main technologies:
+
 [![HTML5][HTML5]][HTML5-url]
 
 [![Javascript][Javascript]][Javascript-url]
 
+[![TypeScript][TypeScript]][TypeScript-url]
+
+[![NodeJS][NodeJS]][NodeJS-url]
+
+[![React][React]][React-url]
+
+[![React-router][React-router]][React-router-url]
+
+Styled components:
+
+[![Mui][Mui]][Mui-url]
+
+Data validation:
+
+[![Zod][Zod]][Zod-url]
+
+Linters and formatters:
+
+[![Prettier][Prettier]][Prettier-url]
+
+[![Stylelint][Stylelint]][Stylelint-url]
+
+[![Lint-staged][Lint-staged]][Lint-staged-url]
+
+[![Husky][Husky]][Husky-url]
+
+[![Eslint][Eslint]][Eslint-url]
+
+Deployment hostings:
+
 [![Netlify][Netlify]][Netlify-url]
+[![Render][Render]][Render-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -108,6 +141,28 @@ Main features (completed and in progress):
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+[Render]: https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white
+[Render-url]: https://dashboard.render.com/
+[Husky]: ./public/husky.png
+[Husky-url]: https://typicode.github.io/husky/
+[Lint-staged]: ./public/lint-staged.png
+[Lint-staged-url]: https://npmjs.com/package/lint-staged/v/12.3.2
+[Eslint]: https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white
+[Eslint-url]: https://eslint.org/
+[Prettier]: https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E
+[Prettier-url]: https://prettier.io/
+[Stylelint]: https://img.shields.io/badge/stylelint-000?style=for-the-badge&logo=stylelint&logoColor=white
+[Stylelint-url]: https://stylelint.io/
+[Zod]: https://img.shields.io/badge/-Zod-3E67B1?style=flat&logo=zod&logoColor=white
+[Zod-url]: https://zod.dev/
+[React-router]: https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white
+[React-router-url]: https://reactrouter.com/en/main
+[TypeScript]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
+[TypeScript-url]: https://www.typescriptlang.org
+[Mui]: https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white
+[Mui-url]: https://mui.com/
+[React]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://https://react.dev/
 [NPM]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [NPM-url]: https://www.npmjs.com
 [Javascript]: https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E
@@ -116,3 +171,5 @@ Main features (completed and in progress):
 [HTML5-url]: https://html.com/html5/
 [Netlify]: https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7
 [Netlify-url]: https://www.netlify.com/
+[NodeJS]: https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
+[NodeJS-url]: https://nodejs.org/en
