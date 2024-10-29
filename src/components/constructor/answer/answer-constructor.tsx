@@ -19,7 +19,8 @@ export const AnswerConstructor: FC<{
   isDisabled: boolean;
   isRequired: boolean;
   value?: string;
-}> = ({ type, title, isDisabled, isRequired, value }) => {
+  onChange?: (value: string | number | boolean) => void;
+}> = ({ type, title, isDisabled, isRequired, value, onChange }) => {
   if (type === answerTypes.oneLineString) {
     return (
       <>
@@ -32,6 +33,11 @@ export const AnswerConstructor: FC<{
           isRequired={isRequired}
           placeholder="Short answer"
           isDisabled={isDisabled}
+          onChange={(e) => {
+            if (onChange) {
+              onChange(e.target.value);
+            }
+          }}
         />
       </>
     );
@@ -40,7 +46,17 @@ export const AnswerConstructor: FC<{
     return (
       <FormGroup>
         <FormControlLabel
-          control={<Checkbox required={isRequired} disabled={isDisabled} />}
+          control={
+            <Checkbox
+              required={isRequired}
+              disabled={isDisabled}
+              onChange={(e) => {
+                if (onChange) {
+                  onChange(e.target.value);
+                }
+              }}
+            />
+          }
           label={title}
         />
       </FormGroup>
@@ -52,6 +68,7 @@ export const AnswerConstructor: FC<{
         isDisabled={isDisabled}
         label={title}
         isRequired={isRequired}
+        onChangeHandler={onChange}
       />
     );
   }
@@ -73,6 +90,11 @@ export const AnswerConstructor: FC<{
           required={isRequired}
           disabled={isDisabled}
           placeholder={"Full answer...\n"}
+          onChange={(e) => {
+            if (onChange) {
+              onChange(e.target.value);
+            }
+          }}
         />
       </>
     );

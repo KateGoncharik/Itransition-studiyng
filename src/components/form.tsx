@@ -42,6 +42,10 @@ export const FormComponent: FC = () => {
     );
   }, [id, isAuthenticated]);
 
+  const validateAnswers = (): boolean => {
+    return false;
+  };
+
   return template ? (
     <Stack
       sx={{
@@ -76,6 +80,12 @@ export const FormComponent: FC = () => {
         style={{ width: "100%" }}
         onSubmit={(e) => {
           e.preventDefault();
+          // TODO get template id from params
+          // TODO get user id from state
+          // collect answers
+          if (!validateAnswers()) {
+            return;
+          }
         }}
         encType="multipart/form-data"
       >
@@ -122,6 +132,9 @@ export const FormComponent: FC = () => {
                     type={question.answerType}
                     title={question.title}
                     isDisabled={!isAuthenticated}
+                    onChange={() => {
+                      //TODO set values to form state
+                    }}
                   />
                 </Stack>
               );
@@ -135,6 +148,7 @@ export const FormComponent: FC = () => {
       </form>
     </Stack>
   ) : (
+    // TODO make loader
     <>No template data</>
   );
 };
