@@ -1,6 +1,13 @@
 <a name="readme-top"></a>
 
 <div align="center">
+<a href="https://kate-forms-final-task.netlify.app/">
+  <img  src="./public/result-main.png">
+  <img  src="./public/result-auth.png">
+  <img src="./public/result-constructor.png">
+  <img  src="./public/result-form-view.png">
+
+</a>
   <h1 align="center">Final task</h1>
 
 </div>
@@ -26,15 +33,50 @@
 
 _Completed: 2024_
 
-For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
+- For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
-Deployment: [here](https://kate-forms-final-task.netlify.app/)
+- Deployment: [here](https://kate-forms-final-task.netlify.app/)
 
-Here is the [video demonstration](h) of the result.
+- Here is the [video demonstration](h) of the result.
 
 ### Task description
 
-TBD
+You have to implement a Web application for customisable forms (quizzes, tests, questionnaires, polls, etc.). Something similar to Google Forms.
+Users define "_templates_" (the set of questions, their names and descriptions, etc.), and other users fill out "forms" (their specific answers) using these templates (e.g., enter or select values in the fields).
+
+E.g., I create a template with one integer-valued question "How many apples do you eat per day?" Users fill out corresponding forms, and I can analyse the answers.
+
+Filled-out forms (answers) can be seen by the author as well as the creator of the responding template and admins. Templates are accessible for viewing for everyone.
+
+Every user has its own personal page where they can manage the sortable table of templates (create new, delete, or edit) and the sortable table of the filled forms (probably on two separate tabs).
+
+More requirements can be found at [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
+
+Main features (completed and in progress):
+
+- [x] registration and authorization
+- [] admin and user roles
+- [] user profile
+- [x] form templates creation
+- [x] view created templates
+- [x] forms filling
+- [] viewing and editing answers
+- [] comments, likes to forms
+- [] drag'n'drop at template constructor
+- [] markdown support at template constructor
+- [] tags for filtering templates
+- [x] themes (dark/light)
+- [] full-text search
+- [] internalization (2 languages)
+- [x] adaptive layout
+
+<img src="./public/scheme-full.png">
+
+<div style="display: flex;">
+  <img width="50%" src="./public/scheme-first-part.png">
+||
+  <img width="50%" src="./public/scheme-second-part.png">
+</div>
 
 ### Technology stack
 
