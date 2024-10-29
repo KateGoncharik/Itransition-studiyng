@@ -30,6 +30,7 @@ export const NumberInputComponent: FC<{
     if (value === null) {
       return;
     }
+
     if (isNaN(value)) {
       setNumberValue(null);
     } else if (value >= minValue && value <= maxValue) {

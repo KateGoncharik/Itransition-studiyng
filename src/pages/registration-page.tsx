@@ -47,6 +47,7 @@ const Registration = (): JSX.Element => {
 
     const password = formData.get("password");
 
+    //  validateUserRegistrationData
     if (
       typeof username !== "string" ||
       typeof password !== "string" ||
@@ -69,11 +70,13 @@ const Registration = (): JSX.Element => {
 
     registerUser({ username, email, password })
       .then(() => {
+        // handleSuccessfulRegistration
         setSnackbarMessage("Successfully registered");
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
         void loginUser({ username, password }).then(() => {
           login();
+          // redirect
           setTimeout(() => navigate("/"), 1000);
         });
       })
@@ -81,6 +84,7 @@ const Registration = (): JSX.Element => {
         console.error("Error:", error);
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
+        // handleRegistrationError
         setSnackbarMessage(errorMessage);
         setSnackbarSeverity("error");
         setOpenSnackbar(true);
