@@ -314,36 +314,34 @@ app.get("/templates/:id", (req, res) => {
   );
 });
 
-app.post("/submit-form", (req, res) => {
+app.post("/submit-form", upload.none(), (req, res) => {
   const { userId, templateId, answers } = req.body;
-
   if (!userId || !templateId || !answers) {
     return res
       .status(400)
       .json({ error: "Invalid data. Missing userId, templateId, or answers." });
   }
-
+  const parsedAnswers = JSON.parse(answers);
   const formValues = {
     user_id: userId,
     template_id: templateId,
-    custom_string1: answers.custom_string1 || null,
-    custom_string2: answers.custom_string2 || null,
-    custom_string3: answers.custom_string3 || null,
-    custom_string4: answers.custom_string4 || null,
-    custom_int1: answers.custom_int1 || null,
-    custom_int2: answers.custom_int2 || null,
-    custom_int3: answers.custom_int3 || null,
-    custom_int4: answers.custom_int4 || null,
-    custom_text1: answers.custom_text1 || null,
-    custom_text2: answers.custom_text2 || null,
-    custom_text3: answers.custom_text3 || null,
-    custom_text4: answers.custom_text4 || null,
-    custom_checkbox1: answers.custom_checkbox1 || null,
-    custom_checkbox2: answers.custom_checkbox2 || null,
-    custom_checkbox3: answers.custom_checkbox3 || null,
-    custom_checkbox4: answers.custom_checkbox4 || null,
+    custom_string1: parsedAnswers.string1 || null,
+    custom_string2: parsedAnswers.string2 || null,
+    custom_string3: parsedAnswers.string3 || null,
+    custom_string4: parsedAnswers.string4 || null,
+    custom_int1: parsedAnswers.int1 || null,
+    custom_int2: parsedAnswers.int2 || null,
+    custom_int3: parsedAnswers.int3 || null,
+    custom_int4: parsedAnswers.int4 || null,
+    custom_text1: parsedAnswers.text1 || null,
+    custom_text2: parsedAnswers.text2 || null,
+    custom_text3: parsedAnswers.text3 || null,
+    custom_text4: parsedAnswers.text4 || null,
+    custom_checkbox1: parsedAnswers.checkbox1 || null,
+    custom_checkbox2: parsedAnswers.checkbox2 || null,
+    custom_checkbox3: parsedAnswers.checkbox3 || null,
+    custom_checkbox4: parsedAnswers.checkbox4 || null,
   };
-
   const columns = Object.keys(formValues).join(", ");
   const placeholders = Object.keys(formValues)
     .map(() => "?")
