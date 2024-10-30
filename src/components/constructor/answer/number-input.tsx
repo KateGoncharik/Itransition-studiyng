@@ -17,9 +17,13 @@ const numberInputStyles = {
 export const NumberInputComponent: FC<{
   label: string;
   isDisabled: boolean;
+  nameInDb?: string;
   isRequired: boolean;
-  onChangeHandler?: (value: string | number | boolean) => void;
-}> = ({ label, isRequired, isDisabled, onChangeHandler }) => {
+  onChangeHandler?: (
+    nameInDb: string,
+    value: string | number | boolean,
+  ) => void;
+}> = ({ label, isRequired, isDisabled, onChangeHandler, nameInDb }) => {
   const [numberValue, setNumberValue] = useState<number | null>(0);
   const minValue = 0;
   const maxValue = 9999;
@@ -41,8 +45,8 @@ export const NumberInputComponent: FC<{
     } else {
       setNumberValue(maxValue);
     }
-    if (onChangeHandler) {
-      onChangeHandler(value);
+    if (onChangeHandler && nameInDb) {
+      onChangeHandler(nameInDb, value);
     }
   };
 

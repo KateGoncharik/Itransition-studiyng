@@ -2,7 +2,7 @@ import { getTemplateById } from "@/requests/get-template-by-id";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { StoredTemplateType } from "@/requests/template-state-schema";
+import { CustomTemplateType } from "@/requests/template-state-schema";
 import { AnswerConstructor } from "./constructor/answer/answer-constructor";
 import { useAuth } from "@/hooks/use-auth";
 import { getAuthorizedUser } from "@/requests/get-authorized-user";
@@ -17,13 +17,56 @@ const getCurrentDate = (): string => {
   return `${year}-${month}-${day}`;
 };
 
+export type Answer = string | number | boolean;
+type Answers = {
+  string1: string;
+  string2: string;
+  string3: string;
+  string4: string;
+  text1: string;
+  text2: string;
+  text3: string;
+  text4: string;
+  int1: number | string;
+  int2: number | string;
+  int3: number | string;
+  int4: number | string;
+  checkbox1: boolean | string;
+  checkbox2: boolean | string;
+  checkbox3: boolean | string;
+  checkbox4: boolean | string;
+};
+
+const initAnswersState = {
+  string1: "",
+  string2: "",
+  string3: "",
+  string4: "",
+  text1: "",
+  text2: "",
+  text3: "",
+  text4: "",
+  int1: "",
+  int2: "",
+  int3: "",
+  int4: "",
+  checkbox1: "",
+  checkbox2: "",
+  checkbox3: "",
+  checkbox4: "",
+};
+
+const isAnswerKey = (key: string): key is keyof Answers => {
+  return key in initAnswersState;
+};
+
 export const FormComponent: FC = () => {
-  const [template, setTemplate] = useState<null | StoredTemplateType>(null);
+  const [template, setTemplate] = useState<null | CustomTemplateType>(null);
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
   const [user, setUser] = useState<null | UserType>(null);
   const [currentDate, setCurrentDate] = useState("");
-
+  const [answers, setAnswers] = useState<Answers>(initAnswersState);
   useEffect(() => {
     if (isAuthenticated) {
       void getAuthorizedUser().then((data) => {
@@ -44,6 +87,15 @@ export const FormComponent: FC = () => {
 
   const validateAnswers = (): boolean => {
     return false;
+  };
+
+  const handleAnswer = (nameInDb: string, value: Answer): void => {
+    if (nameInDb in answers) {
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [nameInDb]: value,
+      }));
+    }
   };
 
   return template ? (
@@ -83,6 +135,7 @@ export const FormComponent: FC = () => {
           // TODO get template id from params
           // TODO get user id from state
           // collect answers
+          console.log(answers);
           if (!validateAnswers()) {
             return;
           }
@@ -131,10 +184,16 @@ export const FormComponent: FC = () => {
                     key={question.id}
                     type={question.answerType}
                     title={question.title}
+                    value={
+                      isAnswerKey(question.nameInDb)
+                        ? answers[question.nameInDb]
+                        : ""
+                    }
+                    nameInDb={question.nameInDb}
                     isDisabled={!isAuthenticated}
-                    onChange={() => {
-                      //TODO set values to form state
-                    }}
+                    onChange={
+                      handleAnswer //TODO set values to form state
+                    }
                   />
                 </Stack>
               );

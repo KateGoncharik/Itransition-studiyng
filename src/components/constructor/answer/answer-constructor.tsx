@@ -12,15 +12,17 @@ import { answerTypes } from "./types";
 import { StyledTextarea } from "../question/styled-textarea";
 
 import { NumberInputComponent } from "./number-input";
+import { Answer } from "@/components/form";
 
 export const AnswerConstructor: FC<{
   type: string;
   title: string;
   isDisabled: boolean;
   isRequired: boolean;
-  value?: string;
-  onChange?: (value: string | number | boolean) => void;
-}> = ({ type, title, isDisabled, isRequired, value, onChange }) => {
+  value?: Answer;
+  nameInDb?: string;
+  onChange?: (nameInDb: string, value: string | number | boolean) => void;
+}> = ({ type, title, isDisabled, isRequired, value, onChange, nameInDb }) => {
   if (type === answerTypes.oneLineString) {
     return (
       <>
@@ -34,8 +36,8 @@ export const AnswerConstructor: FC<{
           placeholder="Short answer"
           isDisabled={isDisabled}
           onChange={(e) => {
-            if (onChange) {
-              onChange(e.target.value);
+            if (onChange && nameInDb) {
+              onChange(nameInDb, e.target.value);
             }
           }}
         />
@@ -51,8 +53,8 @@ export const AnswerConstructor: FC<{
               required={isRequired}
               disabled={isDisabled}
               onChange={(e) => {
-                if (onChange) {
-                  onChange(e.target.value);
+                if (onChange && nameInDb) {
+                  onChange(nameInDb, e.target.value);
                 }
               }}
             />
@@ -67,6 +69,7 @@ export const AnswerConstructor: FC<{
       <NumberInputComponent
         isDisabled={isDisabled}
         label={title}
+        nameInDb={nameInDb}
         isRequired={isRequired}
         onChangeHandler={onChange}
       />
@@ -91,8 +94,8 @@ export const AnswerConstructor: FC<{
           disabled={isDisabled}
           placeholder={"Full answer...\n"}
           onChange={(e) => {
-            if (onChange) {
-              onChange(e.target.value);
+            if (onChange && nameInDb) {
+              onChange(nameInDb, e.target.value);
             }
           }}
         />

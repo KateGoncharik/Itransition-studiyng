@@ -1,12 +1,12 @@
 import { getUrl } from "./get-url.ts";
 import {
-  StoredTemplateSchema,
-  StoredTemplateType,
+  CustomTemplateSchema,
+  CustomTemplateType,
 } from "./template-state-schema.ts";
 
 export const getTemplateById = async (
   id: number,
-): Promise<StoredTemplateType> => {
+): Promise<CustomTemplateType> => {
   try {
     const response = await fetch(getUrl(`templates/${id}`));
 
@@ -14,7 +14,7 @@ export const getTemplateById = async (
       throw new Error("No server response");
     }
 
-    return StoredTemplateSchema.parse(await response.json());
+    return CustomTemplateSchema.parse(await response.json());
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
