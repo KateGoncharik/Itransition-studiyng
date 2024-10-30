@@ -54,7 +54,7 @@ export const AnswerConstructor: FC<{
               disabled={isDisabled}
               onChange={(e) => {
                 if (onChange && nameInDb) {
-                  onChange(nameInDb, e.target.value);
+                  onChange(nameInDb, e.target.checked);
                 }
               }}
             />

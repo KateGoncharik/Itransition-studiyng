@@ -2,12 +2,16 @@ import { getTemplateById } from "@/requests/get-template-by-id";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CustomTemplateType } from "@/requests/template-state-schema";
+import {
+  CustomQuestionType,
+  CustomTemplateType,
+} from "@/requests/template-state-schema";
 import { AnswerConstructor } from "./constructor/answer/answer-constructor";
 import { useAuth } from "@/hooks/use-auth";
 import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { UserType } from "@/requests/user-schema";
 import { answerTypes } from "./constructor/answer/types";
+import { submitForm } from "@/requests/submit-form";
 
 const getCurrentDate = (): string => {
   const today = new Date();
@@ -85,8 +89,11 @@ export const FormComponent: FC = () => {
     );
   }, [id, isAuthenticated]);
 
-  const validateAnswers = (): boolean => {
-    return false;
+  const validateAnswers = (answers: Answers): boolean => {
+    if (Object.values(answers).every((answerValue) => answerValue === "")) {
+      return false;
+    }
+    return true;
   };
 
   const handleAnswer = (nameInDb: string, value: Answer): void => {
@@ -98,6 +105,12 @@ export const FormComponent: FC = () => {
     }
   };
 
+  const getValueForAnswer = (question: CustomQuestionType): Answer => {
+    if (isAnswerKey(question.nameInDb)) {
+      return answers[question.nameInDb];
+    }
+    throw new Error("Invalid answer type");
+  };
   return template ? (
     <Stack
       sx={{
@@ -136,11 +149,34 @@ export const FormComponent: FC = () => {
           // TODO get user id from state
           // collect answers
           console.log(answers);
-          if (!validateAnswers()) {
+          if (!validateAnswers(answers)) {
             return;
           }
+
+          const result = { userId: user?.id, templateId: template.id, answers };
+
+          const formData = new FormData();
+          formData.append("userId", JSON.stringify(result.userId));
+          formData.append("templateId", JSON.stringify(result.templateId));
+          formData.append("answers", JSON.stringify(result.answers));
+
+          submitForm(formData)
+            .then(() => {
+              console.log("success");
+              // setSnackbarMessage("Template successfully created!");
+              // setSnackbarSeverity("success");
+              // setOpenSnackbar(true);
+              // setTimeout(() => navigate("/"), 1000);
+            })
+            .catch((error: unknown) => {
+              console.error("Error:", error);
+              // const errorMessage =
+              // error instanceof Error ? error.message : "Unknown error";
+              // setSnackbarMessage(errorMessage);
+              // setSnackbarSeverity("error");
+              // setOpenSnackbar(true);
+            });
         }}
-        encType="multipart/form-data"
       >
         <Stack width="100%" gap={2}>
           <Typography component="h1" variant="h4" textAlign="center">
@@ -184,16 +220,10 @@ export const FormComponent: FC = () => {
                     key={question.id}
                     type={question.answerType}
                     title={question.title}
-                    value={
-                      isAnswerKey(question.nameInDb)
-                        ? answers[question.nameInDb]
-                        : ""
-                    }
+                    value={getValueForAnswer(question)}
                     nameInDb={question.nameInDb}
                     isDisabled={!isAuthenticated}
-                    onChange={
-                      handleAnswer //TODO set values to form state
-                    }
+                    onChange={handleAnswer}
                   />
                 </Stack>
               );
@@ -208,6 +238,6 @@ export const FormComponent: FC = () => {
     </Stack>
   ) : (
     // TODO make loader
-    <>No template data</>
+    <>Preparing data...</>
   );
 };

@@ -2,7 +2,7 @@ import { getUrl } from "./get-url.ts";
 
 export const submitForm = async (formData: FormData): Promise<void> => {
   try {
-    const response = await fetch(getUrl("upload-form"), {
+    const response = await fetch(getUrl("submit-form"), {
       method: "POST",
 
       body: formData,
