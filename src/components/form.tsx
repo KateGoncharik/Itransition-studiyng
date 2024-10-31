@@ -1,7 +1,14 @@
 import { getTemplateById } from "@/requests/get-template-by-id";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   CustomQuestionType,
   CustomTemplateType,
@@ -71,6 +78,17 @@ export const FormComponent: FC = () => {
   const [user, setUser] = useState<null | UserType>(null);
   const [currentDate, setCurrentDate] = useState("");
   const [answers, setAnswers] = useState<Answers>(initAnswersState);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
+    "error",
+  );
+
+  const handleCloseSnackbar = (): void => {
+    setOpenSnackbar(false);
+  };
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (isAuthenticated) {
       void getAuthorizedUser().then((data) => {
@@ -91,6 +109,9 @@ export const FormComponent: FC = () => {
 
   const validateAnswers = (answers: Answers): boolean => {
     if (Object.values(answers).every((answerValue) => answerValue === "")) {
+      // TODO handle case with all empty answers
+      setSnackbarMessage("All required questions should be answered");
+      setOpenSnackbar(true);
       return false;
     }
     return true;
@@ -145,10 +166,7 @@ export const FormComponent: FC = () => {
         style={{ width: "100%" }}
         onSubmit={(e) => {
           e.preventDefault();
-          // TODO get template id from params
-          // TODO get user id from state
-          // collect answers
-          console.log(answers);
+
           if (!validateAnswers(answers)) {
             return;
           }
@@ -163,18 +181,18 @@ export const FormComponent: FC = () => {
           submitForm(formData)
             .then(() => {
               console.log("success");
-              // setSnackbarMessage("Template successfully created!");
-              // setSnackbarSeverity("success");
-              // setOpenSnackbar(true);
-              // setTimeout(() => navigate("/"), 1000);
+              setSnackbarMessage("Your answer was successfully saved!");
+              setSnackbarSeverity("success");
+              setOpenSnackbar(true);
+              setTimeout(() => navigate("/"), 2000);
             })
             .catch((error: unknown) => {
               console.error("Error:", error);
-              // const errorMessage =
-              // error instanceof Error ? error.message : "Unknown error";
-              // setSnackbarMessage(errorMessage);
-              // setSnackbarSeverity("error");
-              // setOpenSnackbar(true);
+              const errorMessage =
+                error instanceof Error ? error.message : "Unknown error";
+              setSnackbarMessage(errorMessage);
+              setSnackbarSeverity("error");
+              setOpenSnackbar(true);
             });
         }}
       >
@@ -235,6 +253,19 @@ export const FormComponent: FC = () => {
           </Button>
         </Stack>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Stack>
   ) : (
     // TODO make loader
