@@ -25,7 +25,6 @@ export const NumberInputComponent: FC<{
     value: string | number | boolean,
   ) => void;
 }> = ({ label, isRequired, isDisabled, onChangeHandler, nameInDb, value }) => {
-  // TODO take value from props for form component
   const [numberValue, setNumberValue] = useState<number | null>(value ?? 0);
   const minValue = 0;
   const maxValue = 9999;

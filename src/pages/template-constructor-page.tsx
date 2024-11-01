@@ -78,7 +78,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     if (!validateForm()) {
       return;
     }
-    // TODO remove?
+
     if (
       templateState.image === null ||
       templateState.userId === null ||

@@ -70,29 +70,6 @@ const getInitAnswersState = (form: StoredFormType | null): AnswersInForm => {
   };
 };
 
-// const getStoredAnswersAsArray = (
-//   form: StoredFormType,
-// ): Array<AnswerValueType | null> => {
-//   return [
-//     form.custom_checkbox1,
-//     form.custom_string1,
-//     form.custom_string2,
-//     form.custom_string3,
-//     form.custom_string4,
-//     form.custom_text1,
-//     form.custom_text2,
-//     form.custom_text3,
-//     form.custom_text4,
-//     form?.custom_int1,
-//     form?.custom_int2,
-//     form?.custom_int3,
-//     form?.custom_int4,
-//     getCheckboxValue(form?.custom_checkbox1),
-//     getCheckboxValue(form?.custom_checkbox2),
-//     getCheckboxValue(form?.custom_checkbox3),
-//   ];
-// };
-
 const isAnswerKey = (key: string): key is keyof AnswersInForm => {
   return key in getInitAnswersState(null);
 };
@@ -118,7 +95,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
     "error",
   );
-  console.log(answers);
+
   const handleCloseSnackbar = (): void => {
     setOpenSnackbar(false);
   };
@@ -158,7 +135,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
       const getFormAndTemplate = async (): Promise<void> => {
         const form = await getFormById(+id);
         setForm(form);
-        // setForm(form);
         setAnswers(getInitAnswersState(form));
 
         getTemplateById(form.template_id).then(
@@ -197,15 +173,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     }
     throw new Error("Invalid answer type");
   };
-
-  // const getStoredAnswerValue = (
-  //   question: CustomQuestionType,
-  // ): string | number | null => {
-  //   if (isAnswerKey(question.nameInDb) && form) {
-  //     return form[question.nameInDb];
-  //   }
-  //   throw new Error("Invalid answer type");
-  // };
 
   return template ? (
     <Stack
@@ -255,7 +222,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
 
           submitForm(formData)
             .then(() => {
-              console.log("success");
               setSnackbarMessage("Your answer was successfully saved!");
               setSnackbarSeverity("success");
               setOpenSnackbar(true);
@@ -313,12 +279,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
                     key={question.id}
                     type={question.answerType}
                     title={question.title}
-                    value={
-                      // route === "template"
-                      // ?
-                      getValueForAnswer(question)
-                      // : getStoredAnswerValue(question)
-                    }
+                    value={getValueForAnswer(question)}
                     nameInDb={question.nameInDb}
                     isDisabled={route === "template" ? !isAuthenticated : true}
                     onChange={handleAnswer}

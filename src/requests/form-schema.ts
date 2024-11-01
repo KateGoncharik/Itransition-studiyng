@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// TODO make form for edition schema? with answers as array (which we make string..)
 export const StoredFormSchema = z.object({
   id: z.number(),
   template_id: z.number(),

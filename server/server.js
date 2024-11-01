@@ -154,6 +154,7 @@ app.post("/login", (req, res) => {
       { expiresIn: "1h" },
     );
     // TODO make constants for development
+    // check what are this settings at deploy
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
@@ -340,6 +341,7 @@ app.post("/submit-form", upload.none(), (req, res) => {
     custom_text4,
   } = JSON.parse(answers);
 
+  // TODO add date
   const formValues = {
     user_id: userId,
     template_id: templateId,
@@ -484,25 +486,6 @@ app.post("/logout", (req, res) => {
       });
       res.json({ message: OKMESSAGES.loggedOut });
     });
-  });
-});
-
-// TODO remove
-app.delete("/users/:id", (req, res) => {
-  const userId = req.params.id;
-
-  const query = "DELETE FROM users WHERE id = ?";
-
-  db.query(query, [userId], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: ERRORS.serverError });
-    }
-
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: ERRORS.noUser });
-    }
-
-    res.status(200).json({ message: OKMESSAGES.userDelete });
   });
 });
 

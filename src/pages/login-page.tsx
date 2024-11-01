@@ -47,7 +47,6 @@ const Login = (): JSX.Element => {
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
-    // TODO validation
     if (typeof username !== "string" || typeof password !== "string") {
       setSnackbarMessage("Invalid input");
       setOpenSnackbar(true);
