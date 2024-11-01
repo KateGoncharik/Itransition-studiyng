@@ -7,3 +7,4 @@ export const Login = lazy(() => import("../pages/login-page"));
 export const Constructor = lazy(
   () => import("../pages/template-constructor-page"),
 );
+export const Profile = lazy(() => import("../pages/profile-page"));

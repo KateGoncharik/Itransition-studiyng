@@ -19,7 +19,12 @@ import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { UserType } from "@/requests/user-schema";
 import { answerTypes } from "./constructor/answer/types";
 import { submitForm } from "@/requests/submit-form";
-import { AnswerValueType, AnswersInForm } from "@/requests/form-schema";
+import {
+  AnswerValueType,
+  AnswersInForm,
+  StoredFormType,
+} from "@/requests/form-schema";
+import { getFormById } from "@/requests/get-one-form";
 
 const getCurrentDate = (): string => {
   const today = new Date();
@@ -52,15 +57,21 @@ const isAnswerKey = (key: string): key is keyof AnswersInForm => {
   return key in initAnswersState;
 };
 
-export const FormComponent: FC = () => {
+export const FormComponent: FC<{ route: "template" | "form" }> = ({
+  route,
+}) => {
   const [template, setTemplate] = useState<null | CustomTemplateType>(null);
   // we use template id, but later we need form  id
   // component will be used for templates/id and for forms/id
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
   const [user, setUser] = useState<null | UserType>(null);
+
+  // TODO fix - we need to store date of submission - now it's always current
   const [currentDate, setCurrentDate] = useState("");
+
   const [answers, setAnswers] = useState<AnswersInForm>(initAnswersState);
+  const [form, setForm] = useState<null | StoredFormType>(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
@@ -73,22 +84,48 @@ export const FormComponent: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      void getAuthorizedUser().then((data) => {
-        setUser(data);
-      });
+    if (route === "template") {
+      if (isAuthenticated) {
+        void getAuthorizedUser().then((data) => {
+          setUser(data);
+        });
+      }
+      if (!id) {
+        return;
+      }
+      setCurrentDate(getCurrentDate());
+
+      getTemplateById(+id).then(
+        (data) => {
+          setTemplate(data);
+        },
+        () => {},
+      );
     }
-    if (!id) {
-      return;
+    if (route === "form") {
+      if (isAuthenticated) {
+        void getAuthorizedUser().then((data) => {
+          setUser(data);
+        });
+      }
+      if (!id) {
+        return;
+      }
+      setCurrentDate(getCurrentDate());
+
+      const getFormAndTemplate = async (): Promise<void> => {
+        const form = await getFormById(+id);
+        setForm(form);
+        getTemplateById(form.template_id).then(
+          (data) => {
+            setTemplate(data);
+          },
+          () => {},
+        );
+      };
+      void getFormAndTemplate();
     }
-    setCurrentDate(getCurrentDate());
-    getTemplateById(+id).then(
-      (data) => {
-        setTemplate(data);
-      },
-      () => {},
-    );
-  }, [id, isAuthenticated]);
+  }, [id, isAuthenticated, route]);
 
   const validateAnswers = (answers: AnswersInForm): boolean => {
     if (Object.values(answers).every((answerValue) => answerValue === "")) {
@@ -100,6 +137,7 @@ export const FormComponent: FC = () => {
     return true;
   };
 
+  // ?
   const handleAnswer = (nameInDb: string, value: AnswerValueType): void => {
     if (nameInDb in answers) {
       setAnswers((prevAnswers) => ({
@@ -115,6 +153,16 @@ export const FormComponent: FC = () => {
     }
     throw new Error("Invalid answer type");
   };
+
+  const getStoredAnswerValue = (
+    question: CustomQuestionType,
+  ): string | number | null => {
+    if (isAnswerKey(question.nameInDb) && form) {
+      return form[question.nameInDb];
+    }
+    throw new Error("Invalid answer type");
+  };
+
   return template ? (
     <Stack
       sx={{
@@ -221,9 +269,13 @@ export const FormComponent: FC = () => {
                     key={question.id}
                     type={question.answerType}
                     title={question.title}
-                    value={getValueForAnswer(question)}
+                    value={
+                      route === "template"
+                        ? getValueForAnswer(question)
+                        : getStoredAnswerValue(question)
+                    }
                     nameInDb={question.nameInDb}
-                    isDisabled={!isAuthenticated}
+                    isDisabled={route === "template" ? !isAuthenticated : true}
                     onChange={handleAnswer}
                   />
                 </Stack>
@@ -231,7 +283,11 @@ export const FormComponent: FC = () => {
             })}
           </Stack>
 
-          <Button disabled={!isAuthenticated} variant="contained" type="submit">
+          <Button
+            disabled={route === "template" ? !isAuthenticated : true}
+            variant="contained"
+            type="submit"
+          >
             Submit
           </Button>
         </Stack>

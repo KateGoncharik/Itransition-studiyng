@@ -25,7 +25,11 @@ export const Navigation: FC = () => {
           Constructor
         </Button>
       )}
-
+      {isAuthenticated && (
+        <Button component={RouterLink} sx={headerButtonStyles} to={"/profile"}>
+          Profile
+        </Button>
+      )}
       {!isAuthenticated && (
         <Button
           component={RouterLink}

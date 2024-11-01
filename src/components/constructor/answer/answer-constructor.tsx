@@ -12,14 +12,14 @@ import { answerTypes } from "./types";
 import { StyledTextarea } from "../question/styled-textarea";
 
 import { NumberInputComponent } from "./number-input";
-import { Answer } from "@/components/form";
+import { AnswerValueType } from "@/requests/form-schema";
 
 export const AnswerConstructor: FC<{
   type: string;
   title: string;
   isDisabled: boolean;
   isRequired: boolean;
-  value?: Answer;
+  value?: AnswerValueType | null;
   nameInDb?: string;
   onChange?: (nameInDb: string, value: string | number | boolean) => void;
 }> = ({ type, title, isDisabled, isRequired, value, onChange, nameInDb }) => {
