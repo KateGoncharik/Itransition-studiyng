@@ -13,7 +13,6 @@ export const Header: FC<{
       className="px-5 py-1"
       sx={{
         bgcolor: useScrollTrigger() ? "primary.light" : "primary.main",
-        minHeight: "5vh",
         position: "sticky",
         top: 0,
       }}
