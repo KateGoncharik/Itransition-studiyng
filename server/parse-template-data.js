@@ -14,7 +14,7 @@ const parseTemplateDataBack = (templateData) => {
     while (templateData[`custom_${mappedAnswerType}${index}_id`]) {
       const question = {
         id: templateData[`custom_${mappedAnswerType}${index}_id`],
-        nameInDb: `${mappedAnswerType}${index}`,
+        nameInDb: `custom_${mappedAnswerType}${index}`,
         title: templateData[`custom_${mappedAnswerType}${index}_question`],
         description:
           templateData[`custom_${mappedAnswerType}${index}_description`],

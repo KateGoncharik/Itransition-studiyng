@@ -321,26 +321,44 @@ app.post("/submit-form", upload.none(), (req, res) => {
       .status(400)
       .json({ error: "Invalid data. Missing userId, templateId, or answers." });
   }
-  const parsedAnswers = JSON.parse(answers);
+  const {
+    custom_checkbox1,
+    custom_checkbox2,
+    custom_checkbox3,
+    custom_checkbox4,
+    custom_int1,
+    custom_int2,
+    custom_int3,
+    custom_int4,
+    custom_string1,
+    custom_string2,
+    custom_string4,
+    custom_string3,
+    custom_text1,
+    custom_text2,
+    custom_text3,
+    custom_text4,
+  } = JSON.parse(answers);
+
   const formValues = {
     user_id: userId,
     template_id: templateId,
-    custom_string1: parsedAnswers.string1 || null,
-    custom_string2: parsedAnswers.string2 || null,
-    custom_string3: parsedAnswers.string3 || null,
-    custom_string4: parsedAnswers.string4 || null,
-    custom_int1: parsedAnswers.int1 || null,
-    custom_int2: parsedAnswers.int2 || null,
-    custom_int3: parsedAnswers.int3 || null,
-    custom_int4: parsedAnswers.int4 || null,
-    custom_text1: parsedAnswers.text1 || null,
-    custom_text2: parsedAnswers.text2 || null,
-    custom_text3: parsedAnswers.text3 || null,
-    custom_text4: parsedAnswers.text4 || null,
-    custom_checkbox1: parsedAnswers.checkbox1 || null,
-    custom_checkbox2: parsedAnswers.checkbox2 || null,
-    custom_checkbox3: parsedAnswers.checkbox3 || null,
-    custom_checkbox4: parsedAnswers.checkbox4 || null,
+    custom_string1: custom_string1 || null,
+    custom_string2: custom_string2 || null,
+    custom_string3: custom_string3 || null,
+    custom_string4: custom_string4 || null,
+    custom_int1: custom_int1 || null,
+    custom_int2: custom_int2 || null,
+    custom_int3: custom_int3 || null,
+    custom_int4: custom_int4 || null,
+    custom_text1: custom_text1 || null,
+    custom_text2: custom_text2 || null,
+    custom_text3: custom_text3 || null,
+    custom_text4: custom_text4 || null,
+    custom_checkbox1: custom_checkbox1 || null,
+    custom_checkbox2: custom_checkbox2 || null,
+    custom_checkbox3: custom_checkbox3 || null,
+    custom_checkbox4: custom_checkbox4 || null,
   };
   const columns = Object.keys(formValues).join(", ");
   const placeholders = Object.keys(formValues)
@@ -359,6 +377,38 @@ app.post("/submit-form", upload.none(), (req, res) => {
       return res.status(500).json({ error: "Error saving form data" });
     }
     res.status(201).json({ message: "Form submitted successfully" });
+  });
+});
+
+app.get("/users/:id/forms/", (req, res) => {
+  const userId = req.params.id;
+  db.query(
+    "SELECT * FROM forms WHERE user_id = ?",
+    [userId],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: ERRORS.serverError, info: err });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: ERRORS.noTemplate });
+      }
+
+      res.json(results);
+    },
+  );
+});
+
+app.get("/forms/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM forms WHERE id = ?", [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: ERRORS.serverError, info: err });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: ERRORS.noTemplate });
+    }
+
+    res.json(results[0]);
   });
 });
 
@@ -437,6 +487,7 @@ app.post("/logout", (req, res) => {
   });
 });
 
+// TODO remove
 app.delete("/users/:id", (req, res) => {
   const userId = req.params.id;
 
