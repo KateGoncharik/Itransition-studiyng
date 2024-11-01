@@ -14,7 +14,7 @@ import {
 } from "./lazy-loading.tsx";
 import { CircularProgress } from "@mui/material";
 import { TemplateProvider } from "@/pages/template-provider.tsx";
-import { FormComponent } from "@/components/aaa.tsx";
+import { FormComponent } from "@/pages/form-page.tsx";
 
 // import { FormComponent } from "@/components/form.tsx";
 

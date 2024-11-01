@@ -13,11 +13,11 @@ import {
   CustomQuestionType,
   CustomTemplateType,
 } from "@/requests/template-state-schema";
-import { AnswerConstructor } from "./constructor/answer/answer-constructor";
+import { AnswerConstructor } from "../components/constructor/answer/answer-constructor";
 import { useAuth } from "@/hooks/use-auth";
 import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { UserType } from "@/requests/user-schema";
-import { answerTypes } from "./constructor/answer/types";
+import { answerTypes } from "../components/constructor/answer/types";
 import { submitForm } from "@/requests/submit-form";
 import {
   AnswerValueType,
@@ -34,50 +34,91 @@ const getCurrentDate = (): string => {
   return `${year}-${month}-${day}`;
 };
 
-const initAnswersState = {
-  custom_string1: "",
-  custom_string2: "",
-  custom_string3: "",
-  custom_string4: "",
-  custom_text1: "",
-  custom_text2: "",
-  custom_text3: "",
-  custom_text4: "",
-  custom_int1: "",
-  custom_int2: "",
-  custom_int3: "",
-  custom_int4: "",
-  custom_checkbox1: "",
-  custom_checkbox2: "",
-  custom_checkbox3: "",
-  custom_checkbox4: "",
+const getCheckboxValue = (
+  value: number | null | undefined,
+): boolean | string => {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  if (value === 0) {
+    return false;
+  }
+  if (value === 1) {
+    return true;
+  }
+  throw new Error("Checkbox value is invalid");
 };
 
+const getInitAnswersState = (form: StoredFormType | null): AnswersInForm => {
+  return {
+    custom_string1: form?.custom_string1 ?? "",
+    custom_string2: form?.custom_string2 ?? "",
+    custom_string3: form?.custom_string3 ?? "",
+    custom_string4: form?.custom_string4 ?? "",
+    custom_text1: form?.custom_text1 ?? "",
+    custom_text2: form?.custom_text2 ?? "",
+    custom_text3: form?.custom_text3 ?? "",
+    custom_text4: form?.custom_text4 ?? "",
+    custom_int1: form?.custom_int1 ?? "",
+    custom_int2: form?.custom_int2 ?? "",
+    custom_int3: form?.custom_int3 ?? "",
+    custom_int4: form?.custom_int4 ?? "",
+    custom_checkbox1: getCheckboxValue(form?.custom_checkbox1),
+    custom_checkbox2: getCheckboxValue(form?.custom_checkbox2),
+    custom_checkbox3: getCheckboxValue(form?.custom_checkbox3),
+    custom_checkbox4: getCheckboxValue(form?.custom_checkbox4),
+  };
+};
+
+// const getStoredAnswersAsArray = (
+//   form: StoredFormType,
+// ): Array<AnswerValueType | null> => {
+//   return [
+//     form.custom_checkbox1,
+//     form.custom_string1,
+//     form.custom_string2,
+//     form.custom_string3,
+//     form.custom_string4,
+//     form.custom_text1,
+//     form.custom_text2,
+//     form.custom_text3,
+//     form.custom_text4,
+//     form?.custom_int1,
+//     form?.custom_int2,
+//     form?.custom_int3,
+//     form?.custom_int4,
+//     getCheckboxValue(form?.custom_checkbox1),
+//     getCheckboxValue(form?.custom_checkbox2),
+//     getCheckboxValue(form?.custom_checkbox3),
+//   ];
+// };
+
 const isAnswerKey = (key: string): key is keyof AnswersInForm => {
-  return key in initAnswersState;
+  return key in getInitAnswersState(null);
 };
 
 export const FormComponent: FC<{ route: "template" | "form" }> = ({
   route,
 }) => {
   const [template, setTemplate] = useState<null | CustomTemplateType>(null);
-  // we use template id, but later we need form  id
-  // component will be used for templates/id and for forms/id
+
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
   const [user, setUser] = useState<null | UserType>(null);
 
   // TODO fix - we need to store date of submission - now it's always current
   const [currentDate, setCurrentDate] = useState("");
-
-  const [answers, setAnswers] = useState<AnswersInForm>(initAnswersState);
   const [form, setForm] = useState<null | StoredFormType>(null);
+
+  const [answers, setAnswers] = useState<AnswersInForm>(
+    getInitAnswersState(form),
+  );
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
     "error",
   );
-
+  console.log(answers);
   const handleCloseSnackbar = (): void => {
     setOpenSnackbar(false);
   };
@@ -111,11 +152,15 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
       if (!id) {
         return;
       }
+      // TODO fix date
       setCurrentDate(getCurrentDate());
 
       const getFormAndTemplate = async (): Promise<void> => {
         const form = await getFormById(+id);
         setForm(form);
+        // setForm(form);
+        setAnswers(getInitAnswersState(form));
+
         getTemplateById(form.template_id).then(
           (data) => {
             setTemplate(data);
@@ -137,7 +182,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     return true;
   };
 
-  // ?
   const handleAnswer = (nameInDb: string, value: AnswerValueType): void => {
     if (nameInDb in answers) {
       setAnswers((prevAnswers) => ({
@@ -154,14 +198,14 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     throw new Error("Invalid answer type");
   };
 
-  const getStoredAnswerValue = (
-    question: CustomQuestionType,
-  ): string | number | null => {
-    if (isAnswerKey(question.nameInDb) && form) {
-      return form[question.nameInDb];
-    }
-    throw new Error("Invalid answer type");
-  };
+  // const getStoredAnswerValue = (
+  //   question: CustomQuestionType,
+  // ): string | number | null => {
+  //   if (isAnswerKey(question.nameInDb) && form) {
+  //     return form[question.nameInDb];
+  //   }
+  //   throw new Error("Invalid answer type");
+  // };
 
   return template ? (
     <Stack
@@ -270,9 +314,10 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
                     type={question.answerType}
                     title={question.title}
                     value={
-                      route === "template"
-                        ? getValueForAnswer(question)
-                        : getStoredAnswerValue(question)
+                      // route === "template"
+                      // ?
+                      getValueForAnswer(question)
+                      // : getStoredAnswerValue(question)
                     }
                     nameInDb={question.nameInDb}
                     isDisabled={route === "template" ? !isAuthenticated : true}

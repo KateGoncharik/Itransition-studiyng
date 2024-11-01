@@ -19,7 +19,7 @@ export const AnswerConstructor: FC<{
   title: string;
   isDisabled: boolean;
   isRequired: boolean;
-  value?: AnswerValueType | null;
+  value?: AnswerValueType;
   nameInDb?: string;
   onChange?: (nameInDb: string, value: string | number | boolean) => void;
 }> = ({ type, title, isDisabled, isRequired, value, onChange, nameInDb }) => {
@@ -52,6 +52,7 @@ export const AnswerConstructor: FC<{
             <Checkbox
               required={isRequired}
               disabled={isDisabled}
+              checked={typeof value === "boolean" ? value : false}
               onChange={(e) => {
                 if (onChange && nameInDb) {
                   onChange(nameInDb, e.target.checked);

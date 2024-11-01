@@ -7,7 +7,7 @@ type QuestionConfig = {
   placeholder: string;
   isRequired: boolean;
   isDisabled?: boolean;
-  value?: AnswerValueType | null;
+  value?: AnswerValueType;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 export const Question: FC<QuestionConfig> = ({
