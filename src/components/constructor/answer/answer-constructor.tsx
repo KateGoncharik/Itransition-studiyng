@@ -70,6 +70,7 @@ export const AnswerConstructor: FC<{
       <NumberInputComponent
         isDisabled={isDisabled}
         label={title}
+        value={typeof value === "number" ? value : undefined}
         nameInDb={nameInDb}
         isRequired={isRequired}
         onChangeHandler={onChange}
@@ -92,6 +93,7 @@ export const AnswerConstructor: FC<{
             minHeight: "40px",
           }}
           required={isRequired}
+          value={typeof value === "string" ? value : undefined}
           disabled={isDisabled}
           placeholder={"Full answer...\n"}
           onChange={(e) => {
