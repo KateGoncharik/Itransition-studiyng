@@ -12,9 +12,11 @@ import { defaultImage } from "./template-constructor-page";
 import { getTopics } from "@/requests/get-topics";
 import { isUserAuthorized } from "@/requests/check-if-user-authorized";
 import { QuestionType } from "@/requests/template-state-schema";
+// import { getCurrentDate } from "./form-page";
 
 export type TemplateState = {
   title: string;
+  // date: string | null;
   description: string;
   image: File | null;
   topicId: number | null;
@@ -62,6 +64,7 @@ export const TemplateProvider = ({
 }): ReactElement => {
   const initialTemplateState: TemplateState = {
     title: "",
+    // date: null,
     description: "",
     image: null,
     topicId: null,
@@ -83,6 +86,15 @@ export const TemplateProvider = ({
       }));
     };
     void fetchUserData();
+
+    // const getDefaultDate = (): void => {
+    //   const date = getCurrentDate();
+    //   setTemplateState((prevState) => ({
+    //     ...prevState,
+    //     date,
+    //   }));
+    // };
+    // getDefaultDate();
 
     const handleSetDefaultImage = async (): Promise<void> => {
       const file = await convertUrlToFile(

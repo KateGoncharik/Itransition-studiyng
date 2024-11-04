@@ -19,6 +19,7 @@ import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { submitTemplate } from "@/requests/submit-template";
 import { useNavigate } from "react-router-dom";
 export const defaultImage = "./template-placeholder.jpg";
+
 const TemplateConstructor = (): JSX.Element | undefined => {
   const { isAuthenticated } = useAuth();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -88,6 +89,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     }
     const formData = new FormData();
     formData.append("title", templateState.title);
+    // formData.append("date", JSON.stringify(templateState.date));
     formData.append("description", templateState.description);
     formData.append("topicId", JSON.stringify(templateState.topicId));
     formData.append("userId", JSON.stringify(templateState.userId));

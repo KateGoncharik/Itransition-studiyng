@@ -3,6 +3,7 @@ import { z } from "zod";
 export const StoredFormSchema = z.object({
   id: z.number(),
   template_id: z.number(),
+  date: z.string(),
   user_id: z.number(),
   custom_string1: z.union([z.string(), z.null()]),
   custom_string2: z.union([z.string(), z.null()]),

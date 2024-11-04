@@ -4,7 +4,6 @@ export const submitForm = async (formData: FormData): Promise<void> => {
   try {
     const response = await fetch(getUrl("submit-form"), {
       method: "POST",
-
       body: formData,
     });
     // TODO fix error message

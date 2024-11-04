@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   CustomQuestionType,
@@ -25,14 +25,7 @@ import {
   StoredFormType,
 } from "@/requests/form-schema";
 import { getFormById } from "@/requests/get-one-form";
-
-const getCurrentDate = (): string => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+import { getCurrentDate } from "./get-current-date";
 
 const getCheckboxValue = (
   value: number | null | undefined,
@@ -129,8 +122,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
       if (!id) {
         return;
       }
-      // TODO fix date
-      setCurrentDate(getCurrentDate());
 
       const getFormAndTemplate = async (): Promise<void> => {
         const form = await getFormById(+id);
@@ -174,6 +165,44 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     throw new Error("Invalid answer type");
   };
 
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    // TODO move to a handler
+    e.preventDefault();
+
+    if (!validateAnswers(answers)) {
+      return;
+    }
+
+    const result = {
+      userId: user?.id,
+      date: currentDate,
+      templateId: template?.id,
+      answers,
+    };
+
+    const formData = new FormData();
+    formData.append("userId", JSON.stringify(result.userId));
+    formData.append("date", result.date);
+    formData.append("templateId", JSON.stringify(result.templateId));
+    formData.append("answers", JSON.stringify(result.answers));
+
+    submitForm(formData)
+      .then(() => {
+        setSnackbarMessage("Your answer was successfully saved!");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
+        setTimeout(() => navigate("/"), 2000);
+      })
+      .catch((error: unknown) => {
+        console.error("Error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        setSnackbarMessage(errorMessage);
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
+      });
+  };
+
   return template ? (
     <Stack
       sx={{
@@ -204,39 +233,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
         />
       </div>
 
-      <form
-        style={{ width: "100%" }}
-        onSubmit={(e) => {
-          e.preventDefault();
-
-          if (!validateAnswers(answers)) {
-            return;
-          }
-
-          const result = { userId: user?.id, templateId: template.id, answers };
-
-          const formData = new FormData();
-          formData.append("userId", JSON.stringify(result.userId));
-          formData.append("templateId", JSON.stringify(result.templateId));
-          formData.append("answers", JSON.stringify(result.answers));
-
-          submitForm(formData)
-            .then(() => {
-              setSnackbarMessage("Your answer was successfully saved!");
-              setSnackbarSeverity("success");
-              setOpenSnackbar(true);
-              setTimeout(() => navigate("/"), 2000);
-            })
-            .catch((error: unknown) => {
-              console.error("Error:", error);
-              const errorMessage =
-                error instanceof Error ? error.message : "Unknown error";
-              setSnackbarMessage(errorMessage);
-              setSnackbarSeverity("error");
-              setOpenSnackbar(true);
-            });
-        }}
-      >
+      <form style={{ width: "100%" }} onSubmit={handleFormSubmit}>
         <Stack width="100%" gap={2}>
           <Typography component="h1" variant="h4" textAlign="center">
             {template.title}
@@ -260,7 +257,11 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
               isDisabled={true}
               isRequired={false}
             />
-            <TextField type="date" value={currentDate} disabled={true} />
+            <TextField
+              type="date"
+              value={route === "template" ? currentDate : form?.date}
+              disabled={true}
+            />
 
             {template.questions.map((question) => {
               return (
