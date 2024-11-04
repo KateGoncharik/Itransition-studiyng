@@ -316,7 +316,7 @@ app.get("/templates/:id", (req, res) => {
 });
 
 app.post("/submit-form", upload.none(), (req, res) => {
-  const { userId, templateId, answers } = req.body;
+  const { userId, templateId, answers, date } = req.body;
   if (!userId || !templateId || !answers) {
     return res
       .status(400)
@@ -341,9 +341,9 @@ app.post("/submit-form", upload.none(), (req, res) => {
     custom_text4,
   } = JSON.parse(answers);
 
-  // TODO add date
   const formValues = {
     user_id: userId,
+    date,
     template_id: templateId,
     custom_string1: custom_string1 || null,
     custom_string2: custom_string2 || null,
@@ -376,7 +376,9 @@ app.post("/submit-form", upload.none(), (req, res) => {
   db.query(insertFormQuery, values, (err) => {
     if (err) {
       console.error("Error inserting form data:", err);
-      return res.status(500).json({ error: "Error saving form data" });
+      return res
+        .status(500)
+        .json({ error: "Error saving form data", info: err });
     }
     res.status(201).json({ message: "Form submitted successfully" });
   });
