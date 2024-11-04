@@ -1,5 +1,5 @@
 import { FC, ChangeEvent, useState } from "react";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 
 const numberInputStyles = {
   "& input": {
@@ -9,6 +9,11 @@ const numberInputStyles = {
     },
     "&[type=number]": {
       MozAppearance: "textfield",
+    },
+  },
+  "&:disabled": {
+    "&:label": {
+      color: "primary.contrastText",
     },
   },
   width: "200px",
@@ -64,41 +69,43 @@ export const NumberInputComponent: FC<{
   };
 
   return (
-    <Stack gap={2} flexDirection="row" alignItems="center">
-      <TextField
-        label={label}
-        type="number"
-        disabled={isDisabled}
-        required={isRequired}
-        value={numberValue || ""}
-        onChange={(e) => handleInputChange(e, parseInt(e.target.value))}
-        sx={numberInputStyles}
-        slotProps={{
-          htmlInput: {
-            min: minValue,
-            max: maxValue,
-          },
-        }}
-      />
+    <>
+      <Typography>{label}</Typography>
+      <Stack gap={2} flexDirection="row" alignItems="center">
+        <TextField
+          type="number"
+          disabled={isDisabled}
+          required={isRequired}
+          value={numberValue || ""}
+          onChange={(e) => handleInputChange(e, parseInt(e.target.value))}
+          sx={numberInputStyles}
+          slotProps={{
+            htmlInput: {
+              min: minValue,
+              max: maxValue,
+            },
+          }}
+        />
 
-      <Stack direction="row" spacing={2}>
-        <Button
-          variant="contained"
-          disabled={isDisabled}
-          type="button"
-          onClick={handleDecrement}
-        >
-          -
-        </Button>
-        <Button
-          variant="contained"
-          disabled={isDisabled}
-          type="button"
-          onClick={handleIncrement}
-        >
-          +
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            disabled={isDisabled}
+            type="button"
+            onClick={handleDecrement}
+          >
+            -
+          </Button>
+          <Button
+            variant="contained"
+            disabled={isDisabled}
+            type="button"
+            onClick={handleIncrement}
+          >
+            +
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 };

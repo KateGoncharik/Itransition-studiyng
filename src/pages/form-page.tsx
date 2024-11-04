@@ -209,7 +209,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
         display: "flex",
         margin: "1% auto 3% ",
         alignItems: "center",
-        width: "50%",
+        width: { lg: "50%", md: "70%", sm: "85%", xs: "90%" },
       }}
     >
       <div
@@ -235,8 +235,26 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
 
       <form style={{ width: "100%" }} onSubmit={handleFormSubmit}>
         <Stack width="100%" gap={2}>
-          <Typography component="h1" variant="h4" textAlign="center">
-            {template.title}
+          <Typography
+            component="h1"
+            sx={{
+              fontSize: { lg: "28px", md: "24px", sm: "18px", xs: "14px" },
+            }}
+            textAlign="center"
+          >
+            {route === "template"
+              ? template.title
+              : `Your answer for the "${template.title}" template`}
+          </Typography>
+          <Typography
+            component="h5"
+            color="info"
+            sx={{
+              fontSize: { lg: "20px", md: "16px", sm: "14px", xs: "10px" },
+            }}
+            textAlign="center"
+          >
+            {route === "form" && `The answer is available for viewing only`}
           </Typography>
           <Typography>{template.description}</Typography>
           {!isAuthenticated && (
@@ -257,6 +275,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
               isDisabled={true}
               isRequired={false}
             />
+            <Typography>Date</Typography>
             <TextField
               type="date"
               value={route === "template" ? currentDate : form?.date}

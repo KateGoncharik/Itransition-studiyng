@@ -21,5 +21,6 @@ export const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
 
   "&:disabled": {
     border: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.secondary,
   },
 }));

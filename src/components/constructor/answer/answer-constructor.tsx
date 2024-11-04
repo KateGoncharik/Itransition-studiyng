@@ -46,7 +46,9 @@ export const AnswerConstructor: FC<{
   }
   if (type === answerTypes.checkbox) {
     return (
-      <FormGroup>
+      <FormGroup
+        sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
         <FormControlLabel
           control={
             <Checkbox
@@ -60,8 +62,9 @@ export const AnswerConstructor: FC<{
               }}
             />
           }
-          label={title}
+          label={""}
         />
+        <Typography>{title}</Typography>
       </FormGroup>
     );
   }
@@ -81,8 +84,7 @@ export const AnswerConstructor: FC<{
     return (
       <>
         <Stack>
-          <Typography>{title}</Typography>
-          {isRequired && "*"}
+          <Typography>{isRequired ? `${title}*` : title}</Typography>
         </Stack>
 
         <StyledTextarea
