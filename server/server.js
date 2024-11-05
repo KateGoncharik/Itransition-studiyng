@@ -163,8 +163,8 @@ app.post("/login", (req, res) => {
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      // maxAge: 3600000,
-      maxAge: 36000,
+      maxAge: 3600000,
+      // maxAge: 35000,
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
