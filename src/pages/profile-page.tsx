@@ -5,12 +5,12 @@ import { useAuth } from "@/hooks/use-auth";
 
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "@/components/user";
-import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { getAllUserForms } from "@/requests/get-all-user-forms";
 import { StoredFormType } from "@/requests/form-schema";
+import { checkToken } from "@/providers/handle-invalid-token";
 
 const Profile = (): JSX.Element | undefined => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [user, setUser] = useState<null | User>(null);
   const [forms, setForms] = useState<Array<StoredFormType>>([]);
   const navigate = useNavigate();
@@ -20,13 +20,14 @@ const Profile = (): JSX.Element | undefined => {
         navigate("/");
         return;
       }
-      const user = await getAuthorizedUser();
-      const forms = await getAllUserForms(user.id);
+      const authorized = await checkToken(logout);
+
+      const forms = await getAllUserForms(authorized.id);
       setForms(forms);
-      setUser(user);
+      setUser(authorized);
     };
     void getUserAndHisForms();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, logout]);
 
   return (
     <Stack gap={2} textAlign="center">

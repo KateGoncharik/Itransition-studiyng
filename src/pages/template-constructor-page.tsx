@@ -89,7 +89,6 @@ const TemplateConstructor = (): JSX.Element | undefined => {
     }
     const formData = new FormData();
     formData.append("title", templateState.title);
-    // formData.append("date", JSON.stringify(templateState.date));
     formData.append("description", templateState.description);
     formData.append("topicId", JSON.stringify(templateState.topicId));
     formData.append("userId", JSON.stringify(templateState.userId));
