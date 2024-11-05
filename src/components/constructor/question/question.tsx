@@ -1,3 +1,4 @@
+import { AnswerValueType } from "@/requests/form-schema";
 import { TextField } from "@mui/material";
 import { ChangeEvent, FC } from "react";
 type QuestionConfig = {
@@ -6,7 +7,7 @@ type QuestionConfig = {
   placeholder: string;
   isRequired: boolean;
   isDisabled?: boolean;
-  value?: string;
+  value?: AnswerValueType;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 export const Question: FC<QuestionConfig> = ({

@@ -10,10 +10,12 @@ import {
   Registration,
   Constructor,
   Login,
+  Profile,
 } from "./lazy-loading.tsx";
 import { CircularProgress } from "@mui/material";
 import { TemplateProvider } from "@/pages/template-provider.tsx";
-import { FormComponent } from "@/components/form.tsx";
+
+import { FormComponent } from "@/pages/form-page.tsx";
 
 export const routes = [
   {
@@ -64,10 +66,26 @@ export const routes = [
       {
         element: (
           <Suspense fallback={<CircularProgress />}>
-            <FormComponent />
+            <FormComponent route="form" />
           </Suspense>
         ),
-        path: "/form/:id",
+        path: "/forms/:id",
+      },
+      {
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <FormComponent route="template" />
+          </Suspense>
+        ),
+        path: "/templates/:id",
+      },
+      {
+        element: (
+          <Suspense fallback={<CircularProgress />}>
+            <Profile />
+          </Suspense>
+        ),
+        path: "/profile",
       },
     ],
     element: (

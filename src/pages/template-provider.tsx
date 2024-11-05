@@ -1,5 +1,4 @@
 import { answerTypes } from "@/components/constructor/answer/types";
-import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import {
   createContext,
   useEffect,
@@ -12,6 +11,7 @@ import { defaultImage } from "./template-constructor-page";
 import { getTopics } from "@/requests/get-topics";
 import { isUserAuthorized } from "@/requests/check-if-user-authorized";
 import { QuestionType } from "@/requests/template-state-schema";
+import { useAuth } from "@/hooks/use-auth";
 
 export type TemplateState = {
   title: string;
@@ -70,16 +70,25 @@ export const TemplateProvider = ({
   };
   const [templateState, setTemplateState] =
     useState<TemplateState>(initialTemplateState);
+  const { logout } = useAuth();
   useEffect(() => {
     const fetchUserData = async (): Promise<void> => {
       const authorized = await isUserAuthorized();
-      if (!authorized.isAuthorized) {
+      if (authorized === "Token expired") {
+        logout();
+        throw new Error("Token expired");
+      }
+      if (authorized === "No token provided") {
+        logout();
+        throw new Error("No token provided");
+      }
+      if (typeof authorized === "string") {
         return;
       }
-      const user = await getAuthorizedUser();
+
       setTemplateState((prevState) => ({
         ...prevState,
-        userId: user.id,
+        userId: authorized.id,
       }));
     };
     void fetchUserData();
@@ -109,7 +118,7 @@ export const TemplateProvider = ({
     };
 
     void setInitialTopic();
-  }, []);
+  }, [logout]);
 
   const getQuestionCountByType = (type: string): number => {
     return templateState.questions.filter(

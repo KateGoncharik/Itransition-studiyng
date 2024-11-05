@@ -82,12 +82,16 @@ function handleDisconnect() {
 
 handleDisconnect();
 
-app.get("/users", (_, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: ERRORS.noUsers });
-    }
-    res.json(results);
+app.get("/users", (req, res) => {
+  getUserByToken(req, res, async () => {
+    if (res.headersSent) return;
+
+    db.query("SELECT * FROM users", (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: ERRORS.noUsers });
+      }
+      res.json(results);
+    });
   });
 });
 
@@ -154,10 +158,13 @@ app.post("/login", (req, res) => {
       { expiresIn: "1h" },
     );
     // TODO make constants for development
+
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
       secure: true,
+      maxAge: 3600000,
+      // maxAge: 35000,
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
@@ -168,107 +175,115 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.post("/upload-template", upload.single("image"), async (req, res) => {
-  const templateState = req.body;
-  if (!req.file) {
-    return res.status(400).json({ error: ERRORS.noReceivedFile });
-  }
+app.post("/upload-template", upload.single("image"), (req, res) => {
+  // TODO update all calls of getUserByToken like that - to avoid multiple responses
+  getUserByToken(req, res, async () => {
+    if (res.headersSent) return;
 
-  const filePath = path.join(__dirname, req.file.path);
+    const templateState = req.body;
+    if (!req.file) {
+      return res.status(400).json({ error: ERRORS.noReceivedFile });
+    }
 
-  const imgCloudUrl = await uploadImage(filePath);
-  fs.unlinkSync(filePath);
+    const filePath = path.join(__dirname, req.file.path);
+    try {
+      const imgCloudUrl = await uploadImage(filePath);
+      fs.unlinkSync(filePath);
 
-  templateState.image = imgCloudUrl;
-  if (isTemplateValid(templateState)) {
-    const { title, description, topicId, userId } = templateState;
+      templateState.image = imgCloudUrl;
+      if (isTemplateValid(templateState)) {
+        const { title, description, topicId, userId } = templateState;
 
-    const result = {
-      title,
-      description,
-      image_url: imgCloudUrl,
-      topic_id: topicId,
-      user_id: userId,
-    };
-    const parsedQuestions = JSON.parse(templateState.questions);
-    // TODO try catch?
-    // TODO put strings in constants
-    const formatQuestionsByType = (questions, type, mappedAnswerType) => {
-      return questions
-        .filter((question) => question.answerType === type)
-        .map((question, index) => ({
-          [`custom_${mappedAnswerType}${index + 1}_id`]: question.id,
-          [`custom_${mappedAnswerType}${index + 1}_state`]: question.isRequired
-            ? "PRESENT_REQUIRED"
-            : "PRESENT_OPTIONAL",
-          [`custom_${mappedAnswerType}${index + 1}_question`]: question.title,
-          [`custom_${mappedAnswerType}${index + 1}_description`]:
-            question.description,
-          [`custom_${mappedAnswerType}${index + 1}_isShown`]: question.isShown,
-        }))
-        .reduce((acc, current) => ({ ...acc, ...current }), {});
-    };
+        const result = {
+          title,
+          description,
+          image_url: imgCloudUrl,
+          topic_id: topicId,
+          user_id: userId,
+        };
+        const parsedQuestions = JSON.parse(templateState.questions);
 
-    // TODO make the same names and remove mapping
-    // TODO refactor
-    const mappedAnswerTypes = {
-      [clientAnswerTypes.oneLineString]: "string",
-      [clientAnswerTypes.multilineString]: "text",
-      [clientAnswerTypes.number]: "int",
-      [clientAnswerTypes.checkbox]: "checkbox",
-    };
-    const formattedQuestions = {
-      ...formatQuestionsByType(
-        parsedQuestions,
-        clientAnswerTypes.oneLineString,
-        mappedAnswerTypes[clientAnswerTypes.oneLineString],
-      ),
-      ...formatQuestionsByType(
-        parsedQuestions,
-        clientAnswerTypes.multilineString,
-        mappedAnswerTypes[clientAnswerTypes.multilineString],
-      ),
-      ...formatQuestionsByType(
-        parsedQuestions,
-        clientAnswerTypes.number,
-        mappedAnswerTypes[clientAnswerTypes.number],
-      ),
-      ...formatQuestionsByType(
-        parsedQuestions,
-        clientAnswerTypes.checkbox,
-        mappedAnswerTypes[clientAnswerTypes.checkbox],
-      ),
-    };
+        const formatQuestionsByType = (questions, type, mappedAnswerType) => {
+          return questions
+            .filter((question) => question.answerType === type)
+            .map((question, index) => ({
+              [`custom_${mappedAnswerType}${index + 1}_id`]: question.id,
+              [`custom_${mappedAnswerType}${index + 1}_state`]:
+                question.isRequired ? "PRESENT_REQUIRED" : "PRESENT_OPTIONAL",
+              [`custom_${mappedAnswerType}${index + 1}_question`]:
+                question.title,
+              [`custom_${mappedAnswerType}${index + 1}_description`]:
+                question.description,
+              [`custom_${mappedAnswerType}${index + 1}_isShown`]:
+                question.isShown,
+            }))
+            .reduce((acc, current) => ({ ...acc, ...current }), {});
+        };
 
-    Object.assign(result, formattedQuestions);
+        const mappedAnswerTypes = {
+          [clientAnswerTypes.oneLineString]: "string",
+          [clientAnswerTypes.multilineString]: "text",
+          [clientAnswerTypes.number]: "int",
+          [clientAnswerTypes.checkbox]: "checkbox",
+        };
 
-    const insertTemplateQuery = `
-      INSERT INTO templates (
-        title, description, image_url, topic_id, user_id,
-        ${Object.keys(formattedQuestions).join(", ")}
-      ) VALUES (?, ?, ?, ?, ?, ${Object.keys(formattedQuestions)
-        .map(() => "?")
-        .join(", ")})
-    `;
+        const formattedQuestions = {
+          ...formatQuestionsByType(
+            parsedQuestions,
+            clientAnswerTypes.oneLineString,
+            mappedAnswerTypes[clientAnswerTypes.oneLineString],
+          ),
+          ...formatQuestionsByType(
+            parsedQuestions,
+            clientAnswerTypes.multilineString,
+            mappedAnswerTypes[clientAnswerTypes.multilineString],
+          ),
+          ...formatQuestionsByType(
+            parsedQuestions,
+            clientAnswerTypes.number,
+            mappedAnswerTypes[clientAnswerTypes.number],
+          ),
+          ...formatQuestionsByType(
+            parsedQuestions,
+            clientAnswerTypes.checkbox,
+            mappedAnswerTypes[clientAnswerTypes.checkbox],
+          ),
+        };
 
-    const templateValues = [
-      result.title,
-      result.description,
-      result.image_url,
-      result.topic_id,
-      result.user_id,
-      ...Object.values(formattedQuestions),
-    ];
+        Object.assign(result, formattedQuestions);
 
-    db.query(insertTemplateQuery, templateValues, (err) => {
-      if (err) {
-        return res.status(500).json({ error: ERRORS.serverError });
+        const insertTemplateQuery = `
+          INSERT INTO templates (
+            title, description, image_url, topic_id, user_id,
+            ${Object.keys(formattedQuestions).join(", ")}
+          ) VALUES (?, ?, ?, ?, ?, ${Object.keys(formattedQuestions)
+            .map(() => "?")
+            .join(", ")})
+        `;
+
+        const templateValues = [
+          result.title,
+          result.description,
+          result.image_url,
+          result.topic_id,
+          result.user_id,
+          ...Object.values(formattedQuestions),
+        ];
+
+        db.query(insertTemplateQuery, templateValues, (err) => {
+          if (err) {
+            return res.status(500).json({ error: ERRORS.serverError });
+          }
+          res.status(201).json({ message: OKMESSAGES.templateCreated });
+        });
+      } else {
+        return res.status(400).json({ error: ERRORS.invalidTemplate });
       }
-      res.status(201).json({ message: OKMESSAGES.templateCreated });
-    });
-  } else {
-    return res.status(400).json({ error: ERRORS.invalidTemplate });
-  }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: ERRORS.serverError });
+    }
+  });
 });
 
 app.get("/templates", (_, res) => {
@@ -314,11 +329,123 @@ app.get("/templates/:id", (req, res) => {
   );
 });
 
-app.get("/me", (req, res) => {
+app.post("/submit-form", upload.none(), (req, res) => {
+  getUserByToken(req, res, () => {
+    if (res.headersSent) return;
+
+    const { userId, templateId, answers, date } = req.body;
+    if (!userId || !templateId || !answers) {
+      return res.status(400).json({
+        error: "Invalid data. Missing userId, templateId, or answers.",
+      });
+    }
+    const {
+      custom_checkbox1,
+      custom_checkbox2,
+      custom_checkbox3,
+      custom_checkbox4,
+      custom_int1,
+      custom_int2,
+      custom_int3,
+      custom_int4,
+      custom_string1,
+      custom_string2,
+      custom_string4,
+      custom_string3,
+      custom_text1,
+      custom_text2,
+      custom_text3,
+      custom_text4,
+    } = JSON.parse(answers);
+
+    const formValues = {
+      user_id: userId,
+      date,
+      template_id: templateId,
+      custom_string1: custom_string1 || null,
+      custom_string2: custom_string2 || null,
+      custom_string3: custom_string3 || null,
+      custom_string4: custom_string4 || null,
+      custom_int1: custom_int1 || null,
+      custom_int2: custom_int2 || null,
+      custom_int3: custom_int3 || null,
+      custom_int4: custom_int4 || null,
+      custom_text1: custom_text1 || null,
+      custom_text2: custom_text2 || null,
+      custom_text3: custom_text3 || null,
+      custom_text4: custom_text4 || null,
+      custom_checkbox1: custom_checkbox1 || null,
+      custom_checkbox2: custom_checkbox2 || null,
+      custom_checkbox3: custom_checkbox3 || null,
+      custom_checkbox4: custom_checkbox4 || null,
+    };
+    const columns = Object.keys(formValues).join(", ");
+    const placeholders = Object.keys(formValues)
+      .map(() => "?")
+      .join(", ");
+    const values = Object.values(formValues);
+
+    const insertFormQuery = `
+    INSERT INTO forms (${columns})
+    VALUES (${placeholders})
+  `;
+
+    db.query(insertFormQuery, values, (err) => {
+      if (err) {
+        console.error("Error inserting form data:", err);
+        return res
+          .status(500)
+          .json({ error: "Error saving form data", info: err });
+      }
+      res.status(201).json({ message: "Form submitted successfully" });
+    });
+  });
+});
+
+app.get("/users/:id/forms/", (req, res) => {
+  getUserByToken(req, res, () => {
+    if (res.headersSent) return;
+    const userId = req.params.id;
+    db.query(
+      "SELECT * FROM forms WHERE user_id = ?",
+      [userId],
+      (err, results) => {
+        if (err) {
+          return res.status(500).json({ error: ERRORS.serverError, info: err });
+        }
+        if (results.length === 0) {
+          return res.status(404).json({ error: ERRORS.noTemplate });
+        }
+
+        res.json(results);
+      },
+    );
+  });
+});
+
+app.get("/forms/:id", (req, res) => {
+  getUserByToken(req, res, () => {
+    if (res.headersSent) return;
+
+    const id = req.params.id;
+    db.query("SELECT * FROM forms WHERE id = ?", [id], (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: ERRORS.serverError, info: err });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: ERRORS.noTemplate });
+      }
+
+      res.json(results[0]);
+    });
+  });
+});
+
+const getUserByToken = (req, res, callback) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+    return res.status(400).json({ error: ERRORS.noToken, info: req.cookies });
   }
 
   jwt.verify(token, secretKey, (err, decoded) => {
@@ -329,15 +456,34 @@ app.get("/me", (req, res) => {
     const query = "SELECT * FROM users WHERE id = ?";
     db.query(query, [decoded.id], (queryErr, results) => {
       if (queryErr) return res.status(500).json({ error: ERRORS.serverError });
-      if (results.length === 0)
+      if (results.length === 0) {
         return res.status(404).json({ error: ERRORS.noUser });
+      }
 
-      res.json(results[0]);
+      const user = results[0];
+      if (user.token !== token) {
+        return res.status(401).json({ error: "Tokens are not the same" });
+      }
+
+      callback(user);
     });
+  });
+};
+
+app.get("/me", async (req, res) => {
+  getUserByToken(req, res, (user) => {
+    if (res.headersSent) return;
+
+    res.json(user);
   });
 });
 
-app.get("/topics", (_, res) => {
+app.get("/topics", (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
   const query = "SELECT * FROM topics";
 
   db.query(query, (err, results) => {
@@ -348,62 +494,37 @@ app.get("/topics", (_, res) => {
   });
 });
 
-app.get("/auth/check", (req, res) => {
-  try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(200).json({ isAuthorized: false });
-    }
-
-    return res.status(200).json({ isAuthorized: true });
-  } catch (err) {
-    return res.status(500).json({ error: "Server error occurred." });
-  }
-});
-
 app.post("/logout", (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ error: ERRORS.noToken });
   }
 
-  const query = "SELECT * FROM users WHERE token = ?";
-  db.query(query, [token], (err, results) => {
-    if (err) return res.status(500).json({ error: ERRORS.serverError });
-    if (results.length === 0)
-      return res.status(404).json({ error: ERRORS.noUser });
-
-    const user = results[0];
-
-    const updateQuery = "UPDATE users SET token = NULL WHERE id = ?";
-    db.query(updateQuery, [user.id], (updateErr) => {
-      if (updateErr) return res.status(500).json({ error: ERRORS.serverError });
-      res.clearCookie("token", {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-      });
-      res.json({ message: OKMESSAGES.loggedOut });
-    });
-  });
-});
-
-app.delete("/users/:id", (req, res) => {
-  const userId = req.params.id;
-
-  const query = "DELETE FROM users WHERE id = ?";
-
-  db.query(query, [userId], (err, results) => {
+  jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return res.status(500).json({ error: ERRORS.serverError });
+      return res.status(401).json({ error: ERRORS.invalidToken });
     }
 
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: ERRORS.noUser });
-    }
+    const query = "SELECT * FROM users WHERE token = ?";
+    db.query(query, [token], (err, results) => {
+      if (err) return res.status(500).json({ error: ERRORS.serverError });
+      if (results.length === 0)
+        return res.status(404).json({ error: ERRORS.noUser });
 
-    res.status(200).json({ message: OKMESSAGES.userDelete });
+      const user = results[0];
+
+      const updateQuery = "UPDATE users SET token = NULL WHERE id = ?";
+      db.query(updateQuery, [user.id], (updateErr) => {
+        if (updateErr)
+          return res.status(500).json({ error: ERRORS.serverError });
+        res.clearCookie("token", {
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+        });
+        res.json({ message: OKMESSAGES.loggedOut });
+      });
+    });
   });
 });
 

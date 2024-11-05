@@ -8,6 +8,27 @@ const QuestionSchema = z.object({
   isShown: z.boolean(),
   answerType: z.string(),
 });
+
+const CustomQuestionSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  nameInDb: z.string(),
+  description: z.string(),
+  isRequired: z.boolean(),
+  isShown: z.boolean(),
+  answerType: z.string(),
+});
+
+export const CustomTemplateSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  description: z.string(),
+  image_url: z.string(),
+  user_id: z.number(),
+  topic_id: z.number(),
+  questions: z.array(CustomQuestionSchema),
+});
+
 export const StoredTemplateSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -20,3 +41,6 @@ export const StoredTemplateSchema = z.object({
 
 export type QuestionType = z.infer<typeof QuestionSchema>;
 export type StoredTemplateType = z.infer<typeof StoredTemplateSchema>;
+
+export type CustomQuestionType = z.infer<typeof CustomQuestionSchema>;
+export type CustomTemplateType = z.infer<typeof CustomTemplateSchema>;

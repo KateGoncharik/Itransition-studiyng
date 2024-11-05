@@ -1,9 +1,9 @@
-import { getUrl } from "./get-url";
-import { TopicSchema, AllTopicsType } from "./topic-schema";
+import { StoredFormSchema, StoredFormType } from "./form-schema.ts";
+import { getUrl } from "./get-url.ts";
 
-export const getTopics = async (): Promise<AllTopicsType> => {
+export const getFormById = async (formId: number): Promise<StoredFormType> => {
   try {
-    const response = await fetch(getUrl("topics"), {
+    const response = await fetch(getUrl(`forms/${formId}`), {
       method: "GET",
       credentials: "include",
     });
@@ -12,7 +12,7 @@ export const getTopics = async (): Promise<AllTopicsType> => {
       throw new Error("No server response");
     }
 
-    return TopicSchema.parse(await response.json());
+    return StoredFormSchema.parse(await response.json());
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);

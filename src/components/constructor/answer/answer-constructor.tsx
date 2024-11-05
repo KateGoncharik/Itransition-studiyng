@@ -12,14 +12,17 @@ import { answerTypes } from "./types";
 import { StyledTextarea } from "../question/styled-textarea";
 
 import { NumberInputComponent } from "./number-input";
+import { AnswerValueType } from "@/requests/form-schema";
 
 export const AnswerConstructor: FC<{
   type: string;
   title: string;
   isDisabled: boolean;
   isRequired: boolean;
-  value?: string;
-}> = ({ type, title, isDisabled, isRequired, value }) => {
+  value?: AnswerValueType;
+  nameInDb?: string;
+  onChange?: (nameInDb: string, value: string | number | boolean) => void;
+}> = ({ type, title, isDisabled, isRequired, value, onChange, nameInDb }) => {
   if (type === answerTypes.oneLineString) {
     return (
       <>
@@ -32,17 +35,36 @@ export const AnswerConstructor: FC<{
           isRequired={isRequired}
           placeholder="Short answer"
           isDisabled={isDisabled}
+          onChange={(e) => {
+            if (onChange && nameInDb) {
+              onChange(nameInDb, e.target.value);
+            }
+          }}
         />
       </>
     );
   }
   if (type === answerTypes.checkbox) {
     return (
-      <FormGroup>
+      <FormGroup
+        sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
         <FormControlLabel
-          control={<Checkbox required={isRequired} disabled={isDisabled} />}
-          label={title}
+          control={
+            <Checkbox
+              required={isRequired}
+              disabled={isDisabled}
+              checked={typeof value === "boolean" ? value : false}
+              onChange={(e) => {
+                if (onChange && nameInDb) {
+                  onChange(nameInDb, e.target.checked);
+                }
+              }}
+            />
+          }
+          label={""}
         />
+        <Typography>{title}</Typography>
       </FormGroup>
     );
   }
@@ -51,7 +73,10 @@ export const AnswerConstructor: FC<{
       <NumberInputComponent
         isDisabled={isDisabled}
         label={title}
+        value={typeof value === "number" ? value : undefined}
+        nameInDb={nameInDb}
         isRequired={isRequired}
+        onChangeHandler={onChange}
       />
     );
   }
@@ -59,8 +84,7 @@ export const AnswerConstructor: FC<{
     return (
       <>
         <Stack>
-          <Typography>{title}</Typography>
-          {isRequired && "*"}
+          <Typography>{isRequired ? `${title}*` : title}</Typography>
         </Stack>
 
         <StyledTextarea
@@ -71,8 +95,14 @@ export const AnswerConstructor: FC<{
             minHeight: "40px",
           }}
           required={isRequired}
+          value={typeof value === "string" ? value : undefined}
           disabled={isDisabled}
           placeholder={"Full answer...\n"}
+          onChange={(e) => {
+            if (onChange && nameInDb) {
+              onChange(nameInDb, e.target.value);
+            }
+          }}
         />
       </>
     );

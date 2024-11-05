@@ -4,7 +4,7 @@ export const submitTemplate = async (formData: FormData): Promise<void> => {
   try {
     const response = await fetch(getUrl("upload-template"), {
       method: "POST",
-
+      credentials: "include",
       body: formData,
     });
     // TODO fix error message

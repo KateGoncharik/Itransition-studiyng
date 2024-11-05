@@ -53,7 +53,7 @@ export const TemplateOnMain: FC<{ templates: Array<TemplateData> }> = ({
             alt={template.title}
             loading="lazy"
           />
-          <Link to={`/form/${template.id}`}>
+          <Link to={`/templates/${template.id}`}>
             <ImageListItemBar
               sx={{
                 height: { lg: "30%", md: "45%", sm: "60%", xs: "70%" },
