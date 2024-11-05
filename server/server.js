@@ -413,9 +413,6 @@ app.get("/users/:id/forms/", (req, res) => {
         if (err) {
           return res.status(500).json({ error: ERRORS.serverError, info: err });
         }
-        if (results.length === 0) {
-          return res.status(404).json({ error: ERRORS.noTemplate });
-        }
 
         res.json(results);
       },
