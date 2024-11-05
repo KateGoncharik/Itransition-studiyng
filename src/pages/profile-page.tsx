@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { User } from "@/components/user";
 import { getAllUserForms } from "@/requests/get-all-user-forms";
 import { StoredFormType } from "@/requests/form-schema";
-import { checkToken } from "@/providers/handle-invalid-token";
+import { checkToken } from "@/providers/check-token";
 
 const Profile = (): JSX.Element | undefined => {
   const { isAuthenticated, logout } = useAuth();
@@ -23,6 +23,7 @@ const Profile = (): JSX.Element | undefined => {
       const authorized = await checkToken(logout);
 
       const forms = await getAllUserForms(authorized.id);
+      // TODO handle no forms case
       setForms(forms);
       setUser(authorized);
     };

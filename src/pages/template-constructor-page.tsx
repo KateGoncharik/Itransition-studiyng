@@ -18,10 +18,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { submitTemplate } from "@/requests/submit-template";
 import { useNavigate } from "react-router-dom";
+import { checkToken } from "@/providers/check-token";
 export const defaultImage = "./template-placeholder.jpg";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
@@ -74,42 +75,46 @@ const TemplateConstructor = (): JSX.Element | undefined => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setFormError(null);
+    void checkToken(logout).then(() => {
+      setFormError(null);
 
-    if (!validateForm()) {
-      return;
-    }
+      if (!validateForm()) {
+        return;
+      }
 
-    if (
-      templateState.image === null ||
-      templateState.userId === null ||
-      templateState.topicId === null
-    ) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append("title", templateState.title);
-    formData.append("description", templateState.description);
-    formData.append("topicId", JSON.stringify(templateState.topicId));
-    formData.append("userId", JSON.stringify(templateState.userId));
-    formData.append("questions", JSON.stringify(templateState.questions));
-    formData.append("image", templateState.image);
+      if (
+        templateState.image === null ||
+        templateState.userId === null ||
+        templateState.topicId === null
+      ) {
+        return;
+      }
 
-    submitTemplate(formData)
-      .then(() => {
-        setSnackbarMessage("Template successfully created!");
-        setSnackbarSeverity("success");
-        setOpenSnackbar(true);
-        setTimeout(() => navigate("/"), 1000);
-      })
-      .catch((error: unknown) => {
-        console.error("Error:", error);
-        const errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
-        setSnackbarMessage(errorMessage);
-        setSnackbarSeverity("error");
-        setOpenSnackbar(true);
-      });
+      const formData = new FormData();
+      formData.append("title", templateState.title);
+      formData.append("description", templateState.description);
+      formData.append("topicId", JSON.stringify(templateState.topicId));
+      formData.append("userId", JSON.stringify(templateState.userId));
+      formData.append("questions", JSON.stringify(templateState.questions));
+      formData.append("image", templateState.image);
+
+      submitTemplate(formData)
+        .then(() => {
+          setSnackbarMessage("Template successfully created!");
+          setSnackbarSeverity("success");
+          setOpenSnackbar(true);
+          setTimeout(() => navigate("/"), 1000);
+        })
+        .catch((error: unknown) => {
+          // TODO logout if no token
+          console.error("Error:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+          setSnackbarMessage(errorMessage);
+          setSnackbarSeverity("error");
+          setOpenSnackbar(true);
+        });
+    });
   };
 
   // TODO move file input logic to its component

@@ -26,7 +26,7 @@ import {
 } from "@/requests/form-schema";
 import { getFormById } from "@/requests/get-form-by-id";
 import { getCurrentDate } from "./get-current-date";
-import { isUserAuthorized } from "@/requests/check-if-user-authorized";
+import { checkToken } from "@/providers/check-token";
 
 const getCheckboxValue = (
   value: number | null | undefined,
@@ -117,27 +117,12 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     }
     if (route === "form") {
       const fetchUserData = async (): Promise<void> => {
-        const authorized = await isUserAuthorized();
-        if (authorized === "Token expired") {
-          logout();
-          throw new Error("Token expired");
-        }
-        if (authorized === "No token provided") {
-          logout();
-          throw new Error("No token provided");
-        }
-        if (typeof authorized === "string") {
-          return;
-        }
+        const authorized = await checkToken(logout);
+
         setUser(authorized);
       };
       void fetchUserData();
 
-      // if (isAuthenticated) {
-      //   void getAuthorizedUser().then((data) => {
-      //     setUser(data);
-      //   });
-      // }
       if (!id) {
         return;
       }
@@ -184,14 +169,16 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     throw new Error("Invalid answer type");
   };
 
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleFormSubmit = async (
+    e: FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
     // TODO move to a handler
     e.preventDefault();
 
     if (!validateAnswers(answers)) {
       return;
     }
-
+    await checkToken(logout);
     const result = {
       userId: user?.id,
       date: currentDate,
@@ -252,7 +239,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
         />
       </div>
 
-      <form style={{ width: "100%" }} onSubmit={handleFormSubmit}>
+      <form style={{ width: "100%" }} onSubmit={void handleFormSubmit}>
         <Stack width="100%" gap={2}>
           <Typography
             component="h1"
