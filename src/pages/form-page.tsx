@@ -169,44 +169,43 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
     throw new Error("Invalid answer type");
   };
 
-  const handleFormSubmit = async (
-    e: FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>): void => {
     // TODO move to a handler
     e.preventDefault();
 
     if (!validateAnswers(answers)) {
       return;
     }
-    await checkToken(logout);
-    const result = {
-      userId: user?.id,
-      date: currentDate,
-      templateId: template?.id,
-      answers,
-    };
+    void checkToken(logout).then(() => {
+      const result = {
+        userId: user?.id,
+        date: currentDate,
+        templateId: template?.id,
+        answers,
+      };
 
-    const formData = new FormData();
-    formData.append("userId", JSON.stringify(result.userId));
-    formData.append("date", result.date);
-    formData.append("templateId", JSON.stringify(result.templateId));
-    formData.append("answers", JSON.stringify(result.answers));
+      const formData = new FormData();
+      formData.append("userId", JSON.stringify(result.userId));
+      formData.append("date", result.date);
+      formData.append("templateId", JSON.stringify(result.templateId));
+      formData.append("answers", JSON.stringify(result.answers));
 
-    submitForm(formData)
-      .then(() => {
-        setSnackbarMessage("Your answer was successfully saved!");
-        setSnackbarSeverity("success");
-        setOpenSnackbar(true);
-        setTimeout(() => navigate("/"), 2000);
-      })
-      .catch((error: unknown) => {
-        console.error("Error:", error);
-        const errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
-        setSnackbarMessage(errorMessage);
-        setSnackbarSeverity("error");
-        setOpenSnackbar(true);
-      });
+      submitForm(formData)
+        .then(() => {
+          setSnackbarMessage("Your answer was successfully saved!");
+          setSnackbarSeverity("success");
+          setOpenSnackbar(true);
+          setTimeout(() => navigate("/"), 2000);
+        })
+        .catch((error: unknown) => {
+          console.error("Error:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+          setSnackbarMessage(errorMessage);
+          setSnackbarSeverity("error");
+          setOpenSnackbar(true);
+        });
+    });
   };
 
   return template ? (
@@ -239,7 +238,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
         />
       </div>
 
-      <form style={{ width: "100%" }} onSubmit={void handleFormSubmit}>
+      <form style={{ width: "100%" }} onSubmit={handleFormSubmit}>
         <Stack width="100%" gap={2}>
           <Typography
             component="h1"
