@@ -3,7 +3,10 @@ import { getUrl } from "./get-url.ts";
 
 export const getFormById = async (formId: number): Promise<StoredFormType> => {
   try {
-    const response = await fetch(getUrl(`forms/${formId}`));
+    const response = await fetch(getUrl(`forms/${formId}`), {
+      method: "GET",
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error("No server response");

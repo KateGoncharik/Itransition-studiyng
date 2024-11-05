@@ -5,7 +5,10 @@ export const getAllUserForms = async (
   userId: number,
 ): Promise<Array<StoredFormType>> => {
   try {
-    const response = await fetch(getUrl(`users/${userId}/forms`));
+    const response = await fetch(getUrl(`users/${userId}/forms`), {
+      method: "GET",
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error("No server response");

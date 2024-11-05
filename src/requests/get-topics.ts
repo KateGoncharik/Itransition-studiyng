@@ -3,7 +3,11 @@ import { TopicSchema, AllTopicsType } from "./topic-schema";
 
 export const getTopics = async (): Promise<AllTopicsType> => {
   try {
-    const response = await fetch(getUrl("topics"));
+    const response = await fetch(getUrl("topics"), {
+      method: "GET",
+      credentials: "include",
+    });
+
     if (!response.ok) {
       throw new Error("No server response");
     }

@@ -24,8 +24,9 @@ import {
   AnswersInForm,
   StoredFormType,
 } from "@/requests/form-schema";
-import { getFormById } from "@/requests/get-one-form";
+import { getFormById } from "@/requests/get-form-by-id";
 import { getCurrentDate } from "./get-current-date";
+import { isUserAuthorized } from "@/requests/check-if-user-authorized";
 
 const getCheckboxValue = (
   value: number | null | undefined,
@@ -73,7 +74,8 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
   const [template, setTemplate] = useState<null | CustomTemplateType>(null);
 
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
+
   const [user, setUser] = useState<null | UserType>(null);
 
   // TODO fix - we need to store date of submission - now it's always current
@@ -114,11 +116,28 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
       );
     }
     if (route === "form") {
-      if (isAuthenticated) {
-        void getAuthorizedUser().then((data) => {
-          setUser(data);
-        });
-      }
+      const fetchUserData = async (): Promise<void> => {
+        const authorized = await isUserAuthorized();
+        if (authorized === "Token expired") {
+          logout();
+          throw new Error("Token expired");
+        }
+        if (authorized === "No token provided") {
+          logout();
+          throw new Error("No token provided");
+        }
+        if (typeof authorized === "string") {
+          return;
+        }
+        setUser(authorized);
+      };
+      void fetchUserData();
+
+      // if (isAuthenticated) {
+      //   void getAuthorizedUser().then((data) => {
+      //     setUser(data);
+      //   });
+      // }
       if (!id) {
         return;
       }
@@ -137,7 +156,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
       };
       void getFormAndTemplate();
     }
-  }, [id, isAuthenticated, route]);
+  }, [id, isAuthenticated, route, logout]);
 
   const validateAnswers = (answers: AnswersInForm): boolean => {
     if (Object.values(answers).every((answerValue) => answerValue === "")) {
