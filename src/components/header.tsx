@@ -17,13 +17,12 @@ export const Header: FC<{
         top: 0,
       }}
     >
-      <Stack alignItems="center" className="w-full flex-row justify-between">
+      <Stack alignItems="center" className=" flex-row justify-evenly">
         <Stack
           alignItems="center"
           flexDirection="row"
-          justifyContent="space-between"
           sx={{ transition: "2s" }}
-          width={{ lg: "20%", md: "30%", sm: "40%", xs: "50%" }}
+          width={{ lg: "30%", md: "60%", sm: "80%", xs: "95%" }}
         >
           <Navigation />
           <ChangeThemeButton />
