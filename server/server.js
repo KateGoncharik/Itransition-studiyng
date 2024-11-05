@@ -83,6 +83,12 @@ function handleDisconnect() {
 handleDisconnect();
 
 app.get("/users", (_, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
+
   db.query("SELECT * FROM users", (err, results) => {
     if (err) {
       return res.status(500).json({ error: ERRORS.noUsers });
@@ -159,6 +165,7 @@ app.post("/login", (req, res) => {
       httpOnly: true,
       sameSite: "none",
       secure: true,
+      expires: 3600,
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
@@ -170,6 +177,12 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/upload-template", upload.single("image"), async (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
+
   const templateState = req.body;
   if (!req.file) {
     return res.status(400).json({ error: ERRORS.noReceivedFile });
@@ -316,6 +329,12 @@ app.get("/templates/:id", (req, res) => {
 });
 
 app.post("/submit-form", upload.none(), (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
+
   const { userId, templateId, answers, date } = req.body;
   if (!userId || !templateId || !answers) {
     return res
@@ -385,6 +404,12 @@ app.post("/submit-form", upload.none(), (req, res) => {
 });
 
 app.get("/users/:id/forms/", (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
+
   const userId = req.params.id;
   db.query(
     "SELECT * FROM forms WHERE user_id = ?",
@@ -403,6 +428,11 @@ app.get("/users/:id/forms/", (req, res) => {
 });
 
 app.get("/forms/:id", (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
   const id = req.params.id;
   db.query("SELECT * FROM forms WHERE id = ?", [id], (err, results) => {
     if (err) {
@@ -420,7 +450,7 @@ app.get("/me", (req, res) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+    return res.status(400).json({ error: ERRORS.noToken, info: req.cookies });
   }
 
   jwt.verify(token, secretKey, (err, decoded) => {
@@ -439,7 +469,12 @@ app.get("/me", (req, res) => {
   });
 });
 
-app.get("/topics", (_, res) => {
+app.get("/topics", (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: ERRORS.noToken, info: req.cookies });
+  }
   const query = "SELECT * FROM topics";
 
   db.query(query, (err, results) => {
@@ -448,20 +483,6 @@ app.get("/topics", (_, res) => {
     }
     res.json(results);
   });
-});
-
-app.get("/auth/check", (req, res) => {
-  try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(200).json({ isAuthorized: false });
-    }
-
-    return res.status(200).json({ isAuthorized: true });
-  } catch (err) {
-    return res.status(500).json({ error: "Server error occurred." });
-  }
 });
 
 app.post("/logout", (req, res) => {
