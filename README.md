@@ -5,7 +5,8 @@
   <img  src="./public/result-main.png">
   <img  src="./public/result-auth.png">
   <img src="./public/result-constructor.png">
-  <img  src="./public/result-form-view.png">
+  <img src="./public/result-profile.png">
+  <img src="./public/result-form-view2.png">
 
 </a>
   <h1 align="center">Final task</h1>
@@ -31,20 +32,20 @@
 
 ## About The Project
 
-_Completed: 2024_
+_Completed: November 2024_
 
 - For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
-- Deployment: [here](https://kate-forms-final-task.netlify.app/)
+- Deployment: [here](https://kate-forms-final-task.netlify.app)
 
 - Here is the [video demonstration](h) of the result.
 
 ### Task description
 
-You have to implement a Web application for customisable forms (quizzes, tests, questionnaires, polls, etc.). Something similar to Google Forms.
+You have to implement a Web application for customizable forms (quizzes, tests, questionnaires, polls, etc.). Something similar to Google Forms.
 Users define "_templates_" (the set of questions, their names and descriptions, etc.), and other users fill out "forms" (their specific answers) using these templates (e.g., enter or select values in the fields).
 
-E.g., I create a template with one integer-valued question "How many apples do you eat per day?" Users fill out corresponding forms, and I can analyse the answers.
+E.g., I create a template with one integer-valued question "How many apples do you eat per day?" Users fill out corresponding forms, and I can analyze the answers.
 
 Filled-out forms (answers) can be seen by the author as well as the creator of the responding template and admins. Templates are accessible for viewing for everyone.
 
@@ -56,11 +57,16 @@ Main features (completed and in progress):
 
 - [x] registration and authorization
 - [] admin and user roles
-- [] user profile
+- [x] user profile
+  - [x] view table with answers (forms)
+  - [] view table with created templates
+  - [] make sort in tables
+  - [] allow managing templates from profile
+  - [] allow managing answers(forms) from profile
 - [x] form templates creation
-- [x] view created templates
+- [x] view all created templates
 - [x] forms filling
-- [] viewing and editing answers
+- [] editing answers
 - [] comments, likes to forms
 - [] drag'n'drop at template constructor
 - [] markdown support at template constructor
@@ -99,6 +105,10 @@ Main technologies:
 Styled components:
 
 [![Mui][Mui]][Mui-url]
+
+Token:
+
+[![JWT][JWT]][JWT-url]
 
 Data validation:
 
@@ -141,6 +151,8 @@ Deployment hostings:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+[JWT]: ./public/jwt-logo.jpeg
+[JWT-url]: https://jwt.io/
 [Render]: https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white
 [Render-url]: https://dashboard.render.com/
 [Husky]: ./public/husky.png
