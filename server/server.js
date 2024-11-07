@@ -42,6 +42,7 @@ app.use(cookieParser());
 const corsOptions = {
   origin: clientOrigin,
   credentials: true,
+  exposedHeaders: ["Content-Range"],
 };
 
 app.use(cors(corsOptions));
@@ -86,11 +87,33 @@ app.get("/users", (req, res) => {
   getUserByToken(req, res, async () => {
     if (res.headersSent) return;
 
-    db.query("SELECT * FROM users", (err, results) => {
+    const range = req.headers.range;
+    const [start, end] = range
+      ? range
+          .replace(/bytes=/, "")
+          .split("-")
+          .map(Number)
+      : [0, 9];
+    // console.log(range);
+
+    db.query("SELECT COUNT(*) AS total FROM users", (err, totalResults) => {
       if (err) {
         return res.status(500).json({ error: ERRORS.noUsers });
       }
-      res.json(results);
+
+      const total = totalResults[0].total;
+      const usersQuery = `SELECT id,username,email FROM users LIMIT ?, ?`;
+
+      db.query(usersQuery, [start, end - start + 1], (err, results) => {
+        if (err) {
+          return res.status(500).json({ error: ERRORS.noUsers });
+        }
+
+        res.setHeader("Content-Range", `items ${start}-${end}/${total}`);
+        res.setHeader("Access-Control-Expose-Headers", "Content-Range");
+
+        res.json(results);
+      });
     });
   });
 });
@@ -286,16 +309,34 @@ app.post("/upload-template", upload.single("image"), (req, res) => {
   });
 });
 
-app.get("/templates", (_, res) => {
-  db.query(
-    "SELECT id, title, description, image_url, user_id, topic_id FROM templates",
-    (err, results) => {
+app.get("/templates", (req, res) => {
+  const range = req.headers.range;
+  const [start, end] = range
+    ? range
+        .replace(/bytes=/, "")
+        .split("-")
+        .map(Number)
+    : [0, 9];
+
+  db.query("SELECT COUNT(*) AS total FROM templates", (err, totalResults) => {
+    if (err) {
+      return res.status(500).json({ error: ERRORS.noTemplates });
+    }
+
+    const total = totalResults[0].total;
+    const usersQuery = `SELECT id, title, description, image_url, user_id, topic_id FROM templates LIMIT ?, ?`;
+
+    db.query(usersQuery, [start, end - start + 1], (err, results) => {
       if (err) {
-        return res.status(500).json({ error: ERRORS.noUsers, info: err });
+        return res.status(500).json({ error: ERRORS.noTemplates });
       }
+
+      res.setHeader("Content-Range", `items ${start}-${end}/${total}`);
+      res.setHeader("Access-Control-Expose-Headers", "Content-Range");
+
       res.json(results);
-    },
-  );
+    });
+  });
 });
 
 app.get("/templates/:id", (req, res) => {
