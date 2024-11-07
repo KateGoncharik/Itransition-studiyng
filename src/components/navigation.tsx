@@ -25,6 +25,9 @@ export const Navigation: FC = () => {
           Constructor
         </Button>
       )}
+      <Button component={RouterLink} sx={headerButtonStyles} to={"/admin"}>
+        Admin page
+      </Button>
       {isAuthenticated && (
         <Button component={RouterLink} sx={headerButtonStyles} to={"/profile"}>
           Profile
