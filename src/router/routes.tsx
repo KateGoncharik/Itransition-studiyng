@@ -16,7 +16,7 @@ import { CircularProgress } from "@mui/material";
 import { TemplateProvider } from "@/pages/template-provider.tsx";
 
 import { FormComponent } from "@/pages/form-page.tsx";
-import AdminComponent from "@/components/admin.tsx";
+import AdminComponent from "@/components/admin/admin.tsx";
 
 export const routes = [
   {
@@ -29,14 +29,7 @@ export const routes = [
         ),
         index: true,
       },
-      {
-        element: (
-          <Suspense fallback={<CircularProgress />}>
-            <AdminComponent />
-          </Suspense>
-        ),
-        path: "/admin/*",
-      },
+
       {
         element: (
           <Suspense fallback={<CircularProgress />}>
@@ -101,6 +94,15 @@ export const routes = [
         <RootLayout />
       </ErrorBoundary>
     ),
+
     path: "/",
+  },
+  {
+    element: (
+      <Suspense fallback={<CircularProgress />}>
+        <AdminComponent />
+      </Suspense>
+    ),
+    path: "/admin/*",
   },
 ];
