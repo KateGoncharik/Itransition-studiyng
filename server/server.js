@@ -443,6 +443,40 @@ app.post("/submit-form", upload.none(), (req, res) => {
   });
 });
 
+app.get("/forms", (req, res) => {
+  getUserByToken(req, res, async () => {
+    if (res.headersSent) return;
+
+    const range = req.headers.range;
+    const [start, end] = range
+      ? range
+          .replace(/bytes=/, "")
+          .split("-")
+          .map(Number)
+      : [0, 9];
+
+    db.query("SELECT COUNT(*) AS total FROM forms", (err, totalResults) => {
+      if (err) {
+        return res.status(500).json({ error: ERRORS.noUsers });
+      }
+
+      const total = totalResults[0].total;
+      const usersQuery = `SELECT * FROM forms LIMIT ?, ?`;
+
+      db.query(usersQuery, [start, end - start + 1], (err, results) => {
+        if (err) {
+          return res.status(500).json({ error: ERRORS.noUsers });
+        }
+
+        res.setHeader("Content-Range", `items ${start}-${end}/${total}`);
+        res.setHeader("Access-Control-Expose-Headers", "Content-Range");
+
+        res.json(results);
+      });
+    });
+  });
+});
+
 app.get("/users/:id/forms/", (req, res) => {
   getUserByToken(req, res, () => {
     if (res.headersSent) return;
