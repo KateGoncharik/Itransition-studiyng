@@ -1,5 +1,5 @@
 import { TemplateFieldChangeHandler } from "@/pages/template-provider";
-import { AllTopicsType } from "@/requests/topic-schema";
+import { AllTopicsType } from "@/requests/schemas/topic-schema";
 import { InputLabel, MenuItem, Select } from "@mui/material";
 import { FC, useState } from "react";
 

@@ -1,5 +1,5 @@
 import { getUrl } from "./get-url";
-import { TopicSchema, AllTopicsType } from "./topic-schema";
+import { TopicSchema, AllTopicsType } from "./schemas/topic-schema";
 
 export const getTopics = async (): Promise<AllTopicsType> => {
   try {

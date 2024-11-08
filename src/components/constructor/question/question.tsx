@@ -1,4 +1,4 @@
-import { AnswerValueType } from "@/requests/form-schema";
+import { AnswerValueType } from "@/requests/schemas/form-schema";
 import { TextField } from "@mui/material";
 import { ChangeEvent, FC } from "react";
 type QuestionConfig = {

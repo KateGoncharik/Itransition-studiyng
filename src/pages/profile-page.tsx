@@ -16,10 +16,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { Link } from "react-router-dom";
 import { User } from "@/components/user";
 import { getAllUserForms } from "@/requests/get-all-user-forms";
-import { StoredFormType } from "@/requests/form-schema";
+import { StoredFormType } from "@/requests/schemas/form-schema";
 import { checkToken } from "@/providers/check-token";
 import { getTemplateById } from "@/requests/get-template-by-id";
-import { StoredTemplateType } from "@/requests/template-state-schema";
+import { StoredTemplateType } from "@/requests/schemas/template-state-schema";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRedirectWithDelay } from "@/router/redirect";
 

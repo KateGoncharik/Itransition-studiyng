@@ -1,5 +1,5 @@
 import { getUrl } from "./get-url.ts";
-import { UserSchema, UserType } from "./user-schema.ts";
+import { UserSchema, UserType } from "./schemas/user-schema.ts";
 
 export const getUserById = async (id: number): Promise<UserType> => {
   try {

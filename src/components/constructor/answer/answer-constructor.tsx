@@ -12,7 +12,7 @@ import { answerTypes } from "./types";
 import { StyledTextarea } from "../question/styled-textarea";
 
 import { NumberInputComponent } from "./number-input";
-import { AnswerValueType } from "@/requests/form-schema";
+import { AnswerValueType } from "@/requests/schemas/form-schema";
 
 export const AnswerConstructor: FC<{
   type: string;

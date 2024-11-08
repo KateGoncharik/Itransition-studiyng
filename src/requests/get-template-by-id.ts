@@ -2,7 +2,7 @@ import { getUrl } from "./get-url.ts";
 import {
   CustomTemplateSchema,
   CustomTemplateType,
-} from "./template-state-schema.ts";
+} from "./schemas/template-state-schema.ts";
 
 export const getTemplateById = async (
   id: number,

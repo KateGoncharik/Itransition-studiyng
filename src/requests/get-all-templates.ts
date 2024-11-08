@@ -2,7 +2,7 @@ import { getUrl } from "./get-url.ts";
 import {
   TemplatePreviewType,
   TemplatePreviewSchema,
-} from "./templates-schema.ts";
+} from "./schemas/templates-schema.ts";
 
 export const getAllTemplates = async (): Promise<TemplatePreviewType[]> => {
   try {

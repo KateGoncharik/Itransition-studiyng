@@ -12,18 +12,18 @@ import { useParams } from "react-router-dom";
 import {
   CustomQuestionType,
   CustomTemplateType,
-} from "@/requests/template-state-schema";
+} from "@/requests/schemas/template-state-schema";
 import { AnswerConstructor } from "../components/constructor/answer/answer-constructor";
 import { useAuth } from "@/hooks/use-auth";
 import { getAuthorizedUser } from "@/requests/get-authorized-user";
-import { UserType } from "@/requests/user-schema";
+import { UserType } from "@/requests/schemas/user-schema";
 import { answerTypes } from "../components/constructor/answer/types";
 import { submitForm } from "@/requests/submit-form";
 import {
   AnswerValueType,
   AnswersInForm,
   StoredFormType,
-} from "@/requests/form-schema";
+} from "@/requests/schemas/form-schema";
 import { getFormById } from "@/requests/get-form-by-id";
 import { getCurrentDate } from "./get-current-date";
 import { checkToken } from "@/providers/check-token";

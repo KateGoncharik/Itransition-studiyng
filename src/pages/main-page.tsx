@@ -3,7 +3,7 @@ import { useEffect, useState, type JSX } from "react";
 import { Stack, Typography } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
 import { getAllTemplates } from "@/requests/get-all-templates";
-import { TemplatePreviewType } from "@/requests/templates-schema";
+import { TemplatePreviewType } from "@/requests/schemas/templates-schema";
 import { TemplateOnMain } from "@/components/template-on-main";
 import { getUserById } from "@/requests/get-user-by-id";
 import Lottie from "react-lottie";

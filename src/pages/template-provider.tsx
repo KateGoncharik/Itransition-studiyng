@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { defaultImage } from "./template-constructor-page";
 import { getTopics } from "@/requests/get-topics";
 import { isUserAuthorized } from "@/requests/check-if-user-authorized";
-import { QuestionType } from "@/requests/template-state-schema";
+import { QuestionType } from "@/requests/schemas/template-state-schema";
 import { useAuth } from "@/hooks/use-auth";
 
 export type TemplateState = {

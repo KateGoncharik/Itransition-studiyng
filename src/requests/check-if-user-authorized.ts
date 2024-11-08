@@ -1,4 +1,4 @@
-import { UserSchema, UserType } from "./user-schema";
+import { UserSchema, UserType } from "./schemas/user-schema";
 import { getUrl } from "./get-url";
 
 export const isUserAuthorized = async (): Promise<UserType | string> => {

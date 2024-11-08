@@ -1,5 +1,5 @@
 import { isUserAuthorized } from "@/requests/check-if-user-authorized";
-import { UserType } from "@/requests/user-schema";
+import { UserType } from "@/requests/schemas/user-schema";
 
 export const checkToken = async (logout: () => void): Promise<UserType> => {
   const authorized = await isUserAuthorized();

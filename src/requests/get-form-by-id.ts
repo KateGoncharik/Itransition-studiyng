@@ -1,4 +1,4 @@
-import { StoredFormSchema, StoredFormType } from "./form-schema.ts";
+import { StoredFormSchema, StoredFormType } from "./schemas/form-schema.ts";
 import { getUrl } from "./get-url.ts";
 
 export const getFormById = async (formId: number): Promise<StoredFormType> => {

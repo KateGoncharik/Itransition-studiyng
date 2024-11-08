@@ -10,7 +10,7 @@ import { StyledTextarea } from "@/components/constructor/question/styled-textare
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTemplateContext } from "./template-context";
 import { getTopics } from "@/requests/get-topics";
-import { AllTopicsType } from "@/requests/topic-schema";
+import { AllTopicsType } from "@/requests/schemas/topic-schema";
 import { TopicSelect } from "@/components/constructor/topics-select";
 import { InputFileUpload } from "@/components/constructor/file-input";
 import DeleteIcon from "@mui/icons-material/Delete";
