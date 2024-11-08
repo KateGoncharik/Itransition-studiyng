@@ -94,7 +94,6 @@ app.get("/users", (req, res) => {
           .split("-")
           .map(Number)
       : [0, 9];
-    // console.log(range);
 
     db.query("SELECT COUNT(*) AS total FROM users", (err, totalResults) => {
       if (err) {
@@ -187,7 +186,6 @@ app.post("/login", (req, res) => {
       sameSite: "none",
       secure: true,
       maxAge: 3600000,
-      // maxAge: 35000,
     });
     const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
     db.query(updateQuery, [token, user.id], (updateErr) => {
@@ -199,7 +197,6 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/upload-template", upload.single("image"), (req, res) => {
-  // TODO update all calls of getUserByToken like that - to avoid multiple responses
   getUserByToken(req, res, async () => {
     if (res.headersSent) return;
 
