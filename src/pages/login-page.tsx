@@ -11,7 +11,7 @@ import {
 import { useState, FormEvent, useEffect } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useRedirectWithDelay } from "@/router/redirect";
+import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
 
 const Login = (): JSX.Element => {
   const { login, isAuthenticated } = useAuth();

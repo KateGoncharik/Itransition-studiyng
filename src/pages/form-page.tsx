@@ -27,7 +27,7 @@ import {
 import { getFormById } from "@/requests/get-form-by-id";
 import { getCurrentDate } from "./get-current-date";
 import { checkToken } from "@/providers/check-token";
-import { useRedirectWithDelay } from "@/router/redirect";
+import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
 
 const getCheckboxValue = (
   value: number | null | undefined,

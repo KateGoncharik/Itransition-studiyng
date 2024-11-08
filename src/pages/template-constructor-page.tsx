@@ -18,7 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { submitTemplate } from "@/requests/submit-template";
 import { checkToken } from "@/providers/check-token";
-import { useRedirectWithDelay } from "@/router/redirect";
+import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
 export const defaultImage = "./template-placeholder.jpg";
 
 const TemplateConstructor = (): JSX.Element | undefined => {

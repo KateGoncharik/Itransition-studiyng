@@ -12,7 +12,7 @@ import {
 import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useRedirectWithDelay } from "@/router/redirect";
+import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
 
 const validateUserPassword = (
   password: string | null,

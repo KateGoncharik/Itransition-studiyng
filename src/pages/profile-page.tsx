@@ -21,7 +21,7 @@ import { checkToken } from "@/providers/check-token";
 import { getTemplateById } from "@/requests/get-template-by-id";
 import { StoredTemplateType } from "@/requests/schemas/template-state-schema";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useRedirectWithDelay } from "@/router/redirect";
+import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
 
 const Profile = (): JSX.Element | undefined => {
   const { isAuthenticated, logout } = useAuth();
