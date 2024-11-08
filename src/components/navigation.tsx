@@ -1,13 +1,14 @@
 import { logoutUser } from "@/requests/logout-user";
 import { Button, Stack } from "@mui/material";
 import { FC } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { headerButtonStyles } from "./styles";
 import HomeIcon from "@mui/icons-material/Home";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { useRedirectWithDelay } from "@/router/redirect";
 
 export const Navigation: FC = () => {
   const { isAuthenticated } = useAuth();
@@ -56,12 +57,12 @@ export const Navigation: FC = () => {
 const LogoutButton: FC = () => {
   const { logout } = useAuth();
 
-  const navigate = useNavigate();
+  const redirect = useRedirectWithDelay();
   const handleLogout = (): void => {
     logoutUser().then(
       () => {
         logout();
-        navigate("/login");
+        redirect("/login", 0);
       },
       () => {},
     );

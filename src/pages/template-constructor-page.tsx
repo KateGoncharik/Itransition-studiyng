@@ -17,8 +17,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { submitTemplate } from "@/requests/submit-template";
-import { useNavigate } from "react-router-dom";
 import { checkToken } from "@/providers/check-token";
+import { useRedirectWithDelay } from "@/router/redirect";
 export const defaultImage = "./template-placeholder.jpg";
 
 const TemplateConstructor = (): JSX.Element | undefined => {
@@ -32,13 +32,12 @@ const TemplateConstructor = (): JSX.Element | undefined => {
   const handleCloseSnackbar = (): void => {
     setOpenSnackbar(false);
   };
-  const navigate = useNavigate();
+  const redirect = useRedirectWithDelay();
   useEffect(() => {
     if (!isAuthenticated) {
-      // TODO DRY
-      navigate("/");
+      redirect("/", 0);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, redirect]);
   const {
     templateState,
     handleTemplateFieldChange,
@@ -103,7 +102,7 @@ const TemplateConstructor = (): JSX.Element | undefined => {
           setSnackbarMessage("Template successfully created!");
           setSnackbarSeverity("success");
           setOpenSnackbar(true);
-          setTimeout(() => navigate("/"), 1000);
+          redirect("/", 1000);
         })
         .catch((error: unknown) => {
           // TODO logout if no token

@@ -9,15 +9,38 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useRedirectWithDelay } from "@/router/redirect";
+
+const validateUserPassword = (
+  password: string | null,
+  setSnackbarMessage: Dispatch<SetStateAction<string>>,
+  setOpenSnackbar: Dispatch<SetStateAction<boolean>>,
+): boolean => {
+  if (password === null) {
+    setSnackbarMessage("Password should be present");
+    setOpenSnackbar(true);
+    return false;
+  }
+  if (password.length < 6) {
+    setSnackbarMessage("Password should be at least 6 chars long");
+    setOpenSnackbar(true);
+    return false;
+  }
+  if (password.length > 20) {
+    setSnackbarMessage("Password should be at not longer than 20 chars");
+    setOpenSnackbar(true);
+    return false;
+  }
+  return true;
+};
 
 const Registration = (): JSX.Element => {
   const { login } = useAuth();
 
-  const navigate = useNavigate();
+  const redirect = useRedirectWithDelay();
   const [passwordInputType, setPasswordInputType] = useState("password");
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -39,45 +62,49 @@ const Registration = (): JSX.Element => {
     }
   };
 
+  const handleSuccessfulRegistration = (
+    setSnackbarMessage: Dispatch<SetStateAction<string>>,
+    setOpenSnackbar: Dispatch<SetStateAction<boolean>>,
+    setSnackbarSeverity: (value: SetStateAction<"error" | "success">) => void,
+  ): void => {
+    setSnackbarMessage("Successfully registered");
+    setSnackbarSeverity("success");
+    setOpenSnackbar(true);
+  };
+
   const handleRegistration = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const email = formData.get("email");
-
     const password = formData.get("password");
 
-    //  validateUserRegistrationData
     if (
       typeof username !== "string" ||
       typeof password !== "string" ||
       typeof email !== "string"
     ) {
-      setSnackbarMessage("Invalid input");
-      setOpenSnackbar(true);
       return;
     }
-    if (password.length < 6) {
-      setSnackbarMessage("Password should be at least 6 chars long");
-      setOpenSnackbar(true);
-      return;
-    }
-    if (password.length > 20) {
-      setSnackbarMessage("Password should be at not longer than 20 chars");
-      setOpenSnackbar(true);
-      return;
-    }
+    const isRegistrationDataValid = validateUserPassword(
+      password,
+      setSnackbarMessage,
+      setOpenSnackbar,
+    );
 
+    if (!isRegistrationDataValid) {
+      return;
+    }
     registerUser({ username, email, password })
       .then(() => {
-        // handleSuccessfulRegistration
-        setSnackbarMessage("Successfully registered");
-        setSnackbarSeverity("success");
-        setOpenSnackbar(true);
+        handleSuccessfulRegistration(
+          setSnackbarMessage,
+          setOpenSnackbar,
+          setSnackbarSeverity,
+        );
         void loginUser({ username, password }).then(() => {
           login();
-          // redirect
-          setTimeout(() => navigate("/"), 1000);
+          redirect("/", 1000);
         });
       })
       .catch((error: unknown) => {

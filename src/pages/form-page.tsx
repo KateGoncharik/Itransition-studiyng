@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, FormEvent, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   CustomQuestionType,
   CustomTemplateType,
@@ -27,6 +27,7 @@ import {
 import { getFormById } from "@/requests/get-form-by-id";
 import { getCurrentDate } from "./get-current-date";
 import { checkToken } from "@/providers/check-token";
+import { useRedirectWithDelay } from "@/router/redirect";
 
 const getCheckboxValue = (
   value: number | null | undefined,
@@ -78,7 +79,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
 
   const [user, setUser] = useState<null | UserType>(null);
 
-  // TODO fix - we need to store date of submission - now it's always current
   const [currentDate, setCurrentDate] = useState("");
   const [form, setForm] = useState<null | StoredFormType>(null);
 
@@ -94,7 +94,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
   const handleCloseSnackbar = (): void => {
     setOpenSnackbar(false);
   };
-  const navigate = useNavigate();
+  const redirect = useRedirectWithDelay();
 
   useEffect(() => {
     if (route === "template") {
@@ -170,7 +170,6 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
   };
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    // TODO move to a handler
     e.preventDefault();
 
     if (!validateAnswers(answers)) {
@@ -195,7 +194,7 @@ export const FormComponent: FC<{ route: "template" | "form" }> = ({
           setSnackbarMessage("Your answer was successfully saved!");
           setSnackbarSeverity("success");
           setOpenSnackbar(true);
-          setTimeout(() => navigate("/"), 2000);
+          redirect("/", 2000);
         })
         .catch((error: unknown) => {
           console.error("Error:", error);

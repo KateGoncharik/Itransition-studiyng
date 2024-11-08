@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "@/hooks/use-auth";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { User } from "@/components/user";
 import { getAllUserForms } from "@/requests/get-all-user-forms";
 import { StoredFormType } from "@/requests/form-schema";
@@ -21,17 +21,18 @@ import { checkToken } from "@/providers/check-token";
 import { getTemplateById } from "@/requests/get-template-by-id";
 import { StoredTemplateType } from "@/requests/template-state-schema";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useRedirectWithDelay } from "@/router/redirect";
 
 const Profile = (): JSX.Element | undefined => {
   const { isAuthenticated, logout } = useAuth();
   const [user, setUser] = useState<null | User>(null);
   const [forms, setForms] = useState<Array<StoredFormType>>([]);
   const [templates, setTemplates] = useState<Array<StoredTemplateType>>([]);
-  const navigate = useNavigate();
+  const redirect = useRedirectWithDelay();
   useEffect(() => {
     const getUserAndHisForms = async (): Promise<void> => {
       if (!isAuthenticated) {
-        navigate("/");
+        redirect("/", 0);
         return;
       }
       const authorized = await checkToken(logout);
@@ -47,7 +48,7 @@ const Profile = (): JSX.Element | undefined => {
       setUser(authorized);
     };
     void getUserAndHisForms();
-  }, [isAuthenticated, navigate, logout]);
+  }, [isAuthenticated, redirect, logout]);
 
   return (
     <Stack gap={2} textAlign="center">
@@ -82,7 +83,6 @@ const Profile = (): JSX.Element | undefined => {
                     <TableCell>
                       <Link to={`/forms/${form.id}`}>
                         <Button>
-                          {" "}
                           <VisibilityIcon />
                         </Button>
                       </Link>

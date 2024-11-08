@@ -9,18 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useState, FormEvent, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useRedirectWithDelay } from "@/router/redirect";
 
 const Login = (): JSX.Element => {
   const { login, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const redirect = useRedirectWithDelay();
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      redirect("/", 0);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, redirect]);
 
   const [passwordInputType, setPasswordInputType] = useState("password");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -69,7 +69,7 @@ const Login = (): JSX.Element => {
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
         login();
-        setTimeout(() => navigate("/"), 1000);
+        redirect("/", 1000);
       })
       .catch((error: unknown) => {
         console.error("Error:", error);
