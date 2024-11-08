@@ -3,7 +3,7 @@ import { Button, Stack } from "@mui/material";
 import { FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
-import { headerButtonStyles } from "./styles";
+import { headerButtonStyles } from "./header-button-styles";
 import HomeIcon from "@mui/icons-material/Home";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
