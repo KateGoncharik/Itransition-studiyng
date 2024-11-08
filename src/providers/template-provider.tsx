@@ -7,11 +7,12 @@ import {
   ReactElement,
 } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { defaultImage } from "./template-constructor-page";
+
 import { getTopics } from "@/requests/get-topics";
 import { isUserAuthorized } from "@/requests/check-if-user-authorized";
 import { QuestionType } from "@/requests/schemas/template-state-schema";
 import { useAuth } from "@/hooks/use-auth";
+import { defaultImage } from "@/pages/template-constructor-page";
 
 export type TemplateState = {
   title: string;

@@ -13,7 +13,7 @@ import {
   Profile,
 } from "./lazy-loading.tsx";
 import { CircularProgress } from "@mui/material";
-import { TemplateProvider } from "@/pages/template-provider.tsx";
+import { TemplateProvider } from "@/providers/template-provider.tsx";
 
 import { FormComponent } from "@/pages/form-page.tsx";
 import AdminComponent from "@/components/admin/admin.tsx";

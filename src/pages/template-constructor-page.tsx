@@ -8,7 +8,7 @@ import { QuestionConstructor } from "@/components/constructor/question/question-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { StyledTextarea } from "@/components/constructor/question/styled-textarea";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { useTemplateContext } from "./template-context";
+import { useTemplateContext } from "../providers/template-context";
 import { getTopics } from "@/requests/get-topics";
 import { AllTopicsType } from "@/requests/schemas/topic-schema";
 import { TopicSelect } from "@/components/constructor/topics-select";

@@ -12,7 +12,7 @@ import { FC, useState } from "react";
 import { AnswerConstructor } from "../answer/answer-constructor";
 import { answerTypes } from "../answer/types";
 import { StyledTextarea } from "./styled-textarea";
-import { type QuestionFieldChangeHandler } from "@/pages/template-provider";
+import { type QuestionFieldChangeHandler } from "@/providers/template-provider";
 import { useCheckAnswerType } from "./check-answer-type";
 
 type QuestionConstructorConfig = {

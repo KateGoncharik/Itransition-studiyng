@@ -1,5 +1,8 @@
+import {
+  TemplateContext,
+  type TemplateContextType,
+} from "@/providers/template-provider";
 import { useContext } from "react";
-import { TemplateContext, TemplateContextType } from "./template-provider";
 
 export const useTemplateContext = (): TemplateContextType => {
   const context = useContext(TemplateContext);

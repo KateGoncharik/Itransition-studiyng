@@ -2,7 +2,7 @@ import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { TemplateFieldChangeHandler } from "@/pages/template-provider";
+import { TemplateFieldChangeHandler } from "@/providers/template-provider";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",

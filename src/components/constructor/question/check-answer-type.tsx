@@ -1,4 +1,4 @@
-import { useTemplateContext } from "@/pages/template-context";
+import { useTemplateContext } from "@/providers/template-context";
 import { answerTypes } from "../answer/types";
 
 type UseCheckAnswerTypeData = {
