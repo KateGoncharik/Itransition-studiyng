@@ -38,7 +38,9 @@ _Completed: November 2024_
 
 - Deployment: [here](https://kate-forms-final-task.netlify.app)
 
-- Here is the [video demonstration](h) of the result.
+VIDEO WILL BE UPDATED AFTER ADMIN PAGE COMPLETION
+
+- Here is the [video demonstration](https://www.youtube.com/watch?v=XUAySelb4WU) of the result.
 
 ### Task description
 
@@ -63,6 +65,12 @@ Main features (completed and in progress):
   - [] make sort in tables
   - [] allow managing templates from profile
   - [] allow managing answers(forms) from profile
+- [x] admin page
+  - [x] view all templates, forms and users data
+  - [] paginate, sort, search through templates, forms and users data
+  - [] control roles in app
+  - [] edit templates, forms, users data
+  - [] set or remove role of any user
 - [x] form templates creation
 - [x] view all created templates
 - [x] forms filling
@@ -76,13 +84,35 @@ Main features (completed and in progress):
 - [] internalization (2 languages)
 - [x] adaptive layout
 
-<img src="./public/scheme-full.png">
+## Scheme for all possible user actions in app
+
+  <img src="./public/scheme-full.png">
 
 <div style="display: flex;">
   <img width="50%" src="./public/scheme-first-part.png">
 ||
   <img width="50%" src="./public/scheme-second-part.png">
 </div>
+
+## API overview
+
+Available endpoints:
+
+Users:
+
+- GET /users - returns a list of all users
+- GET /users/:id - returns a user by id
+- GET /users/:id/forms - returns all forms of particular user
+
+Templates:
+
+- GET /templates -> returns a list of all templates
+- GET /templates/:id -> returns a template by id
+
+Forms:
+
+- GET /forms - returns a list of all forms
+- GET /forms/:id - returns a form by id
 
 ### Technology stack
 
@@ -101,6 +131,8 @@ Main technologies:
 [![React][React]][React-url]
 
 [![React-router][React-router]][React-router-url]
+
+[![React-admin][React-admin]][React-admin-url]
 
 Styled components:
 
@@ -153,6 +185,8 @@ Deployment hostings:
 
 [JWT]: ./public/jwt-logo.jpeg
 [JWT-url]: https://jwt.io/
+[React-admin]: ./public/react-admin.png
+[React-admin-url]: https://marmelab.com/react-admin/
 [Render]: https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white
 [Render-url]: https://dashboard.render.com/
 [Husky]: ./public/husky.png
