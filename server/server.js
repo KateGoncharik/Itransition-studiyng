@@ -160,6 +160,7 @@ app.post("/register", async (req, res) => {
 const secretKey = process.env.JWT_SECRET;
 
 app.post("/login", (req, res) => {
+  console.log("logging in user..");
   const { username, password } = req.body;
 
   const query = "SELECT * FROM users WHERE username = ?";
@@ -307,6 +308,7 @@ app.post("/upload-template", upload.single("image"), (req, res) => {
 });
 
 app.get("/templates", (req, res) => {
+  console.log("fetching templates...");
   const range = req.headers.range;
   const [start, end] = range
     ? range
