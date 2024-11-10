@@ -325,7 +325,7 @@ app.get("/templates", (req, res) => {
 
     db.query(usersQuery, [start, end - start + 1], (err, results) => {
       if (err) {
-        return res.status(500).json({ error: ERRORS.noTemplates });
+        return res.status(500).json({ error: ERRORS.noTemplates, info: err });
       }
 
       res.setHeader("Content-Range", `items ${start}-${end}/${total}`);
