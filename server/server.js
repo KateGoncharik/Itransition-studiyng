@@ -71,7 +71,7 @@ function handleDisconnect() {
   });
 
   db.on("error", (err) => {
-    console.error("DB error:", err);
+    console.error("DB error in error handler:", err);
     if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
       console.log("Connection lost, reconnecting...");
       handleDisconnect();
@@ -98,6 +98,7 @@ app.get("/users", (req, res) => {
 
     db.query("SELECT COUNT(*) AS total FROM users", (err, totalResults) => {
       if (err) {
+        console.error("DB error in /users:", err);
         return res.status(500).json({ error: ERRORS.noUsers });
       }
 
@@ -106,6 +107,7 @@ app.get("/users", (req, res) => {
 
       db.query(usersQuery, [start, end - start + 1], (err, results) => {
         if (err) {
+          console.error("DB error in /users 2:", err);
           return res.status(500).json({ error: ERRORS.noUsers });
         }
 
@@ -122,6 +124,7 @@ app.get("/users/:id", (req, res) => {
   const userId = req.params.id;
   db.query("SELECT * FROM users WHERE id = ?", [userId], (err, results) => {
     if (err) {
+      console.error("DB error in /users/:id :", err);
       return res.status(500).json({ error: ERRORS.serverError });
     }
     if (results.length === 0) {
@@ -146,6 +149,7 @@ app.post("/register", async (req, res) => {
 
   db.query(query, [username, email, hashedPassword], (err, results) => {
     if (err) {
+      console.error("DB error in /register:", err);
       if (err.code === "ER_DUP_ENTRY") {
         return res.status(400).json({
           error: ERRORS.duplicateEntry,
@@ -167,7 +171,10 @@ app.post("/login", (req, res) => {
   const query = "SELECT * FROM users WHERE username = ?";
 
   db.query(query, [username], async (err, results) => {
-    if (err) return res.status(500).json({ error: ERRORS.serverError });
+    if (err) {
+      console.error("DB error in /login:", err);
+      return res.status(500).json({ error: ERRORS.serverError });
+    }
     if (results.length === 0)
       return res.status(404).json({ error: ERRORS.noUser });
 
@@ -198,6 +205,7 @@ app.post("/login", (req, res) => {
   });
 });
 
+// fix to templates POST?
 app.post("/upload-template", upload.single("image"), (req, res) => {
   getUserByToken(req, res, async () => {
     if (res.headersSent) return;
@@ -294,6 +302,7 @@ app.post("/upload-template", upload.single("image"), (req, res) => {
 
         db.query(insertTemplateQuery, templateValues, (err) => {
           if (err) {
+            console.error("DB error in /upload-template:", err);
             return res.status(500).json({ error: ERRORS.serverError });
           }
           res.status(201).json({ message: OKMESSAGES.templateCreated });
@@ -320,6 +329,7 @@ app.get("/templates", (req, res) => {
 
   db.query("SELECT COUNT(*) AS total FROM templates", (err, totalResults) => {
     if (err) {
+      console.error("DB error in /templates:", err);
       return res.status(500).json({ error: ERRORS.noTemplates });
     }
 
@@ -346,6 +356,7 @@ app.get("/templates/:id", (req, res) => {
     [templateId],
     (err, results) => {
       if (err) {
+        console.error("DB error in /templates/:id :", err);
         return res.status(500).json({ error: ERRORS.serverError });
       }
       if (results.length === 0) {
@@ -443,6 +454,7 @@ app.post("/submit-form", upload.none(), (req, res) => {
   });
 });
 
+// TODO fix or remove pagination
 app.get("/forms", (req, res) => {
   getUserByToken(req, res, async () => {
     if (res.headersSent) return;
@@ -457,6 +469,7 @@ app.get("/forms", (req, res) => {
 
     db.query("SELECT COUNT(*) AS total FROM forms", (err, totalResults) => {
       if (err) {
+        console.error("DB error in /forms:", err);
         return res.status(500).json({ error: ERRORS.noUsers });
       }
 
@@ -465,6 +478,7 @@ app.get("/forms", (req, res) => {
 
       db.query(usersQuery, [start, end - start + 1], (err, results) => {
         if (err) {
+          console.error("DB error:", err);
           return res.status(500).json({ error: ERRORS.noUsers });
         }
 
@@ -486,6 +500,7 @@ app.get("/users/:id/forms/", (req, res) => {
       [userId],
       (err, results) => {
         if (err) {
+          console.error("DB error in all user forms:", err);
           return res.status(500).json({ error: ERRORS.serverError, info: err });
         }
 
@@ -502,6 +517,7 @@ app.get("/forms/:id", (req, res) => {
     const id = req.params.id;
     db.query("SELECT * FROM forms WHERE id = ?", [id], (err, results) => {
       if (err) {
+        console.error("DB error in /forms:id :", err);
         return res.status(500).json({ error: ERRORS.serverError, info: err });
       }
       if (results.length === 0) {
@@ -527,7 +543,10 @@ const getUserByToken = (req, res, callback) => {
 
     const query = "SELECT * FROM users WHERE id = ?";
     db.query(query, [decoded.id], (queryErr, results) => {
-      if (queryErr) return res.status(500).json({ error: ERRORS.serverError });
+      if (queryErr) {
+        console.error("DB error in getUserByToken:", err);
+        return res.status(500).json({ error: ERRORS.serverError });
+      }
       if (results.length === 0) {
         return res.status(404).json({ error: ERRORS.noUser });
       }
@@ -560,6 +579,7 @@ app.get("/topics", (req, res) => {
 
   db.query(query, (err, results) => {
     if (err) {
+      console.error("DB error in /topics :", err);
       return res.status(500).json({ error: ERRORS.serverError });
     }
     res.json(results);
@@ -579,7 +599,10 @@ app.post("/logout", (req, res) => {
 
     const query = "SELECT * FROM users WHERE token = ?";
     db.query(query, [token], (err, results) => {
-      if (err) return res.status(500).json({ error: ERRORS.serverError });
+      if (err) {
+        console.error("DB error in /logout :", err);
+        return res.status(500).json({ error: ERRORS.serverError });
+      }
       if (results.length === 0)
         return res.status(404).json({ error: ERRORS.noUser });
 
@@ -587,8 +610,11 @@ app.post("/logout", (req, res) => {
 
       const updateQuery = "UPDATE users SET token = NULL WHERE id = ?";
       db.query(updateQuery, [user.id], (updateErr) => {
-        if (updateErr)
+        if (updateErr) {
+          console.error("DB error:", err);
           return res.status(500).json({ error: ERRORS.serverError });
+        }
+
         res.clearCookie("token", {
           httpOnly: true,
           sameSite: "none",
