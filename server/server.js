@@ -71,6 +71,7 @@ function handleDisconnect() {
   });
 
   db.on("error", (err) => {
+    console.error("DB error:", err);
     if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
       console.log("Connection lost, reconnecting...");
       handleDisconnect();
