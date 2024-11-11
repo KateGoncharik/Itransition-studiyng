@@ -19,17 +19,14 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("checkAuth");
     const checkAuth = async (): Promise<void> => {
       const checkResult = await isUserAuthorized();
       if (checkResult === "Token expired") {
         setIsAuthenticated(false);
-        console.log(checkResult);
         throw new Error(checkResult);
       }
       if (checkResult === "No token provided") {
         setIsAuthenticated(false);
-        console.log(checkResult);
       } else {
         setIsAuthenticated(true);
       }
