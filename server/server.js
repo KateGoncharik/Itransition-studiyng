@@ -70,30 +70,19 @@ function handleDisconnect() {
     }
   });
 
-  // db.on("error", (err) => {
-  //   console.error("DB error in error handler:", err);
-  //   if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
-  //     console.log("Connection lost, reconnecting...");
-  //     handleDisconnect();
-  //   } else {
-  //     console.error(ERRORS.dbConnection, err);
-  //     throw err;
-  //   }
-  // });
+  db.on("error", (err) => {
+    console.error("DB error in error handler:", err);
+    if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
+      console.log("Connection lost, reconnecting...");
+      handleDisconnect();
+    } else {
+      console.error(ERRORS.dbConnection, err);
+      throw err;
+    }
+  });
 }
 
 handleDisconnect();
-
-db.on("error", (err) => {
-  console.error("DB error in error handler:", err);
-  if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
-    console.log("Connection lost, reconnecting...");
-    handleDisconnect();
-  } else {
-    console.error(ERRORS.dbConnection, err);
-    throw err;
-  }
-});
 
 app.get("/users", (req, res) => {
   getUserByToken(req, res, async () => {
