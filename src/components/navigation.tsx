@@ -1,6 +1,6 @@
 import { logoutUser } from "@/requests/logout-user";
 import { Button, Stack } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { headerButtonStyles } from "./header-button-styles";
@@ -9,9 +9,20 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
+import { getAuthorizedUser } from "@/requests/get-authorized-user";
 
 export const Navigation: FC = () => {
   const { isAuthenticated } = useAuth();
+  const [isAdmin, setIsUserAdmin] = useState(false);
+  useEffect(() => {
+    const checkRole = async (): Promise<void> => {
+      const user = await getAuthorizedUser();
+      if (user.isAdmin === 1) {
+        setIsUserAdmin(true);
+      }
+    };
+    void checkRole();
+  });
   return (
     <Stack className="gap-2" direction={"row"}>
       <Button component={RouterLink} sx={headerButtonStyles} to={"/"}>
@@ -26,9 +37,11 @@ export const Navigation: FC = () => {
           Constructor
         </Button>
       )}
-      <Button component={RouterLink} sx={headerButtonStyles} to={"/admin"}>
-        Admin page
-      </Button>
+      {isAdmin && (
+        <Button component={RouterLink} sx={headerButtonStyles} to={"/admin"}>
+          Admin page
+        </Button>
+      )}
       {isAuthenticated && (
         <Button component={RouterLink} sx={headerButtonStyles} to={"/profile"}>
           Profile
