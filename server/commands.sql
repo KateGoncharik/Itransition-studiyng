@@ -11,3 +11,7 @@ CREATE TABLE users (
 
 ALTER TABLE forms MODIFY COLUMN date VARCHAR(255);
 UPDATE forms SET date = "2024-11-01";
+
+UPDATE users
+SET `isAdmin` = 1
+WHERE username = 'KateGon';

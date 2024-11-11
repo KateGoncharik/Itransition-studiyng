@@ -145,9 +145,9 @@ app.post("/register", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const query =
-    "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    "INSERT INTO users (username, email, password, isAdmin) VALUES (?, ?, ?, ?)";
 
-  db.query(query, [username, email, hashedPassword], (err, results) => {
+  db.query(query, [username, email, hashedPassword, false], (err, results) => {
     if (err) {
       console.error("DB error in /register:", err);
       if (err.code === "ER_DUP_ENTRY") {
