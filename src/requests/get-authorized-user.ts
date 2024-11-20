@@ -17,7 +17,7 @@ export const getAuthorizedUser = async (): Promise<UserType> => {
     if (error instanceof Error) {
       console.error("Error:", error.message);
     } else {
-      console.error("Some error ocurred");
+      console.error("Some error occurred");
     }
     throw error;
   }
