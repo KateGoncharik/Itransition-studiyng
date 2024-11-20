@@ -7,9 +7,10 @@ import { CustomLayout } from "./layout";
 import { CustomDashboard } from "./dashboard";
 import { UserList } from "./users";
 import { FormsList } from "./forms";
-import { getAuthorizedUser } from "@/requests/get-authorized-user";
 import { useRedirectWithDelay } from "@/hooks/use-redirect-with-delay";
-import { CircularProgress, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
+import { EditUsers } from "./edit-users";
+import { isUserAuthorized } from "@/requests/check-if-user-authorized";
 
 const AdminComponent: FC = () => {
   const [isAdmin, setIsUserAdmin] = useState(false);
@@ -17,15 +18,20 @@ const AdminComponent: FC = () => {
 
   useEffect(() => {
     const checkRole = async (): Promise<void> => {
-      const user = await getAuthorizedUser();
+      const user = await isUserAuthorized();
+      if (typeof user === "string") {
+        setIsUserAdmin(false);
+        redirect("/", 0);
+      }
+      if (typeof user === "string") {
+        return;
+      }
       if (user.isAdmin === 1) {
         setIsUserAdmin(true);
-      } else {
-        redirect("/", 0);
       }
     };
     void checkRole();
-  });
+  }, [redirect]);
   return isAdmin ? (
     <Admin
       dataProvider={dataProviderWithAuth}
@@ -33,13 +39,13 @@ const AdminComponent: FC = () => {
       layout={CustomLayout}
       dashboard={CustomDashboard}
     >
-      <Resource name="users" list={UserList} />
+      <Resource name="users" edit={EditUsers} list={UserList} />
       <Resource name="templates" list={TemplatesList} />
       <Resource name="forms" list={FormsList} />
     </Admin>
   ) : (
-    <Stack margin="auto">
-      <CircularProgress />
+    <Stack margin="2% auto" textAlign="center">
+      No access
     </Stack>
   );
 };

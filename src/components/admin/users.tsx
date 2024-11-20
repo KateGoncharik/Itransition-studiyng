@@ -7,6 +7,7 @@ export const UserList: FC = () => (
       <TextField source="id" />
       <TextField source="username" />
       <EmailField source="email" />
+      <TextField source="isAdmin" />
     </Datagrid>
   </List>
 );
