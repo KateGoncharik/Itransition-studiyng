@@ -103,7 +103,7 @@ app.get("/users", (req, res) => {
       }
 
       const total = totalResults[0].total;
-      const usersQuery = `SELECT id,username,email FROM users LIMIT ?, ?`;
+      const usersQuery = `SELECT id,username,email, isAdmin FROM users LIMIT ?, ?`;
 
       db.query(usersQuery, [start, end - start + 1], (err, results) => {
         if (err) {
@@ -132,6 +132,31 @@ app.get("/users/:id", (req, res) => {
     }
     res.json(results[0]);
   });
+});
+
+app.put("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const { isAdmin } = req.body;
+
+  db.query(
+    "UPDATE users SET isAdmin = ? WHERE id = ?",
+    [isAdmin, userId],
+    (err, results) => {
+      if (err) {
+        console.error("DB error in PUT /users/:id:", err);
+        return res.status(500).json({ error: "Server error" });
+      }
+      // TODO format values more clearly
+      if (results.affectedRows > 0) {
+        res.json({
+          id: +userId,
+          isAdmin: +isAdmin,
+        });
+      } else {
+        res.status(404).json({ error: "User not found" });
+      }
+    },
+  );
 });
 
 const bcrypt = require("bcryptjs");
