@@ -187,6 +187,22 @@ app.post("/register", async (req, res) => {
   });
 });
 
+app.delete("/users/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const query = "DELETE FROM users WHERE id = ?";
+
+  db.query(query, [id], (err) => {
+    if (err) {
+      console.error("DB error in /users delete:", err);
+
+      return res.status(500).json({ error: ERRORS.serverError, info: err });
+    }
+
+    res.status(200).json({ message: "User deleted" });
+  });
+});
+
 const secretKey = process.env.JWT_SECRET;
 
 app.post("/login", (req, res) => {
