@@ -22,7 +22,7 @@ export const Navigation: FC = () => {
       }
     };
     void checkRole();
-  });
+  }, []);
   return (
     <Stack className="gap-2" direction={"row"}>
       <Button component={RouterLink} sx={headerButtonStyles} to={"/"}>
