@@ -38,7 +38,7 @@ _Completed: November 2024_
 
 - Deployment: [here](https://kate-forms-final-task.netlify.app)
 
-VIDEO WILL BE UPDATED AFTER ADMIN PAGE COMPLETION
+
 
 - Here is the [video demonstration](https://www.youtube.com/watch?v=XUAySelb4WU) of the result.
 
