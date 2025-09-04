@@ -9,7 +9,7 @@
   <img src="./public/result-form-view2.png">
 
 </a>
-  <h1 align="center">Final task</h1>
+  <h1 align="center">Final task of Commercial Software Development - JavaScript course in 2024 by Kate Goncharik</h1>
 
 </div>
 
@@ -34,34 +34,26 @@
 
 _Completed: November 2024_
 
-- For this and other tasks you can check out the [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
+- For this and other tasks you can check out my [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
 - Deployment: [here](https://kate-forms-final-task.netlify.app)
-
-
 
 - Here is the [video demonstration](https://www.youtube.com/watch?v=XUAySelb4WU) of the result.
 
 ### Task description
 
-You have to implement a Web application for customizable forms (quizzes, tests, questionnaires, polls, etc.). Something similar to Google Forms.
-Users define "_templates_" (the set of questions, their names and descriptions, etc.), and other users fill out "forms" (their specific answers) using these templates (e.g., enter or select values in the fields).
+Fullstack web application for customizable forms (similar to Google Forms).
+Task was to create an application with it's own database, backend and frontend.
 
-E.g., I create a template with one integer-valued question "How many apples do you eat per day?" Users fill out corresponding forms, and I can analyze the answers.
+Technical requirements can be found in the mindmap [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
 
-Filled-out forms (answers) can be seen by the author as well as the creator of the responding template and admins. Templates are accessible for viewing for everyone.
-
-Every user has its own personal page where they can manage the sortable table of templates (create new, delete, or edit) and the sortable table of the filled forms (probably on two separate tabs).
-
-More requirements can be found at [MindMap](https://miro.com/app/board/uXjVKXt043k=/?share_link_id=575629632634).
-
-Main features (completed and in progress):
+Main features (completed and to be done):
 
 - [x] registration and authorization
 - [] admin and user roles
 - [x] user profile
   - [x] view table with answers (forms)
-  - [] view table with created templates
+  - [x] view table with created templates
   - [] make sort in tables
   - [] allow managing templates from profile
   - [] allow managing answers(forms) from profile
@@ -96,7 +88,7 @@ Main features (completed and in progress):
 
 ## API overview
 
-Available endpoints:
+Available endpoints of my API:
 
 Users:
 
